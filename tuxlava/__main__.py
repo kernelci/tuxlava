@@ -49,7 +49,6 @@ def main() -> int:
         parser.error("argument --device is required")
 
     if "hacking-session" in options.tests:
-        options.enable_network = True
         if not options.parameters.get("PUB_KEY"):
             parser.error("argument missing --parameters PUB_KEY='...'")
 
@@ -68,7 +67,6 @@ def main() -> int:
             mcp_romfw=options.mcp_romfw,
             fip=options.fip,
             enable_kvm=options.enable_kvm,
-            enable_network=options.enable_network,
             prompt=options.prompt,
             rootfs=options.rootfs,
             rootfs_partition=options.partition,

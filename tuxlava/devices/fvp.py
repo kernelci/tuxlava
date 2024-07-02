@@ -24,7 +24,6 @@ class FVPDevice(Device):
 class AEMvAFVPDevice(FVPDevice):
     name = "fvp-aemva"
 
-    enable_network: bool = True
     flag_cache_rootfs = True
 
     bl1 = "https://storage.tuxboot.com/buildroot/fvp-aemva/bl1.bin"
@@ -48,7 +47,6 @@ class AEMvAFVPDevice(FVPDevice):
         parameters,
         prompt,
         modules,
-        enable_network,
         tests,
         **kwargs,
     ):
@@ -80,8 +78,6 @@ class AEMvAFVPDevice(FVPDevice):
 
     def definition(self, **kwargs):
         kwargs = kwargs.copy()
-
-        kwargs["no_network"] = not kwargs["enable_network"]
 
         # Options that can be updated
         if kwargs["tux_prompt"]:

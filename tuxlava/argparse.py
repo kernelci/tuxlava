@@ -294,13 +294,6 @@ def setup_parser() -> argparse.ArgumentParser:
         help="Enable kvm, only possible if host and QEMU system are the same",
     )
 
-    group.add_argument(
-        "--enable-network",
-        default=False,
-        action="store_true",
-        help="Enable network",
-    )
-
     group = parser.add_argument_group("output")
     group.add_argument(
         "--lava-definition",
