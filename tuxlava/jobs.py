@@ -10,6 +10,10 @@ from typing import Dict, List
 from tuxlava.devices import Device
 from tuxlava.tests import Test
 from tuxlava.yaml import yaml_load
+from tuxlava.utils import pathurlnone
+
+
+TEST_DEFINITIONS = "https://storage.tuxboot.com/test-definitions/2024.06.tar.zst"
 
 
 class Job:
@@ -85,8 +89,13 @@ class Job:
         overlays = []
 
         self.device = Device.select(self.device)()
-        self.tests = [Test.select(t)(options.timeouts.get(t)) for t in self.tests]
+        self.tests = [Test.select(t)(self.timeouts.get(t)) for t in self.tests]
         self.device.default(self)
+
+        # get test definitions url, when required
+        test_definitions = None
+        if any(t.need_test_definition for t in self.tests):
+            test_definitions = pathurlnone(TEST_DEFINITIONS)
 
         if self.parameters:
             if self.modules:
@@ -122,6 +131,7 @@ class Job:
             "scp_fw": self.scp_fw,
             "scp_romfw": self.scp_romfw,
             "tests": self.tests,
+            "test_definitions": test_definitions,
             "tests_timeout": sum(t.timeout for t in self.tests),
             "timeouts": self.timeouts,
             "tux_boot_args": (

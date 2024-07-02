@@ -72,7 +72,7 @@ def main() -> int:
             rootfs_partition=options.partition,
             scp_fw=options.scp_fw,
             scp_romfw=options.scp_romfw,
-            tests=[t.name for t in options.tests],
+            tests=options.tests,
             timeouts=options.timeouts,
             uefi=options.uefi,
             boot_args=options.boot_args,
