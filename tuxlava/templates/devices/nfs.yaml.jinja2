@@ -1,0 +1,34 @@
+{# device_type: nfs based #}
+{% extends 'base.yaml.jinja2' %}
+
+{% block vland %}
+{# disabled #}
+{% endblock vland %}
+
+{% block body %}
+
+available_architectures:
+- bcm2711-rpi-4-b
+- juno-r2
+- x86_64
+- i386
+
+actions:
+  deploy:
+    connections:
+      serial:
+      lxc:
+    methods:
+      nfs:
+      lxc:
+
+  boot:
+    connections:
+      serial:
+      ssh:
+      lxc:
+    method: ipxe
+    commands: nfs
+
+          options:
+{% endblock body %}

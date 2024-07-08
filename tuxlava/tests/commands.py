@@ -8,7 +8,14 @@ from tuxlava.tests import Test
 
 
 class Commands(Test):
-    devices = ["qemu-*", "fvp-aemva", "avh-imx93", "avh-rpi4b"]
+    devices = [
+        "qemu-*",
+        "fvp-aemva",
+        "avh-imx93",
+        "avh-rpi4b",
+        "nfs-*",
+        "fastboot-*",
+    ]
     name = "commands"
     timeout = 2
 

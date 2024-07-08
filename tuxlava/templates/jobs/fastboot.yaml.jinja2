@@ -1,0 +1,155 @@
+{% set prefix_len = 'fastboot-'|length %}
+device_type: "{{ device.name[prefix_len:] }}"
+
+{% if tests %}
+job_name: "tuxrun@{{ device.name }}: {{ tests|map(attribute="name")|join(", ")}}"
+{% else %}
+job_name: "tuxrun@{{ device.name }}: boot"
+{% endif %}
+priority: {{ lava_job_priority }}
+visibility: "public"
+
+{% if device.name == 'fastboot-x15' %}
+reboot_to_fastboot: true
+{% else %}
+reboot_to_fastboot: false
+{% endif %}
+context:
+    test_character_delay: 10
+
+{%- set deploy_download_timeout = timeouts.deploy|default(25) %}
+{%- set deploy_timeout = timeouts.deploy|default(30) %}
+{%- set boot_timeout = timeouts.boot|default(25) %}
+
+{% block timeouts %}
+timeouts:
+  job:
+    minutes: {{ deploy_download_timeout + deploy_timeout + boot_timeout + tests_timeout }}
+  action:
+   minutes: 5
+  actions:
+    power-off:
+      seconds: 30
+{% endblock %}
+
+actions:
+- deploy:
+    to: downloads
+    timeout:
+      minutes: {{ deploy_download_timeout }}
+    os: oe
+    images:
+{% if bios and device.name == 'fastboot-dragonboard-845c' %}
+      partition:0:
+        url: "{{ bios }}"
+{% endif %}
+      kernel:
+        url: "{{ kernel }}"
+{% if compression(kernel)[1] is not none %}
+        compression: {{ compression(kernel)[1] }}
+        type: image
+{% endif %}
+{% if dtb %}
+      dtb:
+        url: "{{ dtb }}"
+{% endif %}
+{% if modules %}
+      modules:
+        url: "{{ modules }}"
+{% if compression(modules)[1] is not none %}
+        compression: {{ compression(modules)[1] }}
+{% endif %}
+{% endif %}
+{% if device.name == 'fastboot-x15' or device.name == 'fastboot-e850-96' %}
+      super:
+{% else %}
+      rootfs:
+{% endif %}
+        url: "{{ rootfs }}"
+{% if compression(rootfs)[1] is not none %}
+        compression: {{ compression(rootfs)[1] }}
+{% endif %}
+        format: ext4
+        apply-overlay: true
+{% if overlays %}
+        overlays:
+{% for name, overlay, dst in overlays %}
+          {{ name }}:
+            url: "{{ overlay }}"
+            path: "{{ dst }}"
+            format: tar
+            compression: {{ compression(overlay)[1] }}
+{% endfor %}
+{% elif tests %}
+          overlays:
+            lava: true
+{% endif %}
+    postprocess:
+      docker:
+        image: "{{ deploy_docker_image|default('linaro/kir:master') }}"
+        steps:
+        - /kir/lava/board_setup.sh {{ device.name[9:] }} rootfs
+- deploy:
+    to: fastboot
+    timeout:
+      minutes: {{ deploy_timeout }}
+    docker:
+      image: "{{ deploy_fastboot_docker_image|default('linaro/kir:master') }}"
+    images:
+{% if device.name == 'fastboot-dragonboard-845c' %}
+      partition:0:
+        url: downloads://gpt_both0.bin
+        reboot: hard-reset
+      boot:
+        url: downloads://boot.img
+        reboot: hard-reset
+{% elif device.name == 'fastboot-e850-96' or device.name == 'fastboot-dragonboard-410c' %}
+      boot:
+        url: downloads://boot.img
+{% endif %}
+{% if device.name == 'fastboot-dragonboard-845c' or device.name == 'fastboot-dragonboard-410c' %}
+      rootfs:
+{% else %}
+      super:
+{% endif %}
+        url: downloads://rootfs.img
+        apply-overlay: true
+
+{% if device.name == 'fastboot-dragonboard-410c' or device.name == 'fastboot-dragonboard-845c' %}
+- command:
+    name: pre_os_command
+- command:
+    name: pre_power_command
+{% endif %}
+{% if device.name == 'fastboot-e850-96' %}
+- command:
+    name: pre_power_command
+{% endif %}
+- boot:
+{% if device.name == 'fastboot-x15' %}
+    commands:
+    - setenv fdtfile am57xx-beagle-x15.dtb
+    - setenv console ttyS2,115200n8
+    - setenv mmcdev 1
+    - part number mmc 1 super part_num
+    - setenv bootpart 1:${part_num}
+    - run mmcboot
+    method: u-boot
+{% else %}
+    docker:
+      image: "{{ boot_docker_image|default('linaro/kir:master') }}"
+    method: fastboot
+{% endif %}
+    timeout:
+      minutes: {{ boot_timeout }}
+    auto_login:
+      login_prompt: 'login:'
+      username: root
+    prompts:
+    - 'root@(.*):[/~]#'
+{% for prompt in tux_prompt %}
+    - "{{ prompt }}"{% endfor %}
+{% if device.name == 'fastboot-e850-96' %}
+- command:
+    name: pre_os_command
+{% endif %}

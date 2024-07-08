@@ -8,7 +8,14 @@ from tuxlava.tests import Test
 
 
 class KUnit(Test):
-    devices = ["qemu-*", "fvp-aemva", "avh-imx93", "avh-rpi4b"]
+    devices = [
+        "qemu-*",
+        "fvp-aemva",
+        "avh-imx93",
+        "avh-rpi4b",
+        "nfs-*",
+        "fastboot-*",
+    ]
     name = "kunit"
     timeout = 20
     need_test_definition = True

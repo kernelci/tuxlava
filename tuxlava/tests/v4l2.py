@@ -8,7 +8,14 @@ from tuxlava.tests import Test
 
 
 class V4L2(Test):
-    devices = ["qemu-*", "fvp-aemva", "avh-imx93", "avh-rpi4b"]
+    devices = [
+        "qemu-*",
+        "fvp-aemva",
+        "avh-imx93",
+        "avh-rpi4b",
+        "nfs-*",
+        "fastboot-*",
+    ]
     name = "v4l2"
     timeout = 25
     need_test_definition = True
