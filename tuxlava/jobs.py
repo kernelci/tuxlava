@@ -102,7 +102,7 @@ class Job:
                 modules_path = self.parameters.get("MODULES_PATH", "/")
                 self.modules = [module, modules_path]
 
-        if self.modules:
+        if isinstance(self.modules, list):
             overlays.append(("modules", self.modules[0], self.modules[1]))
 
         for index, item in enumerate(self.overlays):
@@ -123,6 +123,7 @@ class Job:
             "mcp_romfw": self.mcp_romfw,
             "fip": self.fip,
             "enable_kvm": self.enable_kvm,
+            "modules": self.modules,
             "overlays": overlays,
             "prompt": self.prompt,
             "rootfs": self.rootfs,

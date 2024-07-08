@@ -8,7 +8,14 @@ from tuxlava.tests import Test
 
 
 class VdsoTest(Test):
-    devices = ["qemu-*", "fvp-aemva", "avh-imx93", "avh-rpi4b"]
+    devices = [
+        "qemu-*",
+        "fvp-aemva",
+        "avh-imx93",
+        "avh-rpi4b",
+        "nfs-*",
+        "fastboot-*",
+    ]
     name = "vdso"
     timeout = 15
     need_test_definition = True

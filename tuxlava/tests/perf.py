@@ -8,7 +8,14 @@ from tuxlava.tests import Test
 
 
 class Perf(Test):
-    devices = ["qemu-*", "fvp-aemva", "avh-imx93", "avh-rpi4b"]
+    devices = [
+        "qemu-*",
+        "fvp-aemva",
+        "avh-imx93",
+        "avh-rpi4b",
+        "nfs-*",
+        "fastboot-*",
+    ]
     name = "perf"
     timeout = 30
     need_test_definition = True

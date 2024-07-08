@@ -1,0 +1,110 @@
+{% set prefix_len = 'nfs-'|length %}
+device_type: "{{ device.name[prefix_len:] }}"
+
+{% if tests %}
+job_name: "tuxrun@{{ device.name }}: {{ tests|map(attribute="name")|join(", ")}}"
+{% else %}
+job_name: "tuxrun@{{ device.name }}: boot"
+{% endif %}
+priority: {{ lava_job_priority }}
+visibility: "public"
+
+context:
+{% if device.name == 'nfs-bcm2711-rpi-4-b' %}
+    arch: arm64
+    booti_dtb_addr: '0x86000000'
+    extra_nfsroot_args: ',vers=3'
+    console_device: ttyS0
+    extra_kernel_args: 8250.nr_uarts=1 cma=64M rootwait
+{% elif device.name == 'nfs-juno-r2' %}
+    bootloader_prompt: juno#
+    booti_dtb_addr: '0x88000000'
+    extra_nfsroot_args: ',wsize=65536'
+    extra_kernel_args: 'default_hugepagesz=2M hugepages=256 '
+{% elif device.name == 'nfs-i386' or device.name == 'nfs-x86_64' %}
+    test_character_delay: 10
+    extra_kernel_args: rootwait
+{% endif %}
+
+{%- set deploy_timeout = timeouts.deploy|default(5) %}
+{%- set boot_timeout = timeouts.boot|default(15) %}
+
+{% block timeouts %}
+timeouts:
+  job:
+    minutes: {{ deploy_timeout + boot_timeout + tests_timeout }}
+  action:
+   minutes: 5
+  actions:
+    power-off:
+      seconds: 30
+{% endblock %}
+
+actions:
+- deploy:
+    to: tftp
+    timeout:
+      minutes: {{ deploy_timeout }}
+    os: oe
+    kernel:
+      url: "{{ kernel }}"
+{% if compression(kernel)[1] is not none %}
+      compression: {{ compression(kernel)[1] }}
+      type: image
+{% endif %}
+{% if dtb %}
+    dtb:
+      url: "{{ dtb }}"
+{% endif %}
+{% if modules %}
+    modules:
+      url: "{{ modules }}"
+{% if compression(modules)[1] is not none %}
+      compression: {{ compression(modules)[1] }}
+{% endif %}
+{% endif %}
+    nfsrootfs:
+      url: "{{ rootfs }}"
+{% if compression(rootfs)[1] is not none %}
+      compression: {{ compression(rootfs)[1] }}
+{% endif %}
+      format: tar
+      apply-overlay: true
+{% if overlays %}
+      overlays:
+{% for name, overlay, dst in overlays %}
+        {{ name }}:
+          url: "{{ overlay }}"
+          path: "{{ dst }}"
+          format: tar
+          compression: {{ compression(overlay)[1] }}
+{% endfor %}
+{% elif tests %}
+        overlays:
+          lava: true
+{% endif %}
+- boot:
+    method:
+{% if device.name == 'nfs-bcm2711-rpi-4-b' or device.name == 'nfs-juno-r2' %}
+      u-boot
+{% elif device.name == 'nfs-i386' or device.name == 'nfs-x86_64' %}
+      ipxe
+{% endif %}
+    commands: nfs
+{% if device.name == 'nfs-i386' or device.name == 'nfs-x86_64' %}
+    parameters:
+      shutdown-message: 'reboot: Restarting system'
+{% endif %}
+{% if qemu_image %}
+    docker:
+      image: {{ qemu_image }}
+{% endif %}
+    timeout:
+      minutes: {{ boot_timeout }}
+    auto_login:
+      login_prompt: 'login:'
+      username: root
+    prompts:
+    - 'root@(.*):[/~]#'
+{% for prompt in tux_prompt %}
+    - "{{ prompt }}"{% endfor %}
