@@ -1,4 +1,6 @@
 #!/usr/bin/python3
+# -*- coding: utf-8 -*-
+#
 # vim: set ts=4
 #
 # Copyright 2024-present Linaro Limited
@@ -52,7 +54,7 @@ def main() -> int:
         if not options.parameters.get("PUB_KEY"):
             parser.error("argument missing --parameters PUB_KEY='...'")
 
-    artefacts = filter_artefacts(options)
+    filter_artefacts(options)
 
     try:
         job = Job(

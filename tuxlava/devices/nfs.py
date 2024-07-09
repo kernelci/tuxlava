@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+#
 # vim: set ts=4
 #
 # Copyright 2024-present Linaro Limited
@@ -63,7 +65,9 @@ class NfsDevice(Device):
         if prompt and '"' in prompt:
             raise InvalidArgument('argument --prompt should not contains "')
         if dtb and self.name not in ["nfs-bcm2711-rpi-4-b", "nfs-juno-r2"]:
-            raise InvalidArgument("argument --dtb is only valid for 'nfs-bcm2711-rpi-4-b' or 'nfs-juno-r2' device")
+            raise InvalidArgument(
+                "argument --dtb is only valid for 'nfs-bcm2711-rpi-4-b' or 'nfs-juno-r2' device"
+            )
         if modules and compression(modules) not in [("tar", "gz"), ("tar", "xz")]:
             raise InvalidArgument(
                 "argument --modules should be a .tar.gz, tar.xz or .tgz"
@@ -107,7 +111,9 @@ class NfsDevice(Device):
         tmp_ljp = kwargs.get("parameters").get("lava_job_priority") or 50
         if "lava_job_priority" in kwargs.get("parameters").keys():
             if int(tmp_ljp) > 100 or int(tmp_ljp) <= 0:
-                raise InvalidArgument("argument --parameters lava_job_priority must be a value between 1-100")
+                raise InvalidArgument(
+                    "argument --parameters lava_job_priority must be a value between 1-100"
+                )
         kwargs["lava_job_priority"] = tmp_ljp
 
         # render the template

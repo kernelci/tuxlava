@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+#
 # vim: set ts=4
 #
 # Copyright 2024-present Linaro Limited
@@ -66,8 +68,10 @@ class FastbootDevice(Device):
             raise InvalidArgument('argument --boot-args should not contains "')
         if prompt and '"' in prompt:
             raise InvalidArgument('argument --prompt should not contains "')
-        if dtb and not self.name.startswith('fastboot-'):
-            raise InvalidArgument("argument --dtb is only valid for 'fastboot-e850-96' device")
+        if dtb and not self.name.startswith("fastboot-"):
+            raise InvalidArgument(
+                "argument --dtb is only valid for 'fastboot-e850-96' device"
+            )
         if modules and compression(modules) not in [("tar", "gz"), ("tar", "xz")]:
             raise InvalidArgument(
                 "argument --modules should be a .tar.gz, tar.xz or .tgz"
@@ -108,7 +112,9 @@ class FastbootDevice(Device):
         tmp_ljp = kwargs.get("parameters").get("lava_job_priority") or 50
         if "lava_job_priority" in kwargs.get("parameters").keys():
             if int(tmp_ljp) > 100 or int(tmp_ljp) <= 0:
-                raise InvalidArgument("argument --parameters lava_job_priority must be a value between 1-100")
+                raise InvalidArgument(
+                    "argument --parameters lava_job_priority must be a value between 1-100"
+                )
         kwargs["lava_job_priority"] = tmp_ljp
 
         # render the template
@@ -132,7 +138,9 @@ class FastbootDevice(Device):
     def device_dict(self, context):
         if self.test_character_delay:
             context["test_character_delay"] = self.test_character_delay
-        return templates.devices().get_template("fastboot.yaml.jinja2").render(**context)
+        return (
+            templates.devices().get_template("fastboot.yaml.jinja2").render(**context)
+        )
 
 
 class FastbootE850_96(FastbootDevice):
