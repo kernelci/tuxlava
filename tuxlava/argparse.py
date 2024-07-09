@@ -1,4 +1,6 @@
 #!/usr/bin/python3
+# -*- coding: utf-8 -*-
+#
 # vim: set ts=4
 #
 # Copyright 2024-present Linaro Limited
@@ -7,7 +9,6 @@
 
 import argparse
 import sys
-from pathlib import Path
 
 from tuxlava import __version__
 from tuxlava.devices import Device
@@ -283,7 +284,7 @@ def setup_parser() -> argparse.ArgumentParser:
         metavar="K=V",
         default={},
         type=str,
-        help="timouts in minutes as action=duration",
+        help="timeouts in minutes as action=duration",
         action=KeyValueIntAction,
         nargs="+",
     )
@@ -301,7 +302,7 @@ def setup_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Save the LAVA definition.yaml file",
     )
- 
+
     group = parser.add_argument_group("debugging")
     group.add_argument(
         "--debug",

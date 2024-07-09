@@ -1,15 +1,17 @@
 #!/usr/bin/python3
+# -*- coding: utf-8 -*-
+#
 # vim: set ts=4
 #
 # Copyright 2024-present Linaro Limited
 #
 # SPDX-License-Identifier: MIT
 
+import shlex
 
 from typing import Dict, List
 from tuxlava.devices import Device
 from tuxlava.tests import Test
-from tuxlava.yaml import yaml_load
 from tuxlava.utils import pathurlnone
 
 
@@ -69,9 +71,7 @@ class Job:
         self.scp_romfw = scp_romfw
         self.tests = tests
         self.timeouts = timeouts
-        self.tux_boot_args = (
-            " ".join(shlex.split(boot_args)) if boot_args else None
-        )
+        self.tux_boot_args = " ".join(shlex.split(boot_args)) if boot_args else None
         self.tux_prompt = tux_prompt
         self.uefi = uefi
         self.boot_args = boot_args
@@ -81,7 +81,7 @@ class Job:
         self.parameters = parameters
 
     def __str__(self) -> str:
-        tests = "_".join(self.tests) if tests else "boot"
+        tests = "_".join(self.tests) if self.tests else "boot"
         return f"Job {self.device}/{tests}"
 
     def render(self) -> str:
@@ -100,7 +100,7 @@ class Job:
         if self.parameters:
             if self.modules:
                 modules_path = self.parameters.get("MODULES_PATH", "/")
-                self.modules = [module, modules_path]
+                self.modules = [self.modules, modules_path]
 
         if isinstance(self.modules, list):
             overlays.append(("modules", self.modules[0], self.modules[1]))
@@ -145,8 +145,4 @@ class Job:
             "secrets": self.secrets,
         }
         definition = self.device.definition(**def_arguments)
-
-        job_definition = yaml_load(definition)
-        job_timeout = (job_definition["timeouts"]["job"]["minutes"] + 1) * 60
-        context = job_definition.get("context", {})
         return definition
