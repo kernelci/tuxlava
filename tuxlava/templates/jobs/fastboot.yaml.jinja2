@@ -37,7 +37,7 @@ actions:
     to: downloads
     timeout:
       minutes: {{ deploy_download_timeout }}
-    os: debian
+    os: {{ deploy_os|default(debian) }}
     images:
 {% if bios and device.name == 'fastboot-dragonboard-845c' %}
       partition:0:
@@ -92,7 +92,7 @@ actions:
         - /kir/lava/board_setup.sh {{ device.name[9:] }} rootfs "/usr/"
 - deploy:
     to: fastboot
-    os: debian
+    os: {{ deploy_os|default(debian) }}
     timeout:
       minutes: {{ deploy_timeout }}
     docker:

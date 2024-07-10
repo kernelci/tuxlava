@@ -45,7 +45,7 @@ actions:
     to: tftp
     timeout:
       minutes: {{ deploy_timeout }}
-    os: oe
+    os: {{ deploy_os|default(debian) }}
     kernel:
       url: "{{ kernel }}"
 {% if compression(kernel)[1] is not none %}
