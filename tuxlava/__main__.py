@@ -82,6 +82,7 @@ def main() -> int:
             modules=options.modules[0] if options.modules else None,
             overlays=options.overlays,
             parameters=options.parameters,
+            deploy_os=options.deploy_os,
         )
         sys.stdout.write(job.render())
     except Exception as exc:

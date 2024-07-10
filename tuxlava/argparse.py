@@ -289,6 +289,12 @@ def setup_parser() -> argparse.ArgumentParser:
         nargs="+",
     )
     group.add_argument(
+        "--deploy-os",
+        default="debian",
+        metavar="DEPLOY_OS",
+        help="Deployment operating system name. Default is 'debian'",
+    )
+    group.add_argument(
         "--enable-kvm",
         default=False,
         action="store_true",

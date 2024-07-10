@@ -2,9 +2,9 @@
 device_type: "{{ device.name[prefix_len:] }}"
 
 {% if tests %}
-job_name: "tuxrun@{{ device.name }}: {{ tests|map(attribute="name")|join(", ")}}"
+job_name: "tuxlava@{{ device.name }}: {{ tests|map(attribute="name")|join(", ")}}"
 {% else %}
-job_name: "tuxrun@{{ device.name }}: boot"
+job_name: "tuxlava@{{ device.name }}: boot"
 {% endif %}
 priority: {{ lava_job_priority }}
 visibility: "public"
@@ -45,7 +45,7 @@ actions:
     to: tftp
     timeout:
       minutes: {{ deploy_timeout }}
-    os: oe
+    os: {{ deploy_os|default(debian) }}
     kernel:
       url: "{{ kernel }}"
 {% if compression(kernel)[1] is not none %}

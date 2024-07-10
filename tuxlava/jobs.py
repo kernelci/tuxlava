@@ -50,6 +50,7 @@ class Job:
         modules: str = None,
         overlays: List[str] = None,
         parameters: Dict[str, str] = None,
+        deploy_os: str = None,
     ) -> None:
         self.device = device
         self.bios = bios
@@ -79,6 +80,7 @@ class Job:
         self.modules = modules
         self.overlays = overlays if overlays else []
         self.parameters = parameters
+        self.deploy_os = deploy_os
 
     def __str__(self) -> str:
         tests = "_".join(self.tests) if self.tests else "boot"
@@ -101,6 +103,7 @@ class Job:
             if self.modules:
                 modules_path = self.parameters.get("MODULES_PATH", "/")
                 self.modules = [self.modules, modules_path]
+            self.deploy_os = self.parameters.get("DEPLOY_OS", self.deploy_os)
 
         if isinstance(self.modules, list):
             overlays.append(("modules", self.modules[0], self.modules[1]))
@@ -143,6 +146,7 @@ class Job:
             "uefi": self.uefi,
             "boot_args": self.boot_args,
             "secrets": self.secrets,
+            "deploy_os": self.deploy_os,
         }
         definition = self.device.definition(**def_arguments)
         return definition
