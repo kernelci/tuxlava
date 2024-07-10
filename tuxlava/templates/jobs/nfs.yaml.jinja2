@@ -20,7 +20,7 @@ context:
     bootloader_prompt: juno#
     booti_dtb_addr: '0x88000000'
     extra_nfsroot_args: ',wsize=65536'
-    extra_kernel_args: 'default_hugepagesz=2M hugepages=256 '
+    extra_kernel_args: 'default_hugepagesz=2M hugepages=256 earlycon'
 {% elif device.name == 'nfs-i386' or device.name == 'nfs-x86_64' %}
     test_character_delay: 10
     extra_kernel_args: rootwait
