@@ -80,6 +80,10 @@ class FastbootDevice(Device):
         for test in tests:
             test.validate(device=self, parameters=parameters, **kwargs)
 
+    def default(self, options) -> None:
+        options.kernel = notnone(options.kernel, self.kernel)
+        options.rootfs = notnone(options.rootfs, self.rootfs)
+
     def definition(self, **kwargs):
         kwargs = kwargs.copy()
 
