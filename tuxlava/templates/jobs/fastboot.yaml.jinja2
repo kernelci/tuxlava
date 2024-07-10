@@ -37,7 +37,7 @@ actions:
     to: downloads
     timeout:
       minutes: {{ deploy_download_timeout }}
-    os: oe
+    os: debian
     images:
 {% if bios and device.name == 'fastboot-dragonboard-845c' %}
       partition:0:
@@ -86,15 +86,18 @@ actions:
 {% endif %}
     postprocess:
       docker:
-        image: "{{ deploy_docker_image|default('linaro/kir:master') }}"
+        image: "{{ deploy_docker_image|default('linaro/kir:20240606') }}"
+        local: true
         steps:
-        - /kir/lava/board_setup.sh {{ device.name[9:] }} rootfs
+        - /kir/lava/board_setup.sh {{ device.name[9:] }} rootfs "/usr/"
 - deploy:
     to: fastboot
+    os: debian
     timeout:
       minutes: {{ deploy_timeout }}
     docker:
-      image: "{{ deploy_fastboot_docker_image|default('linaro/kir:master') }}"
+      image: "{{ deploy_fastboot_docker_image|default('linaro/kir:20240606') }}"
+      local: true
     images:
 {% if device.name == 'fastboot-dragonboard-845c' %}
       partition:0:
