@@ -70,6 +70,7 @@ def main() -> int:
             fip=options.fip,
             enable_kvm=options.enable_kvm,
             prompt=options.prompt,
+            ramdisk=options.ramdisk,
             rootfs=options.rootfs,
             rootfs_partition=options.partition,
             scp_fw=options.scp_fw,
