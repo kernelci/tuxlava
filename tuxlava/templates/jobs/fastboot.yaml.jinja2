@@ -43,6 +43,10 @@ actions:
       partition:0:
         url: "{{ bios }}"
 {% endif %}
+{% if ramdisk and device.name == 'fastboot-dragonboard-845c' %}
+      ramdisk:
+        url: "{{ ramdisk }}"
+{% endif %}
       kernel:
         url: "{{ kernel }}"
 {% if compression(kernel)[1] is not none %}
@@ -141,6 +145,9 @@ actions:
 {% else %}
     docker:
       image: "{{ boot_docker_image|default('linaro/kir:master') }}"
+{% if device.name == 'fastboot-dragonboard-845c' %}
+      local: true
+{% endif %}
     method: fastboot
 {% endif %}
     timeout:
@@ -150,6 +157,9 @@ actions:
       username: root
     prompts:
     - 'root@(.*):[/~]#'
+{% if device.name == 'fastboot-dragonboard-845c' %}
+    - 'dragonboard-845c:'
+{% endif %}
 {% for prompt in tux_prompt %}
     - "{{ prompt }}"{% endfor %}
 {% if device.name == 'fastboot-e850-96' %}

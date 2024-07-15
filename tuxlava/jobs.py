@@ -35,6 +35,7 @@ class Job:
         fip: str = None,
         enable_kvm: bool = False,
         prompt: str = None,
+        ramdisk: str = None,
         rootfs: str = None,
         rootfs_partition: int = None,
         shared: bool = False,
@@ -65,6 +66,7 @@ class Job:
         self.fip = fip
         self.enable_kvm = enable_kvm
         self.prompt = prompt
+        self.ramdisk = ramdisk
         self.rootfs = rootfs
         self.rootfs_partition = rootfs_partition
         self.shared = shared
@@ -129,6 +131,7 @@ class Job:
             "modules": self.modules,
             "overlays": overlays,
             "prompt": self.prompt,
+            "ramdisk": self.ramdisk,
             "rootfs": self.rootfs,
             "rootfs_partition": self.rootfs_partition,
             "shared": False,

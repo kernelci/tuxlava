@@ -49,6 +49,7 @@ class FastbootDevice(Device):
         parameters,
         partition,
         prompt,
+        ramdisk,
         rootfs,
         tests,
         **kwargs,
@@ -63,6 +64,10 @@ class FastbootDevice(Device):
         if bios and self.name not in ["fastboot-dragonboard-845c"]:
             raise InvalidArgument(
                 "argument --bios is only valid for 'fastboot-dragonboard-845c' device"
+            )
+        if ramdisk and self.name not in ["fastboot-dragonboard-845c"]:
+            raise InvalidArgument(
+                "argument --ramdisk is only valid for 'fastboot-dragonboard-845c' device"
             )
         if boot_args and '"' in boot_args:
             raise InvalidArgument('argument --boot-args should not contains "')
@@ -96,6 +101,7 @@ class FastbootDevice(Device):
         kwargs["bios"] = notnone(kwargs.get("bios"), self.bios)
         kwargs["dtb"] = notnone(kwargs.get("dtb"), self.dtb)
         kwargs["kernel"] = notnone(kwargs.get("kernel"), self.kernel)
+        kwargs["ramdisk"] = notnone(kwargs.get("ramdisk"), self.ramdisk)
         kwargs["rootfs"] = notnone(kwargs.get("rootfs"), self.rootfs)
         if self.extra_boot_args:
             if kwargs["tux_boot_args"]:
@@ -176,6 +182,7 @@ class FastbootDragonboard_845c(FastbootDevice):
     kernel = "https://storage.tuxboot.com/buildroot/arm64/Image"
     rootfs = "https://storage.tuxboot.com/buildroot/arm64/rootfs.tar.zst"
     bios = "https://images.validation.linaro.org/snapshots.linaro.org/96boards/dragonboard845c/linaro/rescue/28/dragonboard-845c-bootloader-ufs-linux-28/gpt_both0.bin"
+    ramdisk = "https://snapshots.linaro.org/member-builds/qcomlt/boards/qcom-armv8a/openembedded/master/56008/rpb/initramfs-rootfs-image-qcom-armv8a.rootfs-20240118001247-92260.cpio.gz"
 
 
 class FastbootX15(FastbootDevice):

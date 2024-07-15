@@ -45,6 +45,7 @@ def filter_artefacts(options):
         "mcp-romfw",
         "modules",
         "overlays",
+        "ramdisk",
         "rootfs",
         "scp-fw",
         "scp-romfw",
@@ -179,6 +180,7 @@ def setup_parser() -> argparse.ArgumentParser:
     artefact("kernel")
     artefact("mcp-fw")
     artefact("mcp-romfw")
+    artefact("ramdisk")
     group.add_argument(
         "--modules",
         default=None,
