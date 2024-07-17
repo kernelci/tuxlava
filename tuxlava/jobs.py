@@ -34,6 +34,7 @@ class Job:
         mcp_romfw: str = None,
         fip: str = None,
         enable_kvm: bool = False,
+        enable_network: bool = False,
         prompt: str = None,
         ramdisk: str = None,
         rootfs: str = None,
@@ -65,6 +66,7 @@ class Job:
         self.mcp_romfw = mcp_romfw
         self.fip = fip
         self.enable_kvm = enable_kvm
+        self.enable_network = enable_network
         self.prompt = prompt
         self.ramdisk = ramdisk
         self.rootfs = rootfs
@@ -128,6 +130,7 @@ class Job:
             "mcp_romfw": self.mcp_romfw,
             "fip": self.fip,
             "enable_kvm": self.enable_kvm,
+            "enable_network": self.enable_network,
             "modules": self.modules,
             "overlays": overlays,
             "prompt": self.prompt,
