@@ -1,0 +1,50 @@
+device_type: "qemu"
+
+job_name: "tuxlava@qemu-armv5: boot"
+priority: 50
+visibility: "public"
+
+context:
+    arch: "arm"
+    machine: "versatilepb"
+    cpu: "arm926"
+    memory: "256M"
+    extra_options: ["-no-reboot", ""]
+    no_kvm: true
+    no_network: true
+timeouts:
+  job:
+    minutes: 20
+  action:
+   minutes: 5
+  actions:
+    power-off:
+      seconds: 30
+
+actions:
+- deploy:
+    to: tmpfs
+    timeout:
+      minutes: 5
+    os: oe
+    images:
+      kernel:
+        image_arg: '-kernel {kernel} -append "console=ttyAMA0,115200 rootwait root=/dev/vda debug verbose console_msg_format=syslog systemd.log_level=warning earlycon"'
+        url: "https://storage.tuxboot.com/buildroot/armv5/zImage"
+      dtb:
+        image_arg: "-dtb {dtb}"
+        url: "https://storage.tuxboot.com/buildroot/armv5/versatile-pb.dtb"
+      rootfs:
+        image_arg: "-drive file={rootfs},if=none,format=raw,id=hd0 -device virtio-blk-pci,drive=hd0"
+        url: "https://storage.tuxboot.com/buildroot/armv5/rootfs.ext4.zst"
+        compression: zstd
+        format: ext4
+- boot:
+    method: qemu
+    timeout:
+      minutes: 15
+    auto_login:
+      login_prompt: 'login:'
+      username: root
+    prompts:
+    - 'root@(.*):[/~]#'

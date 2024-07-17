@@ -1,0 +1,47 @@
+device_type: "qemu"
+
+job_name: "tuxlava@qemu-s390: boot"
+priority: 50
+visibility: "public"
+
+context:
+    arch: "s390x"
+    machine: "s390-ccw-virtio"
+    cpu: "max,zpci=on"
+    memory: "4G"
+    extra_options: ["-no-reboot", "-smp 2"]
+    no_kvm: true
+    no_network: true
+timeouts:
+  job:
+    minutes: 20
+  action:
+   minutes: 5
+  actions:
+    power-off:
+      seconds: 30
+
+actions:
+- deploy:
+    to: tmpfs
+    timeout:
+      minutes: 5
+    os: oe
+    images:
+      kernel:
+        image_arg: '-kernel {kernel} -append "console=ttyS0,115200 rootwait root=/dev/vda net.ifnames=0 debug verbose console_msg_format=syslog systemd.log_level=warning earlycon"'
+        url: "https://storage.tuxboot.com/buildroot/s390/bzImage"
+      rootfs:
+        image_arg: "-drive file={rootfs},if=none,format=raw,id=hd0 -device virtio-blk,drive=hd0"
+        url: "https://storage.tuxboot.com/buildroot/s390/rootfs.ext4.zst"
+        compression: zstd
+        format: ext4
+- boot:
+    method: qemu
+    timeout:
+      minutes: 15
+    auto_login:
+      login_prompt: 'login:'
+      username: root
+    prompts:
+    - 'root@(.*):[/~]#'
