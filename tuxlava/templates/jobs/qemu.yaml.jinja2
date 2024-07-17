@@ -17,6 +17,7 @@ context:
 {% endif %}
     extra_options: ["-no-reboot", "{{ '", "'.join(extra_options) }}"]
     no_kvm: {{ no_kvm|lower }}
+    no_network: {{ no_network|lower }}
 
 {%- set deploy_timeout = timeouts.deploy|default(5) %}
 {%- set boot_timeout = timeouts.boot|default(15) %}
