@@ -1,5 +1,5 @@
 export PROJECT := tuxlava
-check: spellcheck stylecheck
+check: spellcheck stylecheck test
 
 include $(shell tuxpkg get-makefile)
 

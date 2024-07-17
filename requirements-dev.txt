@@ -3,3 +3,6 @@ codespell
 flake8
 flake8-coding
 tuxpkg
+pytest
+pytest-cov
+pytest-mock
