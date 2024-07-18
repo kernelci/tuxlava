@@ -34,6 +34,7 @@ class FastbootDevice(Device):
     bios: str = ""
     kernel: str = ""
     rootfs: str = ""
+    ramdisk: str = ""
 
     test_character_delay: int = 0
 
@@ -158,6 +159,7 @@ class FastbootE850_96(FastbootDevice):
 
     arch = "arm64"
     lava_arch = "arm64"
+    real_device = True
 
     kernel = "https://storage.tuxboot.com/buildroot/arm64/Image"
     rootfs = "https://storage.tuxboot.com/buildroot/arm64/rootfs.tar.zst"
@@ -168,6 +170,7 @@ class FastbootDragonboard_410c(FastbootDevice):
 
     arch = "arm64"
     lava_arch = "arm64"
+    real_device = True
 
     kernel = "https://storage.tuxboot.com/buildroot/arm64/Image"
     rootfs = "https://storage.tuxboot.com/buildroot/arm64/rootfs.tar.zst"
@@ -178,6 +181,7 @@ class FastbootDragonboard_845c(FastbootDevice):
 
     arch = "arm64"
     lava_arch = "arm64"
+    real_device = True
 
     kernel = "https://storage.tuxboot.com/buildroot/arm64/Image"
     rootfs = "https://storage.tuxboot.com/buildroot/arm64/rootfs.tar.zst"
@@ -190,6 +194,7 @@ class FastbootX15(FastbootDevice):
 
     arch = "arm64"
     lava_arch = "arm64"
+    real_device = True
 
     kernel = "https://storage.tuxboot.com/buildroot/arm64/Image"
     rootfs = "https://storage.tuxboot.com/buildroot/arm64/rootfs.tar.zst"

@@ -13,7 +13,6 @@ import sys
 from tuxlava import __version__
 from tuxlava.devices import Device
 from tuxlava.tests import Test
-from tuxlava.tuxmake import TuxBuildBuild, TuxMakeBuild
 from tuxlava.utils import pathurlnone
 
 
@@ -52,20 +51,6 @@ def filter_artefacts(options):
         "uefi",
     ]
     return {k: getattr(options, k) for k in vars(options) if k in keys}
-
-
-def tuxbuild_url(s):
-    try:
-        return TuxBuildBuild(s.rstrip("/"))
-    except TuxBuildBuild.Invalid as e:
-        raise argparse.ArgumentTypeError(str(e))
-
-
-def tuxmake_directory(s):
-    try:
-        return TuxMakeBuild(s)
-    except TuxMakeBuild.Invalid as e:
-        raise argparse.ArgumentTypeError(str(e))
 
 
 ###########
@@ -212,14 +197,14 @@ def setup_parser() -> argparse.ArgumentParser:
         "--tuxbuild",
         metavar="URL",
         default=None,
-        type=tuxbuild_url,
+        type=str,
         help="URL of a TuxBuild build",
     )
     group.add_argument(
         "--tuxmake",
         metavar="DIRECTORY",
         default=None,
-        type=tuxmake_directory,
+        type=str,
         help="directory containing a TuxMake build",
     )
     artefact("uefi")

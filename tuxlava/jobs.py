@@ -10,12 +10,28 @@
 import shlex
 
 from typing import Dict, List
+from tuxlava.exceptions import InvalidArgument
 from tuxlava.devices import Device
 from tuxlava.tests import Test
+from tuxlava.tuxmake import TuxBuildBuild, TuxMakeBuild
 from tuxlava.utils import pathurlnone
 
 
 TEST_DEFINITIONS = "https://storage.tuxboot.com/test-definitions/2024.06.tar.zst"
+
+
+def tuxbuild_url(s):
+    try:
+        return TuxBuildBuild(s.rstrip("/"))
+    except TuxBuildBuild.Invalid as e:
+        raise InvalidArgument(str(e))
+
+
+def tuxmake_directory(s):
+    try:
+        return TuxMakeBuild(s)
+    except TuxMakeBuild.Invalid as e:
+        raise InvalidArgument(str(e))
 
 
 class Job:
@@ -53,6 +69,8 @@ class Job:
         overlays: List[str] = None,
         parameters: Dict[str, str] = None,
         deploy_os: str = None,
+        tuxbuild: str = None,
+        tuxmake: str = None,
     ) -> None:
         self.device = device
         self.bios = bios
@@ -85,6 +103,8 @@ class Job:
         self.overlays = overlays if overlays else []
         self.parameters = parameters
         self.deploy_os = deploy_os
+        self.tuxbuild = tuxbuild
+        self.tuxmake = tuxmake
 
     def __str__(self) -> str:
         tests = "_".join(self.tests) if self.tests else "boot"
@@ -103,13 +123,26 @@ class Job:
         if any(t.need_test_definition for t in self.tests):
             test_definitions = pathurlnone(TEST_DEFINITIONS)
 
-        if self.parameters:
-            if self.modules:
-                modules_path = self.parameters.get("MODULES_PATH", "/")
-                self.modules = [self.modules, modules_path]
-            self.deploy_os = self.parameters.get("DEPLOY_OS", self.deploy_os)
+        if self.tuxbuild or self.tuxmake:
+            tux = tuxbuild_url(self.tuxbuild) or tuxmake_directory(self.tuxmake)
+            self.kernel = self.kernel or tux.kernel
+            self.modules = self.modules or tux.modules
+            self.device = self.device or f"qemu-{tux.target_arch}"
+            if self.device == "qemu-armv5":
+                self.dtb = tux.url + "/dtbs/versatile-pb.dtb"
+            if self.parameters:
+                if self.modules:
+                    module, path = self.modules
+                    modules_path = self.parameters.get("MODULES_PATH", path)
+                    self.modules = [module, modules_path]
 
-        if isinstance(self.modules, list):
+                for k in self.parameters:
+                    if isinstance(self.parameters[k], str):
+                        self.parameters[k] = self.parameters[k].replace(
+                            "$BUILD/", tux.url + "/"
+                        )
+
+        if self.modules and not hasattr(self.device, "real_device"):
             overlays.append(("modules", self.modules[0], self.modules[1]))
 
         for index, item in enumerate(self.overlays):
