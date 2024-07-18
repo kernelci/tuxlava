@@ -65,6 +65,7 @@ class Job:
         ssh_prompt: str = None,
         ssh_port: int = 22,
         ssh_user: str = None,
+        ssh_identity_file: str = None,
         tests: List[str] = None,
         timeouts: Dict[str, int] = None,
         tux_prompt: str = None,
@@ -103,6 +104,7 @@ class Job:
         self.ssh_prompt = ssh_prompt
         self.ssh_port = ssh_port
         self.ssh_user = ssh_user
+        self.ssh_identity_file = ssh_identity_file
         self.tests = tests
         self.timeouts = timeouts
         self.tux_prompt = tux_prompt
@@ -192,6 +194,7 @@ class Job:
             "ssh_prompt": self.ssh_prompt,
             "ssh_port": self.ssh_port,
             "ssh_user": self.ssh_user,
+            "ssh_identity_file": self.ssh_identity_file,
             "tests": self.tests,
             "test_definitions": test_definitions,
             "tests_timeout": sum(t.timeout for t in self.tests),

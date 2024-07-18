@@ -65,6 +65,7 @@ def main() -> int:
             ssh_prompt=options.ssh_prompt,
             ssh_port=options.ssh_port,
             ssh_user=options.ssh_user,
+            ssh_identity_file=options.ssh_identity_file,
             tests=options.tests,
             timeouts=options.timeouts,
             uefi=options.uefi,
