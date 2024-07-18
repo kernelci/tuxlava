@@ -8,7 +8,9 @@
 # SPDX-License-Identifier: MIT
 
 import shlex
+import tempfile
 
+from pathlib import Path
 from typing import Dict, List
 from tuxlava.exceptions import InvalidArgument
 from tuxlava.devices import Device
@@ -150,6 +152,9 @@ class Job:
 
         commands = " ".join([shlex.quote(s) for s in self.commands])
 
+        # Create the temp directory
+        tmpdir = Path(tempfile.mkdtemp(prefix="tuxlava-"))
+
         def_arguments = {
             "bios": self.bios,
             "bl1": self.bl1,
@@ -177,6 +182,7 @@ class Job:
             "test_definitions": test_definitions,
             "tests_timeout": sum(t.timeout for t in self.tests),
             "timeouts": self.timeouts,
+            "tmpdir": tmpdir,
             "tux_boot_args": (
                 " ".join(shlex.split(self.boot_args)) if self.boot_args else None
             ),
