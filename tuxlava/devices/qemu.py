@@ -50,7 +50,7 @@ class QemuDevice(Device):
         modules,
         overlays,
         parameters,
-        partition,
+        rootfs_partition,
         prompt,
         rootfs,
         enable_kvm,

@@ -127,18 +127,12 @@ class Job:
         # Render the job definition
         overlays = []
 
-        self.device = Device.select(self.device)()
-        self.tests = [Test.select(t)(self.timeouts.get(t)) for t in self.tests]
-        self.device.validate(**filter_options(self))
-        self.device.default(self)
-
-        # get test definitions url, when required
-        test_definitions = None
-        if any(t.need_test_definition for t in self.tests):
-            test_definitions = pathurlnone(TEST_DEFINITIONS)
-
         if self.tuxbuild or self.tuxmake:
-            tux = tuxbuild_url(self.tuxbuild) or tuxmake_directory(self.tuxmake)
+            tux = (
+                tuxbuild_url(self.tuxbuild)
+                if self.tuxbuild
+                else tuxmake_directory(self.tuxmake)
+            )
             self.kernel = self.kernel or tux.kernel
             self.modules = self.modules or tux.modules
             self.device = self.device or f"qemu-{tux.target_arch}"
@@ -155,6 +149,16 @@ class Job:
                         self.parameters[k] = self.parameters[k].replace(
                             "$BUILD/", tux.url + "/"
                         )
+
+        self.device = Device.select(self.device)()
+        self.tests = [Test.select(t)(self.timeouts.get(t)) for t in self.tests]
+        self.device.validate(**filter_options(self))
+        self.device.default(self)
+
+        # get test definitions url, when required
+        test_definitions = None
+        if any(t.need_test_definition for t in self.tests):
+            test_definitions = pathurlnone(TEST_DEFINITIONS)
 
         if self.modules and not hasattr(self.device, "real_device"):
             overlays.append(("modules", self.modules[0], self.modules[1]))
