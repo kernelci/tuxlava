@@ -59,9 +59,10 @@ actions:
 {% endif %}
 {% if modules %}
       modules:
-        url: "{{ modules }}"
-{% if compression(modules)[1] is not none %}
-        compression: {{ compression(modules)[1] }}
+        url: "{{ modules[0] }}"
+        path: {{ modules[1] }}
+{% if compression(modules[0])[1] is not none %}
+        compression: {{ compression(modules[0])[1] }}
 {% endif %}
 {% endif %}
 {% if device.name == 'fastboot-x15' or device.name == 'fastboot-e850-96' %}

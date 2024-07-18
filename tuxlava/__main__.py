@@ -28,25 +28,6 @@ def main() -> int:
     LOG.addHandler(handler)
     LOG.setLevel(logging.DEBUG if options.debug else logging.INFO)
 
-    if options.tuxbuild or options.tuxmake:
-        tux = options.tuxbuild or options.tuxmake
-        options.kernel = options.kernel or tux.kernel
-        options.modules = options.modules or tux.modules
-        options.device = options.device or f"qemu-{tux.target_arch}"
-        if options.device == "qemu-armv5":
-            options.dtb = tux.url + "/dtbs/versatile-pb.dtb"
-        if options.parameters:
-            if options.modules:
-                module, path = options.modules
-                modules_path = options.parameters.get("MODULES_PATH", path)
-                options.modules = [module, modules_path]
-
-            for k in options.parameters:
-                if isinstance(options.parameters[k], str):
-                    options.parameters[k] = options.parameters[k].replace(
-                        "$BUILD/", tux.url + "/"
-                    )
-
     if not options.device:
         parser.error("argument --device is required")
 
@@ -85,10 +66,12 @@ def main() -> int:
             uefi=options.uefi,
             boot_args=options.boot_args,
             secrets=options.secrets,
-            modules=options.modules[0] if options.modules else None,
+            modules=options.modules,
             overlays=options.overlays,
             parameters=options.parameters,
             deploy_os=options.deploy_os,
+            tuxbuild=options.tuxbuild,
+            tuxmake=options.tuxmake,
         )
         sys.stdout.write(job.render())
     except Exception as exc:
