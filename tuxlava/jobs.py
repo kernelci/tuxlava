@@ -12,6 +12,7 @@ import tempfile
 
 from pathlib import Path
 from typing import Dict, List
+from tuxlava.argparse import filter_options
 from tuxlava.exceptions import InvalidArgument
 from tuxlava.devices import Device
 from tuxlava.tests import Test
@@ -77,6 +78,7 @@ class Job:
         deploy_os: str = None,
         tuxbuild: str = None,
         tuxmake: str = None,
+        job_definition: str = None,
     ) -> None:
         self.device = device
         self.bios = bios
@@ -115,6 +117,7 @@ class Job:
         self.deploy_os = deploy_os
         self.tuxbuild = tuxbuild
         self.tuxmake = tuxmake
+        self.job_definition = job_definition
 
     def __str__(self) -> str:
         tests = "_".join(self.tests) if self.tests else "boot"
@@ -126,6 +129,7 @@ class Job:
 
         self.device = Device.select(self.device)()
         self.tests = [Test.select(t)(self.timeouts.get(t)) for t in self.tests]
+        self.device.validate(**filter_options(self))
         self.device.default(self)
 
         # get test definitions url, when required
