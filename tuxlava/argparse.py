@@ -28,6 +28,7 @@ def filter_options(options):
         "shell",
         "debug",
         "lava_definition",
+        "deploy_os",
     ]
     return {k: getattr(options, k) for k in vars(options) if k not in keys}
 

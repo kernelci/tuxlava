@@ -67,7 +67,6 @@ class Job:
         ssh_user: str = None,
         tests: List[str] = None,
         timeouts: Dict[str, int] = None,
-        tux_boot_args: str = None,
         tux_prompt: str = None,
         uefi: str = None,
         boot_args: str = None,
@@ -106,7 +105,6 @@ class Job:
         self.ssh_user = ssh_user
         self.tests = tests
         self.timeouts = timeouts
-        self.tux_boot_args = " ".join(shlex.split(boot_args)) if boot_args else None
         self.tux_prompt = tux_prompt
         self.uefi = uefi
         self.boot_args = boot_args

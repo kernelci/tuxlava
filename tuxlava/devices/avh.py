@@ -42,7 +42,7 @@ class AvhDevice(Device):
         modules,
         overlays,
         parameters,
-        partition,
+        rootfs_partition,
         prompt,
         tests,
         commands,
