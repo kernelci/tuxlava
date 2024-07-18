@@ -56,6 +56,8 @@ def main() -> int:
             fip=options.fip,
             enable_kvm=options.enable_kvm,
             enable_network=options.enable_network,
+            qemu_image=options.qemu_image,
+            qemu_binary=options.qemu_binary,
             prompt=options.prompt,
             ramdisk=options.ramdisk,
             rootfs=options.rootfs,

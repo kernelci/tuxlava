@@ -46,6 +46,7 @@ class Job:
         bl1: str = None,
         commands: List[str] = None,
         qemu_image: str = None,
+        qemu_binary: str = None,
         dtb: str = None,
         kernel: str = None,
         ap_romfw: str = None,
@@ -85,6 +86,7 @@ class Job:
         self.bl1 = bl1
         self.commands = commands
         self.qemu_image = qemu_image
+        self.qemu_binary = qemu_binary
         self.dtb = dtb
         self.kernel = kernel
         self.ap_romfw = ap_romfw
@@ -176,7 +178,8 @@ class Job:
             "bl1": self.bl1,
             "commands": commands,
             "device": self.device,
-            "qemu_image": False,
+            "qemu_image": self.qemu_image,
+            "qemu_binary": self.qemu_binary,
             "dtb": self.dtb,
             "kernel": self.kernel,
             "ap_romfw": self.ap_romfw,

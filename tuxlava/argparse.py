@@ -10,6 +10,7 @@
 import argparse
 import sys
 
+from pathlib import Path
 from tuxlava import __version__
 from tuxlava.devices import Device
 from tuxlava.tests import Test
@@ -25,6 +26,8 @@ def filter_options(options):
         "tuxbuild",
         "tuxmake",
         "timeouts",
+        "qemu_image",
+        "qemu_binary",
         "shell",
         "debug",
         "lava_definition",
@@ -322,6 +325,19 @@ def setup_parser() -> argparse.ArgumentParser:
         default=False,
         action="store_true",
         help="Enable network",
+    )
+
+    group = parser.add_argument_group("runtime")
+    group.add_argument(
+        "--qemu-image", default=None, help="Use qemu from the given container i\
+mage"
+    )
+
+    group.add_argument(
+        "--qemu-binary",
+        default=None,
+        type=Path,
+        help="Use qemu from the given path",
     )
 
     group = parser.add_argument_group("output")
