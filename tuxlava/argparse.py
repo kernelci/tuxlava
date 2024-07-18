@@ -194,6 +194,34 @@ def setup_parser() -> argparse.ArgumentParser:
     artefact("scp-fw")
     artefact("scp-romfw")
     group.add_argument(
+        "--ssh-host",
+        default=None,
+        metavar="HOST ADDR",
+        type=str,
+        help="ssh host address, applicable to ssh-device",
+    )
+    group.add_argument(
+        "--ssh-port",
+        default=None,
+        metavar="NUMBER",
+        type=int,
+        help="ssh port number. Defaults to 22, applicable to ssh-device",
+    )
+    group.add_argument(
+        "--ssh-prompt",
+        default=None,
+        metavar="STRING",
+        type=str,
+        help="ssh prompt to expect, applicable to ssh-device",
+    )
+    group.add_argument(
+        "--ssh-user",
+        default=None,
+        metavar="USERNAME",
+        type=str,
+        help="ssh username, applicable to ssh-device",
+    )
+    group.add_argument(
         "--tuxbuild",
         metavar="URL",
         default=None,

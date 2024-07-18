@@ -9,7 +9,7 @@
 from tuxlava import templates
 from tuxlava.devices import Device
 from tuxlava.exceptions import InvalidArgument
-from tuxlava.utils import notnone
+from tuxlava.utils import notnone, slugify
 
 
 class SSHDevice(Device):
@@ -18,6 +18,7 @@ class SSHDevice(Device):
 
     def validate(
         self,
+        commands,
         tests,
         parameters,
         overlays,
@@ -47,10 +48,16 @@ class SSHDevice(Device):
         else:
             kwargs["ssh_prompt"] = []
 
+        kwargs["command_name"] = slugify(
+            kwargs.get("parameters").get("command-name", "command")
+        )
+
         # render the template
         tests = [
             t.render(
                 arch="arm64",
+                commands=kwargs["commands"],
+                command_name=kwargs["command_name"],
                 device=kwargs["device"],
                 tmpdir=kwargs["tmpdir"],
                 ssh_prompt=kwargs["ssh_prompt"],

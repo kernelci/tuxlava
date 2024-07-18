@@ -60,6 +60,10 @@ class Job:
         shared: bool = False,
         scp_fw: str = None,
         scp_romfw: str = None,
+        ssh_host: str = None,
+        ssh_prompt: str = None,
+        ssh_port: int = 22,
+        ssh_user: str = None,
         tests: List[str] = None,
         timeouts: Dict[str, int] = None,
         tux_boot_args: str = None,
@@ -94,6 +98,10 @@ class Job:
         self.shared = shared
         self.scp_fw = scp_fw
         self.scp_romfw = scp_romfw
+        self.ssh_host = ssh_host
+        self.ssh_prompt = ssh_prompt
+        self.ssh_port = ssh_port
+        self.ssh_user = ssh_user
         self.tests = tests
         self.timeouts = timeouts
         self.tux_boot_args = " ".join(shlex.split(boot_args)) if boot_args else None
@@ -178,6 +186,10 @@ class Job:
             "shared": False,
             "scp_fw": self.scp_fw,
             "scp_romfw": self.scp_romfw,
+            "ssh_host": self.ssh_host,
+            "ssh_prompt": self.ssh_prompt,
+            "ssh_port": self.ssh_port,
+            "ssh_user": self.ssh_user,
             "tests": self.tests,
             "test_definitions": test_definitions,
             "tests_timeout": sum(t.timeout for t in self.tests),
