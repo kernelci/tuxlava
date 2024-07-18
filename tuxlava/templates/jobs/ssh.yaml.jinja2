@@ -5,7 +5,7 @@ job_name: "tuxlava@{{ device.name }}: {{ tests|map(attribute="name")|join(", ")}
 {% else %}
 job_name: "tuxlava@{{ device.name }}: boot"
 {% endif %}
-priority: "medium"
+priority: {{ lava_job_priority }}
 visibility: "public"
 {%- set boot_timeout = timeouts.boot|default(3) %}
 
