@@ -52,6 +52,14 @@ class SSHDevice(Device):
             kwargs.get("parameters").get("command-name", "command")
         )
 
+        tmp_ljp = kwargs.get("parameters").get("lava_job_priority") or 50
+        if "lava_job_priority" in kwargs.get("parameters").keys():
+            if int(tmp_ljp) > 100 or int(tmp_ljp) <= 0:
+                raise InvalidArgument(
+                    "argument --parameters lava_job_priority must be a value between 1-100"
+                )
+        kwargs["lava_job_priority"] = tmp_ljp
+
         # render the template
         tests = [
             t.render(

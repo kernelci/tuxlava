@@ -46,6 +46,7 @@ class Job:
         bl1: str = None,
         commands: List[str] = None,
         qemu_image: str = None,
+        qemu_binary: str = None,
         dtb: str = None,
         kernel: str = None,
         ap_romfw: str = None,
@@ -65,6 +66,7 @@ class Job:
         ssh_prompt: str = None,
         ssh_port: int = 22,
         ssh_user: str = None,
+        ssh_identity_file: str = None,
         tests: List[str] = None,
         timeouts: Dict[str, int] = None,
         tux_prompt: str = None,
@@ -84,6 +86,7 @@ class Job:
         self.bl1 = bl1
         self.commands = commands
         self.qemu_image = qemu_image
+        self.qemu_binary = qemu_binary
         self.dtb = dtb
         self.kernel = kernel
         self.ap_romfw = ap_romfw
@@ -103,6 +106,7 @@ class Job:
         self.ssh_prompt = ssh_prompt
         self.ssh_port = ssh_port
         self.ssh_user = ssh_user
+        self.ssh_identity_file = ssh_identity_file
         self.tests = tests
         self.timeouts = timeouts
         self.tux_prompt = tux_prompt
@@ -125,18 +129,12 @@ class Job:
         # Render the job definition
         overlays = []
 
-        self.device = Device.select(self.device)()
-        self.tests = [Test.select(t)(self.timeouts.get(t)) for t in self.tests]
-        self.device.validate(**filter_options(self))
-        self.device.default(self)
-
-        # get test definitions url, when required
-        test_definitions = None
-        if any(t.need_test_definition for t in self.tests):
-            test_definitions = pathurlnone(TEST_DEFINITIONS)
-
         if self.tuxbuild or self.tuxmake:
-            tux = tuxbuild_url(self.tuxbuild) or tuxmake_directory(self.tuxmake)
+            tux = (
+                tuxbuild_url(self.tuxbuild)
+                if self.tuxbuild
+                else tuxmake_directory(self.tuxmake)
+            )
             self.kernel = self.kernel or tux.kernel
             self.modules = self.modules or tux.modules
             self.device = self.device or f"qemu-{tux.target_arch}"
@@ -154,6 +152,16 @@ class Job:
                             "$BUILD/", tux.url + "/"
                         )
 
+        self.device = Device.select(self.device)()
+        self.tests = [Test.select(t)(self.timeouts.get(t)) for t in self.tests]
+        self.device.validate(**filter_options(self))
+        self.device.default(self)
+
+        # get test definitions url, when required
+        test_definitions = None
+        if any(t.need_test_definition for t in self.tests):
+            test_definitions = pathurlnone(TEST_DEFINITIONS)
+
         if self.modules and not hasattr(self.device, "real_device"):
             overlays.append(("modules", self.modules[0], self.modules[1]))
 
@@ -170,7 +178,8 @@ class Job:
             "bl1": self.bl1,
             "commands": commands,
             "device": self.device,
-            "qemu_image": False,
+            "qemu_image": self.qemu_image,
+            "qemu_binary": self.qemu_binary,
             "dtb": self.dtb,
             "kernel": self.kernel,
             "ap_romfw": self.ap_romfw,
@@ -192,6 +201,7 @@ class Job:
             "ssh_prompt": self.ssh_prompt,
             "ssh_port": self.ssh_port,
             "ssh_user": self.ssh_user,
+            "ssh_identity_file": self.ssh_identity_file,
             "tests": self.tests,
             "test_definitions": test_definitions,
             "tests_timeout": sum(t.timeout for t in self.tests),

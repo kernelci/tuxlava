@@ -29,7 +29,8 @@ def main() -> int:
     LOG.setLevel(logging.DEBUG if options.debug else logging.INFO)
 
     if not options.device:
-        parser.error("argument --device is required")
+        if not (options.tuxmake or options.tuxbuild):
+            parser.error("argument --device is required")
 
     if options.commands:
         options.tests.append("commands")
@@ -55,6 +56,8 @@ def main() -> int:
             fip=options.fip,
             enable_kvm=options.enable_kvm,
             enable_network=options.enable_network,
+            qemu_image=options.qemu_image,
+            qemu_binary=options.qemu_binary,
             prompt=options.prompt,
             ramdisk=options.ramdisk,
             rootfs=options.rootfs,
@@ -65,6 +68,7 @@ def main() -> int:
             ssh_prompt=options.ssh_prompt,
             ssh_port=options.ssh_port,
             ssh_user=options.ssh_user,
+            ssh_identity_file=options.ssh_identity_file,
             tests=options.tests,
             timeouts=options.timeouts,
             uefi=options.uefi,
