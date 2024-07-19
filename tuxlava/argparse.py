@@ -329,8 +329,9 @@ def setup_parser() -> argparse.ArgumentParser:
 
     group = parser.add_argument_group("runtime")
     group.add_argument(
-        "--qemu-image", default=None, help="Use qemu from the given container i\
-mage"
+        "--qemu-image",
+        default=None,
+        help="Use qemu from the given container image",
     )
 
     group.add_argument(
