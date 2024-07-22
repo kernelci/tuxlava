@@ -1,5 +1,5 @@
 export PROJECT := tuxlava
-export TUXPKG_MIN_COVERAGE := 74
+export TUXPKG_MIN_COVERAGE := 90
 check: spellcheck stylecheck test
 
 include $(shell tuxpkg get-makefile)
