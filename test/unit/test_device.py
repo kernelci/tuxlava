@@ -2027,6 +2027,303 @@ def artefacts(tmp_path):
             ],
             "avh-imx93-multiple-tests.yaml",
         ),
+        (
+            [
+                "--device",
+                "nfs-x86_64",
+                "--kernel",
+                "https://example.com/Image.gz",
+                "--modules",
+                "https://example.com/modules.tar.xz",
+                "/usr/",
+                "--rootfs",
+                "https://example.com/rootfs.tar.xz",
+                "--overlay",
+                "https://example.com/ltp.tar.xz",
+            ],
+            "nfs-x86-64-module-path.yaml",
+        ),
+        (
+            [
+                "--device",
+                "nfs-x86_64",
+                "--kernel",
+                "https://example.com/Image.gz",
+                "--modules",
+                "https://example.com/modules.tar.xz",
+                "/usr/",
+                "--rootfs",
+                "https://example.com/rootfs.tar.xz",
+                "--overlay",
+                "https://example.com/ltp.tar.xz",
+                "--tests",
+                "ltp-smoke",
+                "ltp-io",
+                "ltp-math",
+                "perf",
+                "kselftest-x86",
+                "kunit",
+            ],
+            "nfs-x86-64-multiple-tests.yaml",
+        ),
+        (
+            [
+                "--device",
+                "nfs-i386",
+                "--kernel",
+                "https://example.com/Image.gz",
+                "--modules",
+                "https://example.com/modules.tar.xz",
+                "/usr/",
+                "--rootfs",
+                "https://example.com/rootfs.tar.xz",
+                "--overlay",
+                "https://example.com/ltp.tar.xz",
+            ],
+            "nfs-i386-module-path.yaml",
+        ),
+        (
+            [
+                "--device",
+                "nfs-i386",
+                "--kernel",
+                "https://example.com/Image.gz",
+                "--modules",
+                "https://example.com/modules.tar.xz",
+                "/usr/",
+                "--rootfs",
+                "https://example.com/rootfs.tar.xz",
+                "--overlay",
+                "https://example.com/ltp.tar.xz",
+                "--tests",
+                "ltp-smoke",
+                "ltp-io",
+                "ltp-math",
+                "perf",
+                "kselftest-x86",
+                "kunit",
+            ],
+            "nfs-i386-multiple-tests.yaml",
+        ),
+        (
+            [
+                "--device",
+                "nfs-bcm2711-rpi-4-b",
+                "--kernel",
+                "https://example.com/Image.gz",
+                "--modules",
+                "https://example.com/modules.tar.xz",
+                "/usr/",
+                "--rootfs",
+                "https://example.com/rootfs.tar.xz",
+                "--overlay",
+                "https://example.com/ltp.tar.xz",
+            ],
+            "nfs-bcm2711-rpi-4-b-module-path.yaml",
+        ),
+        (
+            [
+                "--device",
+                "nfs-bcm2711-rpi-4-b",
+                "--kernel",
+                "https://example.com/Image.gz",
+                "--modules",
+                "https://example.com/modules.tar.xz",
+                "/usr/",
+                "--rootfs",
+                "https://example.com/rootfs.tar.xz",
+                "--overlay",
+                "https://example.com/ltp.tar.xz",
+                "--tests",
+                "ltp-smoke",
+                "ltp-io",
+                "ltp-math",
+                "perf",
+                "kselftest-arm64",
+                "kunit",
+            ],
+            "nfs-bcm2711-rpi-4-b-multiple-tests.yaml",
+        ),
+        (
+            [
+                "--device",
+                "nfs-juno-r2",
+                "--kernel",
+                "https://example.com/Image.gz",
+                "--modules",
+                "https://example.com/modules.tar.xz",
+                "/usr/",
+                "--rootfs",
+                "https://example.com/rootfs.tar.xz",
+                "--overlay",
+                "https://example.com/ltp.tar.xz",
+            ],
+            "nfs-juno-r2-module-path.yaml",
+        ),
+        (
+            [
+                "--device",
+                "nfs-juno-r2",
+                "--kernel",
+                "https://example.com/Image.gz",
+                "--modules",
+                "https://example.com/modules.tar.xz",
+                "/usr/",
+                "--rootfs",
+                "https://example.com/rootfs.tar.xz",
+                "--overlay",
+                "https://example.com/ltp.tar.xz",
+                "--tests",
+                "ltp-smoke",
+                "ltp-io",
+                "ltp-math",
+                "perf",
+                "kselftest-arm64",
+                "kunit",
+            ],
+            "nfs-juno-r2-multiple-tests.yaml",
+        ),
+        (
+            [
+                "--device",
+                "fastboot-e850-96",
+                "--kernel",
+                "https://example.com/Image.gz",
+                "--modules",
+                "https://example.com/modules.tar.xz",
+                "/usr/",
+                "--rootfs",
+                "https://example.com/rootfs.tar.xz",
+                "--dtb",
+                "https://example.com/dtbs/exynos/exynos850-e850-96.dtb",
+                "--overlay",
+                "https://example.com/ltp.tar.xz",
+                "--deploy-os",
+                "debian",
+            ],
+            "fastboot-e850-96-module-path.yaml",
+        ),
+        (
+            [
+                "--device",
+                "fastboot-e850-96",
+                "--kernel",
+                "https://example.com/Image.gz",
+                "--modules",
+                "https://example.com/modules.tar.xz",
+                "/usr/",
+                "--rootfs",
+                "https://example.com/rootfs.tar.xz",
+                "--dtb",
+                "https://example.com/dtbs/exynos/exynos850-e850-96.dtb",
+                "--overlay",
+                "https://example.com/ltp.tar.xz",
+                "--deploy-os",
+                "debian",
+                "--tests",
+                "ltp-smoke",
+                "ltp-io",
+                "ltp-math",
+                "perf",
+                "kselftest-arm64",
+                "kunit",
+            ],
+            "fastboot-e850-96-multiple-tests.yaml",
+        ),
+        (
+            [
+                "--device",
+                "fastboot-dragonboard-410c",
+                "--kernel",
+                "https://example.com/Image.gz",
+                "--modules",
+                "https://example.com/modules.tar.xz",
+                "/usr/",
+                "--rootfs",
+                "https://example.com/rootfs.tar.xz",
+                "--dtb",
+                "https://example.com/dtbs/qcom/apq8016-sbc.dtb",
+                "--overlay",
+                "https://example.com/ltp.tar.xz",
+                "--deploy-os",
+                "debian",
+            ],
+            "fastboot-dragonboard-410c-module-path.yaml",
+        ),
+        (
+            [
+                "--device",
+                "fastboot-dragonboard-410c",
+                "--kernel",
+                "https://example.com/Image.gz",
+                "--modules",
+                "https://example.com/modules.tar.xz",
+                "/usr/",
+                "--rootfs",
+                "https://example.com/rootfs.tar.xz",
+                "--dtb",
+                "https://example.com/dtbs/qcom/apq8016-sbc.dtb",
+                "--overlay",
+                "https://example.com/ltp.tar.xz",
+                "--deploy-os",
+                "debian",
+                "--tests",
+                "ltp-smoke",
+                "ltp-io",
+                "ltp-math",
+                "perf",
+                "kselftest-arm64",
+                "kunit",
+            ],
+            "fastboot-dragonboard-410c-multiple-tests.yaml",
+        ),
+        (
+            [
+                "--device",
+                "fastboot-dragonboard-845c",
+                "--kernel",
+                "https://example.com/Image.gz",
+                "--modules",
+                "https://example.com/modules.tar.xz",
+                "/usr/",
+                "--rootfs",
+                "https://example.com/rootfs.tar.xz",
+                "--dtb",
+                "https://example.com/dtbs/qcom/sdm845-db845c.dtb",
+                "--overlay",
+                "https://example.com/ltp.tar.xz",
+                "--deploy-os",
+                "debian",
+            ],
+            "fastboot-dragonboard-845c-module-path.yaml",
+        ),
+        (
+            [
+                "--device",
+                "fastboot-dragonboard-845c",
+                "--kernel",
+                "https://example.com/Image.gz",
+                "--modules",
+                "https://example.com/modules.tar.xz",
+                "/usr/",
+                "--rootfs",
+                "https://example.com/rootfs.tar.xz",
+                "--dtb",
+                "https://example.com/dtbs/qcom/sdm845-db845c.dtb",
+                "--overlay",
+                "https://example.com/ltp.tar.xz",
+                "--deploy-os",
+                "debian",
+                "--tests",
+                "ltp-smoke",
+                "ltp-io",
+                "ltp-math",
+                "perf",
+                "kselftest-arm64",
+                "kunit",
+            ],
+            "fastboot-dragonboard-845c-multiple-tests.yaml",
+        ),
     ],
 )
 def test_definition(monkeypatch, mocker, capsys, tmpdir, artefacts, args, filename):
@@ -2034,17 +2331,6 @@ def test_definition(monkeypatch, mocker, capsys, tmpdir, artefacts, args, filena
     mocker.patch("tempfile.mkdtemp", return_value=tmpdir)
     main()
     output, error = capsys.readouterr()
-    # print(output)
-    # mocker.patch("tuxlava.__main__.Runtime.select", side_effect=Exception)
-    # mocker.patch("tuxlava.assets.__download_and_cache__", side_effect=lambda a, b: a)
-    # mocker.patch(
-    #     "tuxlava.__main__.get_test_definitions", return_value="file://testdef.tar.zst"
-    # )
-    # mocker.patch("shutil.rmtree")
-
-    # with pytest.raises(Exception):
-    #     main()
-    # data = (tmpdir / "definition.yaml").read_text(encoding="utf-8")
 
     for art in ARTEFACTS:
         output = output.replace(f"file://{artefacts}/{art}", f"/DATA/{art}")
@@ -2055,53 +2341,43 @@ def test_definition(monkeypatch, mocker, capsys, tmpdir, artefacts, args, filena
         f'network_from: "{os.path.basename(tmpdir)}"', 'network_from: "tuxlava-ci"'
     )
 
-    # if os.environ.get("TUXLAVA_RENDER"):
-    #     (BASE / "refs" / "definitions" / filename).write_text(data, encoding="utf-8")
     assert output == (BASE / "refs" / "definitions" / filename).read_text(
         encoding="utf-8"
     )
 
 
-# def test_fvp_aemva_extra_assets(tmpdir):
-#     device = Device.select("fvp-aemva")()
-
-#     # 1/ default case
-#     asset = device.extra_assets(dtb=None, kernel=None, tmpdir=tmpdir, tux_boot_args="")
-#     assert len(asset) == 1
-#     assert asset[0] == f"file://{tmpdir / 'startup.nsh'}"
-#     assert (tmpdir / "startup.nsh").read_text(
-#         encoding="utf-8"
-#     ) == "Image dtb=fvp-base-revc.dtb systemd.log_level=warning console=ttyAMA0 earlycon=pl011,0x1c090000 root=/dev/vda ip=dhcp"
-
-#     # 2/ custom urls
-#     asset = device.extra_assets(
-#         dtb="file://hello/world/fdt.dtb",
-#         kernel="http://example.com/kernel",
-#         tmpdir=tmpdir,
-#         tux_boot_args="",
-#     )
-#     assert len(asset) == 1
-#     assert asset[0] == f"file://{tmpdir / 'startup.nsh'}"
-#     assert (tmpdir / "startup.nsh").read_text(
-#         encoding="utf-8"
-#     ) == "kernel dtb=fdt.dtb systemd.log_level=warning console=ttyAMA0 earlycon=pl011,0x1c090000 root=/dev/vda ip=dhcp"
-
-#     # 3/ compression
-#     asset = device.extra_assets(
-#         dtb="file://tmp/my-dtb", kernel="Image.gz", tmpdir=tmpdir, tux_boot_args=None
-#     )
-#     assert len(asset) == 1
-#     assert asset[0] == f"file://{tmpdir / 'startup.nsh'}"
-#     assert (tmpdir / "startup.nsh").read_text(
-#         encoding="utf-8"
-#     ) == "Image dtb=my-dtb systemd.log_level=warning console=ttyAMA0 earlycon=pl011,0x1c090000 root=/dev/vda ip=dhcp"
-
-#     # 4/ custom boot-args
-#     asset = device.extra_assets(
-#         dtb=None, kernel=None, tmpdir=tmpdir, tux_boot_args="debug"
-#     )
-#     assert len(asset) == 1
-#     assert asset[0] == f"file://{tmpdir / 'startup.nsh'}"
-#     assert (tmpdir / "startup.nsh").read_text(
-#         encoding="utf-8"
-#     ) == "Image dtb=fvp-base-revc.dtb systemd.log_level=warning debug console=ttyAMA0 earlycon=pl011,0x1c090000 root=/dev/vda ip=dhcp"
+@pytest.mark.parametrize(
+    "args,error_str",
+    [
+        (
+            [
+                "--device",
+                "nfs-juno-r2",
+                "--kernel",
+                "https://example.com/Image.gz",
+                "--modules",
+                "https://example.com/modules.tar.xz",
+                "/usr/",
+                "--rootfs",
+                "https://example.com/rootfs.tar.xz",
+                "--overlay",
+                "https://example.com/ltp.tar.xz",
+                "--tests",
+                "ltp-smoke",
+                "ltp-io",
+                "ltp-math",
+                "perf",
+                "kselftest-x86",
+                "kunit",
+            ],
+            "Test 'kselftest-x86' not supported on device",
+        ),
+    ],
+)
+def test_failures(monkeypatch, mocker, capsys, tmpdir, args, error_str):
+    monkeypatch.setattr("tuxlava.__main__.sys.argv", ["tuxlava"] + args)
+    mocker.patch("tempfile.mkdtemp", return_value=tmpdir)
+    with pytest.raises(Exception):
+        main()
+    output, error = capsys.readouterr()
+    assert error_str in output

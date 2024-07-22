@@ -1,0 +1,183 @@
+device_type: "dragonboard-410c"
+
+job_name: "tuxlava@fastboot-dragonboard-410c: ltp-smoke, ltp-io, ltp-math, perf, kselftest-arm64, kunit"
+priority: 50
+visibility: "public"
+
+reboot_to_fastboot: false
+context:
+    test_character_delay: 10
+timeouts:
+  job:
+    minutes: 181
+  action:
+   minutes: 5
+  actions:
+    power-off:
+      seconds: 30
+
+actions:
+- deploy:
+    to: downloads
+    timeout:
+      minutes: 25
+    os: debian
+    images:
+      kernel:
+        url: "https://example.com/Image.gz"
+        compression: gz
+        type: image
+      dtb:
+        url: "https://example.com/dtbs/qcom/apq8016-sbc.dtb"
+      modules:
+        url: "https://example.com/modules.tar.xz"
+        path: /usr/
+        compression: xz
+      rootfs:
+        url: "https://example.com/rootfs.tar.xz"
+        compression: xz
+        format: ext4
+        apply-overlay: true
+        overlays:
+          overlay-00:
+            url: "https://example.com/ltp.tar.xz"
+            path: "/"
+            format: tar
+            compression: xz
+    postprocess:
+      docker:
+        image: "linaro/kir:20240606"
+        local: true
+        steps:
+        - /kir/lava/board_setup.sh dragonboard-410c rootfs "/usr/"
+- deploy:
+    to: fastboot
+    os: debian
+    timeout:
+      minutes: 30
+    docker:
+      image: "linaro/kir:20240606"
+      local: true
+    images:
+      boot:
+        url: downloads://boot.img
+      rootfs:
+        url: downloads://rootfs.img
+        apply-overlay: true
+
+- command:
+    name: pre_os_command
+- command:
+    name: pre_power_command
+- boot:
+    docker:
+      image: "linaro/kir:master"
+    method: fastboot
+    timeout:
+      minutes: 25
+    auto_login:
+      login_prompt: 'login:'
+      username: root
+    prompts:
+    - 'root@(.*):[/~]#'
+- test:
+    timeout:
+      minutes: 2
+    definitions:
+    - repository: https://storage.tuxboot.com/test-definitions/2024.06.tar.zst
+      lava-signal: kmsg
+      from: url
+      compression: zstd
+      path: automated/linux/ltp/ltp.yaml
+      parameters:
+        SKIP_INSTALL: 'true'
+        TST_CMDFILES: 'smoketest'
+        SKIPFILE: '/tuxtest/skipfiles/arm64/ltp-smoke'
+        ENVIRONMENT: 'production'
+        LTP_TMPDIR: '/scratch'
+        LTP_INSTALL_PATH: '/opt/ltp/'
+        SHARD_NUMBER: 1
+        SHARD_INDEX: 1
+        TIMEOUT_MULTIPLIER: 5
+      name: ltp-smoke
+- test:
+    timeout:
+      minutes: 2
+    definitions:
+    - repository: https://storage.tuxboot.com/test-definitions/2024.06.tar.zst
+      lava-signal: kmsg
+      from: url
+      compression: zstd
+      path: automated/linux/ltp/ltp.yaml
+      parameters:
+        SKIP_INSTALL: 'true'
+        TST_CMDFILES: 'io'
+        SKIPFILE: '/tuxtest/skipfiles/arm64/ltp-io'
+        ENVIRONMENT: 'production'
+        LTP_TMPDIR: '/scratch'
+        LTP_INSTALL_PATH: '/opt/ltp/'
+        SHARD_NUMBER: 1
+        SHARD_INDEX: 1
+        TIMEOUT_MULTIPLIER: 5
+      name: ltp-io
+- test:
+    timeout:
+      minutes: 2
+    definitions:
+    - repository: https://storage.tuxboot.com/test-definitions/2024.06.tar.zst
+      lava-signal: kmsg
+      from: url
+      compression: zstd
+      path: automated/linux/ltp/ltp.yaml
+      parameters:
+        SKIP_INSTALL: 'true'
+        TST_CMDFILES: 'math'
+        SKIPFILE: '/tuxtest/skipfiles/arm64/ltp-math'
+        ENVIRONMENT: 'production'
+        LTP_TMPDIR: '/scratch'
+        LTP_INSTALL_PATH: '/opt/ltp/'
+        SHARD_NUMBER: 1
+        SHARD_INDEX: 1
+        TIMEOUT_MULTIPLIER: 5
+      name: ltp-math
+- test:
+    timeout:
+      minutes: 30
+    definitions:
+    - repository: https://storage.tuxboot.com/test-definitions/2024.06.tar.zst
+      lava-signal: kmsg
+      from: url
+      compression: zstd
+      path: automated/linux/perf/perf.yaml
+      parameters:
+        SKIP_INSTALL: 'true'
+      name: perf
+- test:
+    timeout:
+      minutes: 45
+    definitions:
+    - repository: https://storage.tuxboot.com/test-definitions/2024.06.tar.zst
+      lava-signal: kmsg
+      from: url
+      compression: zstd
+      path: automated/linux/kselftest/kselftest.yaml
+      parameters:
+        TST_CMDFILES: "arm64"
+        KSELFTEST_PATH: "/opt/kselftests/default-in-kernel"
+        SKIPFILE: "skipfile-lkft.yaml"
+        ENVIRONMENT: "production"
+        SHARD_NUMBER: 1
+        SHARD_INDEX: 1
+      name: kselftest-arm64
+- test:
+    timeout:
+      minutes: 20
+    definitions:
+    - repository: https://storage.tuxboot.com/test-definitions/2024.06.tar.zst
+      lava-signal: kmsg
+      from: url
+      compression: zstd
+      path: automated/linux/kunit/kunit.yaml
+      name: kunit
+      parameters:
+        KUNIT_TEST_MODULE: 'kunit-test.ko'

@@ -1,0 +1,158 @@
+device_type: "x86_64"
+
+job_name: "tuxlava@nfs-x86_64: ltp-smoke, ltp-io, ltp-math, perf, kselftest-x86, kunit"
+priority: 50
+visibility: "public"
+
+context:
+    test_character_delay: 10
+    extra_kernel_args: rootwait
+
+timeouts:
+  job:
+    minutes: 81
+  action:
+   minutes: 5
+  actions:
+    power-off:
+      seconds: 30
+
+actions:
+- deploy:
+    to: tftp
+    timeout:
+      minutes: 5
+    os: debian
+    kernel:
+      url: "https://example.com/Image.gz"
+      compression: gz
+      type: image
+    modules:
+      url: "https://example.com/modules.tar.xz"
+      path: /usr/
+      compression: xz
+    nfsrootfs:
+      url: "https://example.com/rootfs.tar.xz"
+      compression: xz
+      format: tar
+      apply-overlay: true
+      overlays:
+        overlay-00:
+          url: "https://example.com/ltp.tar.xz"
+          path: "/"
+          format: tar
+          compression: xz
+- boot:
+    method:
+      ipxe
+    commands: nfs
+    parameters:
+      shutdown-message: 'reboot: Restarting system'
+    timeout:
+      minutes: 15
+    auto_login:
+      login_prompt: 'login:'
+      username: root
+    prompts:
+    - 'root@(.*):[/~]#'
+- test:
+    timeout:
+      minutes: 2
+    definitions:
+    - repository: https://storage.tuxboot.com/test-definitions/2024.06.tar.zst
+      lava-signal: kmsg
+      from: url
+      compression: zstd
+      path: automated/linux/ltp/ltp.yaml
+      parameters:
+        SKIP_INSTALL: 'true'
+        TST_CMDFILES: 'smoketest'
+        SKIPFILE: '/tuxtest/skipfiles/x86_64/ltp-smoke'
+        ENVIRONMENT: 'production'
+        LTP_TMPDIR: '/scratch'
+        LTP_INSTALL_PATH: '/opt/ltp/'
+        SHARD_NUMBER: 1
+        SHARD_INDEX: 1
+        TIMEOUT_MULTIPLIER: 5
+      name: ltp-smoke
+- test:
+    timeout:
+      minutes: 2
+    definitions:
+    - repository: https://storage.tuxboot.com/test-definitions/2024.06.tar.zst
+      lava-signal: kmsg
+      from: url
+      compression: zstd
+      path: automated/linux/ltp/ltp.yaml
+      parameters:
+        SKIP_INSTALL: 'true'
+        TST_CMDFILES: 'io'
+        SKIPFILE: '/tuxtest/skipfiles/x86_64/ltp-io'
+        ENVIRONMENT: 'production'
+        LTP_TMPDIR: '/scratch'
+        LTP_INSTALL_PATH: '/opt/ltp/'
+        SHARD_NUMBER: 1
+        SHARD_INDEX: 1
+        TIMEOUT_MULTIPLIER: 5
+      name: ltp-io
+- test:
+    timeout:
+      minutes: 2
+    definitions:
+    - repository: https://storage.tuxboot.com/test-definitions/2024.06.tar.zst
+      lava-signal: kmsg
+      from: url
+      compression: zstd
+      path: automated/linux/ltp/ltp.yaml
+      parameters:
+        SKIP_INSTALL: 'true'
+        TST_CMDFILES: 'math'
+        SKIPFILE: '/tuxtest/skipfiles/x86_64/ltp-math'
+        ENVIRONMENT: 'production'
+        LTP_TMPDIR: '/scratch'
+        LTP_INSTALL_PATH: '/opt/ltp/'
+        SHARD_NUMBER: 1
+        SHARD_INDEX: 1
+        TIMEOUT_MULTIPLIER: 5
+      name: ltp-math
+- test:
+    timeout:
+      minutes: 30
+    definitions:
+    - repository: https://storage.tuxboot.com/test-definitions/2024.06.tar.zst
+      lava-signal: kmsg
+      from: url
+      compression: zstd
+      path: automated/linux/perf/perf.yaml
+      parameters:
+        SKIP_INSTALL: 'true'
+      name: perf
+- test:
+    timeout:
+      minutes: 5
+    definitions:
+    - repository: https://storage.tuxboot.com/test-definitions/2024.06.tar.zst
+      lava-signal: kmsg
+      from: url
+      compression: zstd
+      path: automated/linux/kselftest/kselftest.yaml
+      parameters:
+        TST_CMDFILES: "x86"
+        KSELFTEST_PATH: "/opt/kselftests/default-in-kernel"
+        SKIPFILE: "skipfile-lkft.yaml"
+        ENVIRONMENT: "production"
+        SHARD_NUMBER: 1
+        SHARD_INDEX: 1
+      name: kselftest-x86
+- test:
+    timeout:
+      minutes: 20
+    definitions:
+    - repository: https://storage.tuxboot.com/test-definitions/2024.06.tar.zst
+      lava-signal: kmsg
+      from: url
+      compression: zstd
+      path: automated/linux/kunit/kunit.yaml
+      name: kunit
+      parameters:
+        KUNIT_TEST_MODULE: 'kunit-test.ko'

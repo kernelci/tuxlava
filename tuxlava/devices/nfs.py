@@ -47,7 +47,6 @@ class NfsDevice(Device):
         modules,
         overlays,
         parameters,
-        partition,
         prompt,
         rootfs,
         tests,
@@ -68,7 +67,7 @@ class NfsDevice(Device):
             raise InvalidArgument(
                 "argument --dtb is only valid for 'nfs-bcm2711-rpi-4-b' or 'nfs-juno-r2' device"
             )
-        if modules and compression(modules) not in [("tar", "gz"), ("tar", "xz")]:
+        if modules and compression(modules[0]) not in [("tar", "gz"), ("tar", "xz")]:
             raise InvalidArgument(
                 "argument --modules should be a .tar.gz, tar.xz or .tgz"
             )

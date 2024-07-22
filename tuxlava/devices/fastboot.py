@@ -48,7 +48,6 @@ class FastbootDevice(Device):
         modules,
         overlays,
         parameters,
-        partition,
         prompt,
         ramdisk,
         rootfs,
@@ -78,7 +77,7 @@ class FastbootDevice(Device):
             raise InvalidArgument(
                 "argument --dtb is only valid for 'fastboot-e850-96' device"
             )
-        if modules and compression(modules) not in [("tar", "gz"), ("tar", "xz")]:
+        if modules and compression(modules[0]) not in [("tar", "gz"), ("tar", "xz")]:
             raise InvalidArgument(
                 "argument --modules should be a .tar.gz, tar.xz or .tgz"
             )
