@@ -58,7 +58,7 @@ class FastbootDevice(Device):
 
         if len(invalid_args) > 0:
             raise InvalidArgument(
-                f"Invalid option(s) for qemu devices: {', '.join(sorted(invalid_args))}"
+                f"Invalid option(s) for fastboot devices: {', '.join(sorted(invalid_args))}"
             )
 
         if bios and self.name not in ["fastboot-dragonboard-845c"]:
@@ -70,13 +70,9 @@ class FastbootDevice(Device):
                 "argument --ramdisk is only valid for 'fastboot-dragonboard-845c' device"
             )
         if boot_args and '"' in boot_args:
-            raise InvalidArgument('argument --boot-args should not contains "')
+            raise InvalidArgument('argument --boot-args should not contain "')
         if prompt and '"' in prompt:
-            raise InvalidArgument('argument --prompt should not contains "')
-        if dtb and not self.name.startswith("fastboot-"):
-            raise InvalidArgument(
-                "argument --dtb is only valid for 'fastboot-e850-96' device"
-            )
+            raise InvalidArgument('argument --prompt should not contain "')
         if modules and compression(modules[0]) not in [("tar", "gz"), ("tar", "xz")]:
             raise InvalidArgument(
                 "argument --modules should be a .tar.gz, tar.xz or .tgz"
