@@ -21,6 +21,7 @@ BuildRequires: wget
 Requires: python3 >= 3.6
 Requires: python3-requests
 Requires: python3-yaml
+Requires: python3-jinja2
 
 BuildArch: noarch
 
