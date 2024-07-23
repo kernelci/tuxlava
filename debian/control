@@ -1,0 +1,28 @@
+Source: tuxlava
+Maintainer: Senthil Kumaran <senthil.kumaran@linaro.org>
+Section: python
+Priority: optional
+Build-Depends: debhelper-compat (= 13),
+               dh-python,
+               flit,
+               wget,
+               python3-all,
+               python3-pytest,
+               python3-pytest-cov,
+               python3-pytest-mock,
+               python3-flask
+Standards-Version: 3.9.6
+Homepage: https://tuxsuite.com/
+
+Package: tuxlava
+Architecture: all
+Depends: python3 (>= 3.6),
+         python3-attr,
+         python3-requests,
+         python3-yaml,
+         ${misc:Depends},
+         ${python3:Depends},
+Description: TuxLAVA is a python library and tool to generate LAVA jobs for
+  devices of type qemu, fvp, fastboot and nfs. TuxLAVA has standard list of
+  devices that are supported along with tests that could be run on these
+  devices.
