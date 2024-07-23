@@ -8,5 +8,6 @@ stylecheck: style flake8
 
 spellcheck:
 	codespell \
+		-I codespell-ignore-list \
 		--check-filenames \
 		--skip '.git,public,dist,*.sw*,*.pyc,tags,*.json,.coverage,htmlcov,*.jinja2,*.yaml'
