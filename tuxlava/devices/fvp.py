@@ -312,7 +312,8 @@ class FVPLAVA(FVPDevice):
                 raise InvalidArgument("Unable to load LAVA job definition")
         return
 
-    def default(self, options) -> None: ...  # noqa: E704
+    def default(self, options) -> None:
+        ...  # noqa: E704
 
     def definition(self, **kwargs):
         return self.job_definition
