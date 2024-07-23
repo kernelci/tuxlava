@@ -1,0 +1,71 @@
+device_type: "qemu"
+
+job_name: "tuxlava@qemu-armv7: kselftest-ipc"
+priority: 50
+visibility: "public"
+
+context:
+    arch: "arm"
+    machine: "virt,gic-version=3"
+    cpu: "cortex-a15"
+    memory: "4G"
+    extra_options: ["-no-reboot", "-smp 2"]
+    no_kvm: true
+    no_network: true
+timeouts:
+  job:
+    minutes: 25
+  action:
+   minutes: 5
+  actions:
+    power-off:
+      seconds: 30
+
+actions:
+- deploy:
+    to: tmpfs
+    timeout:
+      minutes: 5
+    os: oe
+    images:
+      kernel:
+        image_arg: '-kernel {kernel} -append "console=ttyAMA0,115200 rootwait root=/dev/vda debug verbose console_msg_format=syslog systemd.log_level=warning earlycon"'
+        url: "https://storage.tuxboot.com/buildroot/armv7/zImage"
+      rootfs:
+        image_arg: "-drive file={rootfs},if=none,format=raw,id=hd0 -device virtio-blk-device,drive=hd0"
+        url: "https://storage.tuxboot.com/buildroot/armv7/rootfs.ext4.zst"
+        compression: zstd
+        format: ext4
+        overlays:
+          lava: true
+          kselftest:
+            url: "https://example.com/kselftest.tar.xz"
+            format: tar
+            compression: xz
+            path: "/opt/kselftests/default-in-kernel/"
+- boot:
+    method: qemu
+    timeout:
+      minutes: 15
+    auto_login:
+      login_prompt: 'login:'
+      username: root
+    prompts:
+    - 'root@(.*):[/~]#'
+- test:
+    timeout:
+      minutes: 5
+    definitions:
+    - repository: https://storage.tuxboot.com/test-definitions/2024.06.tar.zst
+      lava-signal: kmsg
+      from: url
+      compression: zstd
+      path: automated/linux/kselftest/kselftest.yaml
+      parameters:
+        TST_CMDFILES: "ipc"
+        KSELFTEST_PATH: "/opt/kselftests/default-in-kernel"
+        SKIPFILE: "skipfile-lkft.yaml"
+        ENVIRONMENT: "production"
+        SHARD_NUMBER: 1
+        SHARD_INDEX: 1
+      name: kselftest-ipc

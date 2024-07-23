@@ -1,5 +1,6 @@
 export PROJECT := tuxlava
-check: spellcheck stylecheck
+export TUXPKG_MIN_COVERAGE := 90
+check: spellcheck stylecheck test
 
 include $(shell tuxpkg get-makefile)
 

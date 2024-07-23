@@ -1,0 +1,109 @@
+device_type: "qemu"
+
+job_name: "tuxlava@qemu-armv7: ltp-fs_perms_simple, ltp-fsx, ltp-nptl"
+priority: 50
+visibility: "public"
+
+context:
+    arch: "arm"
+    machine: "virt,gic-version=3"
+    cpu: "cortex-a15"
+    memory: "4G"
+    extra_options: ["-no-reboot", "-smp 2"]
+    no_kvm: true
+    no_network: true
+timeouts:
+  job:
+    minutes: 42
+  action:
+   minutes: 5
+  actions:
+    power-off:
+      seconds: 30
+
+actions:
+- deploy:
+    to: tmpfs
+    timeout:
+      minutes: 5
+    os: oe
+    images:
+      kernel:
+        image_arg: '-kernel {kernel} -append "console=ttyAMA0,115200 rootwait root=/dev/vda debug verbose console_msg_format=syslog systemd.log_level=warning earlycon"'
+        url: "https://storage.tuxboot.com/buildroot/armv7/zImage"
+      rootfs:
+        image_arg: "-drive file={rootfs},if=none,format=raw,id=hd0 -device virtio-blk-device,drive=hd0"
+        url: "https://storage.tuxboot.com/buildroot/armv7/rootfs.ext4.zst"
+        compression: zstd
+        format: ext4
+        overlays:
+          lava: true
+- boot:
+    method: qemu
+    timeout:
+      minutes: 15
+    auto_login:
+      login_prompt: 'login:'
+      username: root
+    prompts:
+    - 'root@(.*):[/~]#'
+- test:
+    timeout:
+      minutes: 4
+    definitions:
+    - repository: https://storage.tuxboot.com/test-definitions/2024.06.tar.zst
+      lava-signal: kmsg
+      from: url
+      compression: zstd
+      path: automated/linux/ltp/ltp.yaml
+      parameters:
+        SKIP_INSTALL: 'true'
+        TST_CMDFILES: 'fs_perms_simple'
+        SKIPFILE: '/tuxtest/skipfiles/armv7/ltp-fs_perms_simple'
+        ENVIRONMENT: 'production'
+        LTP_TMPDIR: '/scratch'
+        LTP_INSTALL_PATH: '/opt/ltp/'
+        SHARD_NUMBER: 1
+        SHARD_INDEX: 1
+        TIMEOUT_MULTIPLIER: 5
+      name: ltp-fs_perms_simple
+- test:
+    timeout:
+      minutes: 3
+    definitions:
+    - repository: https://storage.tuxboot.com/test-definitions/2024.06.tar.zst
+      lava-signal: kmsg
+      from: url
+      compression: zstd
+      path: automated/linux/ltp/ltp.yaml
+      parameters:
+        SKIP_INSTALL: 'true'
+        TST_CMDFILES: 'fsx'
+        SKIPFILE: '/tuxtest/skipfiles/armv7/ltp-fsx'
+        ENVIRONMENT: 'production'
+        LTP_TMPDIR: '/scratch'
+        LTP_INSTALL_PATH: '/opt/ltp/'
+        SHARD_NUMBER: 1
+        SHARD_INDEX: 1
+        TIMEOUT_MULTIPLIER: 5
+      name: ltp-fsx
+- test:
+    timeout:
+      minutes: 15
+    definitions:
+    - repository: https://storage.tuxboot.com/test-definitions/2024.06.tar.zst
+      lava-signal: kmsg
+      from: url
+      compression: zstd
+      path: automated/linux/ltp/ltp.yaml
+      parameters:
+        SKIP_INSTALL: 'true'
+        TST_CMDFILES: 'nptl'
+        SKIPFILE: '/tuxtest/skipfiles/armv7/ltp-nptl'
+        ENVIRONMENT: 'production'
+        LTP_TMPDIR: '/scratch'
+        LTP_INSTALL_PATH: '/opt/ltp/'
+        SHARD_NUMBER: 1
+        SHARD_INDEX: 1
+        TIMEOUT_MULTIPLIER: 5
+      name: ltp-nptl
