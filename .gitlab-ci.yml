@@ -1,0 +1,147 @@
+include:
+  - '/support/docker/tuxlava-ci-images.yml'
+  - https://gitlab.com/Linaro/tuxpkg/-/raw/main/gitlab-ci-pipeline.yml
+
+variables:
+  TUXPKG_PROJECT: tuxlava
+
+stages:
+  - .pre
+  - build-ci-images
+  - publish-ci-images
+  - unit-tests
+  - code-checks
+  - build
+  - test
+  - deploy
+  - .post
+
+.job:
+  script:
+  - make $CI_JOB_NAME
+
+.tuxlava:
+  except:
+    - schedules
+
+.arm64:
+  only:
+    - branches@LinaroLtd/tuxsuite.com/tuxlava 
+  tags:
+    - arm64-dind
+
+.code-checks:
+  extends: .tuxlava
+  stage: code-checks
+  needs: []
+
+stylecheck:
+  image: $CI_REGISTRY_IMAGE:ci-debian
+  extends: .code-checks
+  script:
+    - python3 -m pip install --break-system-packages -r requirements-dev.txt
+    - make stylecheck
+
+codespell:
+  extends: .code-checks
+  image: $CI_REGISTRY_IMAGE:ci-debian
+  script:
+    - make spellcheck
+
+wheel:
+  image: $CI_REGISTRY_IMAGE:ci-debian
+  stage: build
+  script:
+    - flit build
+  artifacts:
+    paths:
+      - dist/*.whl
+
+.docker:
+  services:
+    - name: docker:dind
+  image: docker
+  only:
+    - tags
+  before_script:
+    - docker info
+    - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+    - export tag="tuxlava/tuxlava:${CI_COMMIT_TAG##v}${TAG_APPEND}"
+    - export latest="tuxlava/tuxlava:latest${TAG_APPEND}"
+  script:
+    - docker build --pull --tag "${tag}" --tag "${latest}" .
+    - docker run "${tag}" tuxlava --version
+    - docker run "${latest}" tuxlava --version
+    - docker push "${tag}"
+    - docker push "${latest}"
+  needs:
+    - wheel
+
+docker-amd64:
+  extends: .docker
+  stage: deploy
+  variables:
+    TAG_APPEND: -amd64
+
+docker-arm64:
+  extends: .docker
+  stage: deploy
+  tags:
+     - arm64-dind
+  variables:
+    TAG_APPEND: -arm64
+
+.unit-tests:
+  extends: .tuxlava
+  stage: unit-tests
+  script:
+    - pip install -r requirements-dev.txt
+    - make test
+
+unit-tests-python3.7:
+  extends: .unit-tests
+  image: $CI_REGISTRY_IMAGE:ci-python-3.7
+
+unit-tests-python3.8:
+  extends: .unit-tests
+  image: $CI_REGISTRY_IMAGE:ci-python-3.8
+
+unit-tests-python3.9:
+  extends: .unit-tests
+  image: $CI_REGISTRY_IMAGE:ci-python-3.9
+
+unit-tests-python3.10:
+  extends: .unit-tests
+  image: $CI_REGISTRY_IMAGE:ci-python-3.10
+
+unit-tests-python3.11:
+  extends: .unit-tests
+  image: $CI_REGISTRY_IMAGE:ci-python-3.11
+
+unit-tests-python3.12:
+  extends: .unit-tests
+  image: $CI_REGISTRY_IMAGE:ci-python-3.12
+
+unit-tests-python3.7-arm64:
+  extends: [.unit-tests, .arm64]
+  image: $CI_REGISTRY_IMAGE:ci-python-3.7
+
+unit-tests-python3.8-arm64:
+  extends: [.unit-tests, .arm64]
+  image: $CI_REGISTRY_IMAGE:ci-python-3.8
+
+unit-tests-python3.9-arm64:
+  extends: [.unit-tests, .arm64]
+  image: $CI_REGISTRY_IMAGE:ci-python-3.9
+
+unit-tests-python3.10-arm64:
+  extends: [.unit-tests, .arm64]
+  image: $CI_REGISTRY_IMAGE:ci-python-3.10
+
+unit-tests-python3.11-arm64:
+  extends: [.unit-tests, .arm64]
+  image: $CI_REGISTRY_IMAGE:ci-python-3.11
+
+unit-tests-python3.12-arm64:
+  extends: [.unit-tests, .arm64]
+  image: $CI_REGISTRY_IMAGE:ci-python-3.12
