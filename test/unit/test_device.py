@@ -2341,6 +2341,8 @@ def test_definition(monkeypatch, mocker, capsys, tmpdir, artefacts, args, filena
         f'network_from: "{os.path.basename(tmpdir)}"', 'network_from: "tuxlava-ci"'
     )
 
+    if os.environ.get("TUXLAVA_RENDER"):
+        (BASE / "refs" / "definitions" / filename).write_text(output, encoding="utf-8")
     assert output == (BASE / "refs" / "definitions" / filename).read_text(
         encoding="utf-8"
     )
