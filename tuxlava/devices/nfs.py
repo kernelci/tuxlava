@@ -180,7 +180,7 @@ class NfsI386(NfsDevice):
     real_device = True
 
     kernel = "https://storage.tuxboot.com/buildroot/x86_64/bzImage"
-    rootfs = "https://storage.tuxboot.com/buildroot/x86_64/rootfs.ext4.zst"
+    rootfs = "https://storage.tuxboot.com/buildroot/x86_64/rootfs.tar.zst"
 
 
 class NfsX86_64(NfsDevice):
@@ -191,4 +191,4 @@ class NfsX86_64(NfsDevice):
     real_device = True
 
     kernel = "https://storage.tuxboot.com/buildroot/x86_64/bzImage"
-    rootfs = "https://storage.tuxboot.com/buildroot/x86_64/rootfs.ext4.zst"
+    rootfs = "https://storage.tuxboot.com/buildroot/x86_64/rootfs.tar.zst"
