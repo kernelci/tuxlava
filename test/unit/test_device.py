@@ -2186,6 +2186,22 @@ def artefacts(tmp_path):
         (
             [
                 "--device",
+                "nfs-rk3399-rock-pi-4b",
+                "--kernel",
+                "https://example.com/Image.gz",
+                "--modules",
+                "https://example.com/modules.tar.xz",
+                "/usr/",
+                "--rootfs",
+                "https://example.com/rootfs.tar.xz",
+                "--overlay",
+                "https://example.com/ltp.tar.xz",
+            ],
+            "nfs-rk3399-rock-pi-4b-module-path.yaml",
+        ),
+        (
+            [
+                "--device",
                 "fastboot-e850-96",
                 "--kernel",
                 "https://example.com/Image.gz",
@@ -2341,6 +2357,8 @@ def test_definition(monkeypatch, mocker, capsys, tmpdir, artefacts, args, filena
         f'network_from: "{os.path.basename(tmpdir)}"', 'network_from: "tuxlava-ci"'
     )
 
+    if os.environ.get("TUXLAVA_RENDER"):
+        (BASE / "refs" / "definitions" / filename).write_text(output, encoding="utf-8")
     assert output == (BASE / "refs" / "definitions" / filename).read_text(
         encoding="utf-8"
     )

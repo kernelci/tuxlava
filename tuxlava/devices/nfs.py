@@ -161,6 +161,17 @@ class NfsRpi4(NfsDevice):
     rootfs = "https://storage.tuxboot.com/buildroot/arm64/rootfs.tar.zst"
 
 
+class NfsRockPi4(NfsDevice):
+    name = "nfs-rk3399-rock-pi-4b"
+
+    arch = "arm64"
+    lava_arch = "arm64"
+    real_device = True
+
+    kernel = "https://storage.tuxboot.com/buildroot/arm64/Image"
+    rootfs = "https://storage.tuxboot.com/buildroot/arm64/rootfs.tar.zst"
+
+
 class NfsI386(NfsDevice):
     name = "nfs-i386"
 
@@ -169,7 +180,7 @@ class NfsI386(NfsDevice):
     real_device = True
 
     kernel = "https://storage.tuxboot.com/buildroot/x86_64/bzImage"
-    rootfs = "https://storage.tuxboot.com/buildroot/x86_64/rootfs.ext4.zst"
+    rootfs = "https://storage.tuxboot.com/buildroot/x86_64/rootfs.tar.zst"
 
 
 class NfsX86_64(NfsDevice):
@@ -180,4 +191,4 @@ class NfsX86_64(NfsDevice):
     real_device = True
 
     kernel = "https://storage.tuxboot.com/buildroot/x86_64/bzImage"
-    rootfs = "https://storage.tuxboot.com/buildroot/x86_64/rootfs.ext4.zst"
+    rootfs = "https://storage.tuxboot.com/buildroot/x86_64/rootfs.tar.zst"
