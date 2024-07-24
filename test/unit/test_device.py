@@ -2186,6 +2186,22 @@ def artefacts(tmp_path):
         (
             [
                 "--device",
+                "nfs-rk3399-rock-pi-4b",
+                "--kernel",
+                "https://example.com/Image.gz",
+                "--modules",
+                "https://example.com/modules.tar.xz",
+                "/usr/",
+                "--rootfs",
+                "https://example.com/rootfs.tar.xz",
+                "--overlay",
+                "https://example.com/ltp.tar.xz",
+            ],
+            "nfs-rk3399-rock-pi-4b-module-path.yaml",
+        ),
+        (
+            [
+                "--device",
                 "fastboot-e850-96",
                 "--kernel",
                 "https://example.com/Image.gz",
