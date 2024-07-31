@@ -193,3 +193,136 @@ class FastbootX15(FastbootDevice):
 
     kernel = "https://storage.tuxboot.com/buildroot/arm64/Image"
     rootfs = "https://storage.tuxboot.com/buildroot/arm64/rootfs.tar.zst"
+
+
+class FastbootAOSPDevice(Device):
+    arch: str = ""
+    lava_arch: str = ""
+    machine: str = ""
+    cpu: str = ""
+    memory: str = "4G"
+
+    extra_options: List[str] = []
+    extra_boot_args: str = ""
+
+    console: str = ""
+    rootfs_dev: str = ""
+    rootfs_arg: str = ""
+
+    test_character_delay: int = 0
+
+    def validate(
+        self,
+        boot_args,
+        commands,
+        overlays,
+        parameters,
+        prompt,
+        tests,
+        **kwargs,
+    ):
+        invalid_args = ["--" + k.replace("_", "-") for (k, v) in kwargs.items() if v]
+
+        if len(invalid_args) > 0:
+            raise InvalidArgument(
+                f"Invalid option(s) for fastboot devices: {', '.join(sorted(invalid_args))}"
+            )
+
+        if boot_args and '"' in boot_args:
+            raise InvalidArgument('argument --boot-args should not contain "')
+        if prompt and '"' in prompt:
+            raise InvalidArgument('argument --prompt should not contain "')
+
+        for test in tests:
+            test.validate(device=self, parameters=parameters, **kwargs)
+
+    def default(self, options) -> None:
+        pass
+
+    def definition(self, **kwargs):
+        kwargs = kwargs.copy()
+
+        # Options that can *not* be updated
+        kwargs["arch"] = self.arch
+        kwargs["lava_arch"] = self.lava_arch
+        kwargs["extra_options"] = self.extra_options.copy()
+        kwargs["ptable"] = self.ptable
+
+        # Options that can be updated
+        if self.extra_boot_args:
+            if kwargs["tux_boot_args"]:
+                kwargs["tux_boot_args"] = kwargs.get("tux_boot_args") + " "
+            else:
+                kwargs["tux_boot_args"] = ""
+            kwargs["tux_boot_args"] += self.extra_boot_args
+
+        if kwargs["tux_prompt"]:
+            kwargs["tux_prompt"] = [kwargs["tux_prompt"]]
+        else:
+            kwargs["tux_prompt"] = []
+
+        kwargs["command_name"] = slugify(
+            kwargs.get("parameters").get("command-name", "command")
+        )
+
+        tmp_ljp = kwargs.get("parameters").get("lava_job_priority") or 50
+        if "lava_job_priority" in kwargs.get("parameters").keys():
+            if int(tmp_ljp) > 100 or int(tmp_ljp) <= 0:
+                raise InvalidArgument(
+                    "argument --parameters lava_job_priority must be a value between 1-100"
+                )
+        kwargs["lava_job_priority"] = tmp_ljp
+
+        if "TUXSUITE_BAKE_VENDOR_DOWNLOAD_URL" not in kwargs.get("parameters").keys():
+            raise InvalidArgument(
+                "argument --parameters TUXSUITE_BAKE_VENDOR_DOWNLOAD_URL must be provided"
+            )
+
+        kwargs["TUXSUITE_BAKE_VENDOR_DOWNLOAD_URL"] = kwargs.get("parameters").get(
+            "TUXSUITE_BAKE_VENDOR_DOWNLOAD_URL"
+        )
+
+        # if "BUILD_REFERENCE_IMAGE_GZ_URL" in kwargs.get("parameters").keys():
+        #     kwargs["BUILD_REFERENCE_IMAGE_GZ_URL"] = kwargs.get("parameters").get("BUILD_REFERENCE_IMAGE_GZ_URL")
+
+        # populate all other parameters supplied
+        for key in kwargs.get("parameters").keys():
+            kwargs[key] = kwargs.get("parameters").get(key)
+
+        # render the template
+        tests = [
+            t.render(
+                arch=kwargs["arch"],
+                commands=kwargs["commands"],
+                command_name=kwargs["command_name"],
+                device=kwargs["device"],
+                overlays=kwargs["overlays"],
+                parameters=kwargs["parameters"],
+                lava_job_priority=kwargs["lava_job_priority"],
+                test_definitions=kwargs["test_definitions"],
+            )
+            for t in kwargs["tests"]
+        ]
+        return templates.jobs().get_template("fastboot-aosp.yaml.jinja2").render(
+            **kwargs
+        ) + "".join(tests)
+
+
+class FastbootAOSPDragonboard_845c(FastbootAOSPDevice):
+    name = "fastboot-aosp-dragonboard-845c"
+
+    arch = "arm64"
+    lava_arch = "arm64"
+    real_device = True
+
+    ptable = "https://images.validation.linaro.org/snapshots.linaro.org/96boards/dragonboard845c/linaro/rescue/101/dragonboard-845c-bootloader-ufs-aosp-101/gpt_both0.bin"
+
+
+class FastbootAOSPQRB5165rb5(FastbootAOSPDevice):
+    name = "fastboot-aosp-qrb5165-rb5"
+
+    arch = "arm64"
+    lava_arch = "arm64"
+    real_device = True
+
+    ptable = "https://images.validation.linaro.org/snapshots.linaro.org/96boards/qrb5165-rb5/linaro/rescue/27/rb5-bootloader-ufs-aosp-27/gpt_both0.bin"

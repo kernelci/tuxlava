@@ -1,0 +1,163 @@
+{% set prefix_len = 'fastboot-aosp-'|length %}
+{% set DOCKER_IMAGE_POSTPROCESS = DOCKER_IMAGE_POSTPROCESS|default("linaro/lava-android-postprocess:bulleye-2023.09.14-01") %}
+{% set DOCKER_IMAGE_DEPLOY = DOCKER_IMAGE_DEPLOY|default("linaro/lava-android-test:focal-2023.10.18-01") %}
+device_type: "{{ device.name[prefix_len:] }}"
+
+{% if tests %}
+job_name: "tuxlava@{{ device.name }}: {{ tests|map(attribute="name")|join(", ")}}"
+{% else %}
+job_name: "tuxlava@{{ device.name }}: boot"
+{% endif %}
+priority: {{ lava_job_priority }}
+visibility: "public"
+reboot_to_fastboot: false
+
+{% block secrets %}
+secrets:
+  SQUAD_ARCHIVE_SUBMIT_TOKEN: SQUAD_ARCHIVE_SUBMIT_TOKEN
+{% endblock secrets %}
+
+metadata:
+  android.build: "{{ BUILD_NUMBER | default('unknown')}}"
+  android.name: "{{ JOB_NAME | default('unknown')}}"
+  android.url: "{{ REFERENCE_BUILD_URL | default('unknown')}}"
+  android.version: "{{ ANDROID_VERSION | default('unknown')}}"
+{% if ANDROID_VENDOR_FINGERPRINT is defined %}
+  android.build.vendor.fingerprint: "{{ ANDROID_VENDOR_FINGERPRINT }}"
+{% endif %}
+{% if ANDROID_GSI_FINGERPRINT is defined %}
+  android.build.gsi.url: "{{ ANDROID_GSI_URL }}"
+  android.build.gsi.fingerprint: "{{ ANDROID_GSI_FINGERPRINT }}"
+{% endif %}
+{% if TUXSUITE_DOWNLOAD_URL is defined %}
+  tuxsuite.download.url: "{{ TUXSUITE_DOWNLOAD_URL }}"
+{% endif %}
+  lkft.build.config: "{{ LKFT_BUILD_CONFIG | default('unknown')}}"
+  git branch: "{{ KERNEL_BRANCH | default('unknown')}}"
+  git repo: "{{ KERNEL_REPO | default('unknown')}}"
+  git commit: "{{ KERNEL_COMMIT | default('unknown')}}"
+  git describe: "{{ KERNEL_DESCRIBE | default('unknown')}}"
+  build-url: "{{ BUILD_URL | default('unknown')}}"
+
+{%- set deploy_download_timeout = timeouts.deploy|default(25) %}
+{%- set deploy_timeout = timeouts.deploy|default(30) %}
+{%- set boot_timeout = timeouts.boot|default(25) %}
+
+{% block timeouts %}
+timeouts:
+  job:
+    minutes: {{ deploy_download_timeout + deploy_timeout + boot_timeout + tests_timeout }}
+  action:
+   minutes: 5
+  actions:
+    power-off:
+      seconds: 30
+{% endblock %}
+
+actions:
+- deploy:
+    to: downloads
+    timeout:
+      minutes: {{ deploy_download_timeout }}
+    os: {{ deploy_os|default(debian) }}
+    images:
+{% if ptable %}
+      partition:0:
+        url: "{{ ptable }}"
+{% endif %}
+    postprocess:
+      docker:
+        image: {{ DOCKER_IMAGE_POSTPROCESS }}
+        local: true
+{% if TUXSUITE_BAKE_VENDOR_DOWNLOAD_URL is defined %}
+        steps:
+{% if BUILD_REFERENCE_IMAGE_GZ_URL is defined %}
+        - linaro-lkft-android.sh -g -k {{BUILD_REFERENCE_IMAGE_GZ_URL}} -v {{TUXSUITE_BAKE_VENDOR_DOWNLOAD_URL}} -c {{LKFT_BUILD_CONFIG}}
+{% else %}
+        - linaro-lkft-android.sh -g -v {{TUXSUITE_BAKE_VENDOR_DOWNLOAD_URL}} -c {{LKFT_BUILD_CONFIG}}
+{% endif %}
+{% endif %}
+
+- deploy:
+    timeout:
+      minutes: {{ deploy_timeout }}
+    to: fastboot
+    docker:
+      image: {{ DOCKER_IMAGE_DEPLOY }}
+      local: true
+    images:
+{% if ptable %}
+      partition:0:
+        url: downloads://{{ ptable.split('/') | last }}
+{% endif %}
+      boot:
+        url: downloads://boot.img
+      super:
+        url: downloads://super.img
+      userdata:
+        url: downloads://userdata.img
+      vendor_boot:
+        url: downloads://vendor_boot.img
+
+- boot:
+    commands:
+    - format:ext4 metadata
+    - oem select-display-panel hdmi
+    - reboot bootloader
+    - oem select-display-panel hdmi
+    - reboot bootloader
+    - oem select-display-panel hdmi
+    - reboot
+    docker:
+      image: {{ DOCKER_IMAGE_DEPLOY }}
+      local: true
+    method: fastboot
+    prompts:
+    - console:/
+    - root@(.*):[/~]#
+    timeout:
+      minutes: {{ boot_timeout }}
+
+- test:
+    interactive:
+    - name: sleep-to-wait-adb-available
+      prompts:
+      - console:/
+      - root@(.*):[/~]#
+      script:
+      - command: echo ===========================
+      - command: while ! getprop sys.boot_completed|grep 1; do echo sleep 10s for
+          sys.boot_completed; sleep 10; done
+      - command: echo ===========================
+      - command: while ! getprop init.svc.adbd|grep running; do echo sleep 10s for
+          init.svc.adbd; sleep 10; done
+      - command: echo ===========================
+      - command: getprop | grep adb
+      - command: echo ===========================
+    timeout:
+      minutes: {{ boot_timeout }}
+
+- test:
+    definitions:
+    - from: inline
+      name: boot
+      path: boot.yaml
+      repository:
+        metadata:
+          description: boot
+          format: Lava-Test Test Definition 1.0
+          name: boot
+        run:
+          steps:
+          - lava-test-case "android-boot-wait-for-device" --shell adb wait-for-device
+          - lava-test-case "android-boot-boot-completed" --shell "while ! adb shell
+            getprop sys.boot_completed|grep 1; do sleep 2; done"
+          - lava-test-case "android-boot-set-power-stayon" --shell adb shell su 0
+            svc power stayon true
+          - lava-test-case "android-boot-screencap" --shell adb shell screencap -p
+            /data/local/tmp/screencap.png
+    docker:
+      image: {{ DOCKER_IMAGE_DEPLOY }}
+      local: true
+    timeout:
+      minutes: {{ boot_timeout }}
