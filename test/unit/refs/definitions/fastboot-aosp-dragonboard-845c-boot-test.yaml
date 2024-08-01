@@ -1,0 +1,127 @@
+device_type: "dragonboard-845c"
+
+job_name: "tuxlava@fastboot-aosp-dragonboard-845c: boot"
+priority: 50
+visibility: "public"
+reboot_to_fastboot: false
+
+secrets:
+  SQUAD_ARCHIVE_SUBMIT_TOKEN: SQUAD_ARCHIVE_SUBMIT_TOKEN
+
+metadata:
+  android.build: "unknown"
+  android.name: "unknown"
+  android.url: "unknown"
+  android.version: "unknown"
+  lkft.build.config: "lkft-db845c-aosp-master-mainline-gki"
+  git branch: "unknown"
+  git repo: "unknown"
+  git commit: "unknown"
+  git describe: "unknown"
+  build-url: "unknown"
+timeouts:
+  job:
+    minutes: 80
+  action:
+   minutes: 5
+  actions:
+    power-off:
+      seconds: 30
+
+actions:
+- deploy:
+    to: downloads
+    timeout:
+      minutes: 25
+    os: debian
+    images:
+      partition:0:
+        url: "https://images.validation.linaro.org/snapshots.linaro.org/96boards/dragonboard845c/linaro/rescue/101/dragonboard-845c-bootloader-ufs-aosp-101/gpt_both0.bin"
+    postprocess:
+      docker:
+        image: linaro/lava-android-postprocess:bulleye-2023.09.14-01
+        local: true
+        steps:
+        - linaro-lkft-android.sh -g -k https://stylesen.dev.storage.tuxsuite.com/public/tuxsuite/senthil/oebuilds/2k0BQ4PP7MJG21NqvHmWZpCA6RC/Image.gz -v https://stylesen.dev.storage.tuxsuite.com/public/tuxsuite/senthil/oebuilds/2k0BQ4PP7MJG21NqvHmWZpCA6RC/ -c lkft-db845c-aosp-master-mainline-gki
+
+- deploy:
+    timeout:
+      minutes: 30
+    to: fastboot
+    docker:
+      image: linaro/lava-android-test:focal-2023.10.18-01
+      local: true
+    images:
+      partition:0:
+        url: downloads://gpt_both0.bin
+      boot:
+        url: downloads://boot.img
+      super:
+        url: downloads://super.img
+      userdata:
+        url: downloads://userdata.img
+      vendor_boot:
+        url: downloads://vendor_boot.img
+
+- boot:
+    commands:
+    - format:ext4 metadata
+    - oem select-display-panel hdmi
+    - reboot bootloader
+    - oem select-display-panel hdmi
+    - reboot bootloader
+    - oem select-display-panel hdmi
+    - reboot
+    docker:
+      image: linaro/lava-android-test:focal-2023.10.18-01
+      local: true
+    method: fastboot
+    prompts:
+    - console:/
+    - root@(.*):[/~]#
+    timeout:
+      minutes: 25
+
+- test:
+    interactive:
+    - name: sleep-to-wait-adb-available
+      prompts:
+      - console:/
+      - root@(.*):[/~]#
+      script:
+      - command: echo ===========================
+      - command: while ! getprop sys.boot_completed|grep 1; do echo sleep 10s for
+          sys.boot_completed; sleep 10; done
+      - command: echo ===========================
+      - command: while ! getprop init.svc.adbd|grep running; do echo sleep 10s for
+          init.svc.adbd; sleep 10; done
+      - command: echo ===========================
+      - command: getprop | grep adb
+      - command: echo ===========================
+    timeout:
+      minutes: 25
+
+- test:
+    definitions:
+    - from: inline
+      name: boot
+      path: boot.yaml
+      repository:
+        metadata:
+          description: boot
+          format: Lava-Test Test Definition 1.0
+          name: boot
+        run:
+          steps:
+          - lava-test-case "android-boot-wait-for-device" --shell adb wait-for-device
+          - lava-test-case "android-boot-boot-completed" --shell "while ! adb shell
+            getprop sys.boot_completed|grep 1; do sleep 2; done"
+          - lava-test-case "android-boot-set-power-stayon" --shell adb shell su 0
+            svc power stayon true
+          - lava-test-case "android-boot-screencap" --shell adb shell screencap -p
+            /data/local/tmp/screencap.png
+    docker:
+      image: linaro/lava-android-test:focal-2023.10.18-01
+      local: true
+    timeout:
+      minutes: 25

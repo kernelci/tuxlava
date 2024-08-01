@@ -225,7 +225,7 @@ class FastbootAOSPDevice(Device):
 
         if len(invalid_args) > 0:
             raise InvalidArgument(
-                f"Invalid option(s) for fastboot devices: {', '.join(sorted(invalid_args))}"
+                f"Invalid option(s) for fastboot aosp devices: {', '.join(sorted(invalid_args))}"
             )
 
         if boot_args and '"' in boot_args:
@@ -281,9 +281,6 @@ class FastbootAOSPDevice(Device):
         kwargs["TUXSUITE_BAKE_VENDOR_DOWNLOAD_URL"] = kwargs.get("parameters").get(
             "TUXSUITE_BAKE_VENDOR_DOWNLOAD_URL"
         )
-
-        # if "BUILD_REFERENCE_IMAGE_GZ_URL" in kwargs.get("parameters").keys():
-        #     kwargs["BUILD_REFERENCE_IMAGE_GZ_URL"] = kwargs.get("parameters").get("BUILD_REFERENCE_IMAGE_GZ_URL")
 
         # populate all other parameters supplied
         for key in kwargs.get("parameters").keys():
