@@ -64,7 +64,7 @@ class Job:
         scp_romfw: str = None,
         ssh_host: str = None,
         ssh_prompt: str = None,
-        ssh_port: int = 22,
+        ssh_port: int = 0,
         ssh_user: str = None,
         ssh_identity_file: str = None,
         tests: List[str] = None,
@@ -168,7 +168,9 @@ class Job:
         for index, item in enumerate(self.overlays):
             overlays.append((f"overlay-{index:02}", item[0], item[1]))
 
-        commands = " ".join([shlex.quote(s) for s in self.commands])
+        commands = None
+        if self.commands:
+            commands = " ".join([shlex.quote(s) for s in self.commands])
 
         # Create the temp directory
         tmpdir = Path(tempfile.mkdtemp(prefix="tuxlava-"))
