@@ -63,9 +63,13 @@ class NfsDevice(Device):
             raise InvalidArgument('argument --boot-args should not contain "')
         if prompt and '"' in prompt:
             raise InvalidArgument('argument --prompt should not contain "')
-        if dtb and self.name not in ["nfs-bcm2711-rpi-4-b", "nfs-juno-r2"]:
+        if dtb and self.name not in [
+            "nfs-bcm2711-rpi-4-b",
+            "nfs-juno-r2",
+            "nfs-rk3399-rock-pi-4b",
+        ]:
             raise InvalidArgument(
-                "argument --dtb is only valid for 'nfs-bcm2711-rpi-4-b' or 'nfs-juno-r2' device"
+                "argument --dtb is only valid for 'nfs-bcm2711-rpi-4-b', 'nfs-juno-r2' and 'nfs-rk3399-rock-pi-4b' devices"
             )
         if modules and compression(modules[0]) not in [("tar", "gz"), ("tar", "xz")]:
             raise InvalidArgument(
