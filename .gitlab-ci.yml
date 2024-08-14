@@ -28,7 +28,8 @@ stages:
   only:
     - branches@LinaroLtd/tuxsuite.com/tuxlava 
   tags:
-    - arm64
+    - saas-linux-medium-arm64
+    - saas-linux-large-arm64
 
 .code-checks:
   extends: .tuxlava
@@ -87,7 +88,7 @@ docker-arm64:
   extends: .docker
   stage: deploy
   tags:
-     - arm64-dind
+     - saas-linux-large-arm64
   variables:
     TAG_APPEND: -arm64
 
