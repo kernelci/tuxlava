@@ -29,7 +29,6 @@ stages:
     - branches@LinaroLtd/tuxsuite.com/tuxlava 
   tags:
     - saas-linux-medium-arm64
-    - saas-linux-large-arm64
 
 .code-checks:
   extends: .tuxlava
