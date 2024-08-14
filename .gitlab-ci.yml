@@ -28,7 +28,7 @@ stages:
   only:
     - branches@LinaroLtd/tuxsuite.com/tuxlava 
   tags:
-    - arm64-dind
+    - arm64
 
 .code-checks:
   extends: .tuxlava
