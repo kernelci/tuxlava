@@ -80,6 +80,12 @@ class KSelftestBreakpoints(KSelfTest):
     timeout = 5
 
 
+class KSelftestBPF(KSelfTest):
+    name = "kselftest-bpf"
+    cmdfile = "bpf"
+    timeout = 45
+
+
 class KSelftestCapabilities(KSelfTest):
     name = "kselftest-capabilities"
     cmdfile = "capabilities"
