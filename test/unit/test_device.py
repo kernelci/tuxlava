@@ -2404,6 +2404,22 @@ def artefacts(tmp_path):
             ],
             "fastboot-aosp-qrb5165-rb5-boot-test.yaml",
         ),
+        (
+            [
+                "--device",
+                "nfs-x86_64",
+                "--kernel",
+                "https://example.com/Image.gz",
+                "--modules",
+                "https://example.com/modules.tar.xz",
+                "/usr/",
+                "--rootfs",
+                "https://example.com/rootfs.tar.xz",
+                "--tests",
+                "network-basic",
+            ],
+            "network-basic-tests.yaml",
+        ),
     ],
 )
 def test_definition(monkeypatch, mocker, capsys, tmpdir, artefacts, args, filename):

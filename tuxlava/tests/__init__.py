@@ -67,6 +67,7 @@ import tuxlava.tests.ltp  # noqa: E402
 import tuxlava.tests.mmtests  # noqa: E402,F401
 import tuxlava.tests.modules  # noqa: E402,F401
 import tuxlava.tests.morello  # noqa: E402,F401
+import tuxlava.tests.network  # noqa: E402,F401
 import tuxlava.tests.perf  # noqa: E402,F401
 import tuxlava.tests.rcutorture  # noqa: E402,F401
 import tuxlava.tests.systemdanalyze  # noqa: E402,F401

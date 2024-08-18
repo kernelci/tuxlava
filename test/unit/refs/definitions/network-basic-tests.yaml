@@ -1,0 +1,64 @@
+device_type: "x86_64"
+
+job_name: "tuxlava@nfs-x86_64: network-basic"
+priority: 50
+visibility: "public"
+
+context:
+    test_character_delay: 10
+    extra_kernel_args: rootwait
+
+timeouts:
+  job:
+    minutes: 45
+  action:
+   minutes: 5
+  actions:
+    power-off:
+      seconds: 30
+
+actions:
+- deploy:
+    to: tftp
+    timeout:
+      minutes: 5
+    os: debian
+    kernel:
+      url: "https://example.com/Image.gz"
+      compression: gz
+      type: image
+    modules:
+      url: "https://example.com/modules.tar.xz"
+      path: /usr/
+      compression: xz
+    nfsrootfs:
+      url: "https://example.com/rootfs.tar.xz"
+      compression: xz
+      format: tar
+      apply-overlay: true
+- boot:
+    method:
+      ipxe
+    commands: nfs
+    parameters:
+      shutdown-message: 'reboot: Restarting system'
+    timeout:
+      minutes: 15
+    auto_login:
+      login_prompt: 'login:'
+      username: root
+    prompts:
+    - 'root@(.*):[/~]#'
+- test:
+    timeout:
+      minutes: 25
+    definitions:
+    - repository: https://storage.tuxboot.com/test-definitions/2024.07.tar.zst
+      lava-signal: kmsg
+      from: url
+      compression: zstd
+      path: automated/linux/network-basic/network-basic.yaml
+      name: network-basic
+      parameters:
+        SKIP_INSTALL: "true"
+        NFS: "true"
