@@ -17,6 +17,8 @@ class HackingSession(Test):
         "qemu-i386",
         "qemu-x86_64",
         "fvp-aemva",
+        "nfs-*",
+        "fastboot-*",
     ]
     name = "hacking-session"
     timeout = 20

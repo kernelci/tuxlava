@@ -20,7 +20,7 @@ from tuxlava.tuxmake import TuxBuildBuild, TuxMakeBuild
 from tuxlava.utils import pathurlnone
 
 
-TEST_DEFINITIONS = "https://storage.tuxboot.com/test-definitions/2024.06.tar.zst"
+TEST_DEFINITIONS = "https://storage.tuxboot.com/test-definitions/2024.07.tar.zst"
 
 
 def tuxbuild_url(s):
@@ -54,6 +54,7 @@ class Job:
         mcp_romfw: str = None,
         fip: str = None,
         enable_kvm: bool = False,
+        enable_trustzone: bool = False,
         enable_network: bool = False,
         prompt: str = None,
         ramdisk: str = None,
@@ -94,6 +95,7 @@ class Job:
         self.mcp_romfw = mcp_romfw
         self.fip = fip
         self.enable_kvm = enable_kvm
+        self.enable_trustzone = enable_trustzone
         self.enable_network = enable_network
         self.prompt = prompt
         self.ramdisk = ramdisk
@@ -189,6 +191,7 @@ class Job:
             "mcp_romfw": self.mcp_romfw,
             "fip": self.fip,
             "enable_kvm": self.enable_kvm,
+            "enable_trustzone": self.enable_trustzone,
             "enable_network": self.enable_network,
             "modules": self.modules,
             "overlays": overlays,

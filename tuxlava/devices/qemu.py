@@ -54,6 +54,7 @@ class QemuDevice(Device):
         prompt,
         rootfs,
         enable_kvm,
+        enable_trustzone,
         enable_network,
         tests,
         **kwargs,
@@ -65,9 +66,9 @@ class QemuDevice(Device):
                 f"Invalid option(s) for qemu devices: {', '.join(sorted(invalid_args))}"
             )
 
-        if bios and self.name not in ["qemu-riscv32", "qemu-riscv64"]:
+        if bios and self.name not in ["qemu-riscv32", "qemu-riscv64", "qemu-arm64"]:
             raise InvalidArgument(
-                "argument --bios is only valid for qemu-riscv32 and qemu-riscv64 device"
+                "argument --bios is only valid for qemu-riscv32, qemu-riscv64 and qemu-arm64 device"
             )
         if boot_args and '"' in boot_args:
             raise InvalidArgument('argument --boot-args should not contains "')
@@ -102,6 +103,7 @@ class QemuDevice(Device):
         kwargs["console"] = self.console
         kwargs["rootfs_dev"] = self.rootfs_dev
         kwargs["rootfs_arg"] = self.rootfs_arg
+        kwargs["enable_trustzone"] = kwargs["enable_trustzone"]
         kwargs["no_kvm"] = not kwargs["enable_kvm"]
         kwargs["no_network"] = not kwargs["enable_network"]
 
@@ -180,12 +182,17 @@ class QemuArm64(QemuDevice):
     kernel = "https://storage.tuxboot.com/buildroot/arm64/Image"
     rootfs = "https://storage.tuxboot.com/buildroot/arm64/rootfs.ext4.zst"
 
-    def validate(self, enable_kvm, **kwargs):
-        super().validate(enable_kvm=enable_kvm, **kwargs)
+    def validate(self, enable_kvm, enable_trustzone, **kwargs):
+        super().validate(
+            enable_kvm=enable_kvm, enable_trustzone=enable_trustzone, **kwargs
+        )
 
         if enable_kvm and platform.machine() == "aarch64":
             self.machine = "virt,gic-version=3"
             self.cpu = "max"
+
+        if enable_trustzone:
+            self.machine = f"{self.machine},secure=on"
 
 
 class QemuArm64BE(QemuArm64):
