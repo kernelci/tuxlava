@@ -319,6 +319,12 @@ def setup_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Enable kvm, only possible if host and QEMU system are the same",
     )
+    group.add_argument(
+        "--enable-trustzone",
+        default=False,
+        action="store_true",
+        help="Enable trustzone, applicable to QEMU arm64 device only",
+    )
 
     group.add_argument(
         "--enable-network",

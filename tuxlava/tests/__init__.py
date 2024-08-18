@@ -65,10 +65,12 @@ import tuxlava.tests.libgpiod  # noqa: E402
 import tuxlava.tests.libhugetlbfs  # noqa: E402
 import tuxlava.tests.ltp  # noqa: E402
 import tuxlava.tests.mmtests  # noqa: E402,F401
+import tuxlava.tests.modules  # noqa: E402,F401
 import tuxlava.tests.morello  # noqa: E402,F401
 import tuxlava.tests.perf  # noqa: E402,F401
 import tuxlava.tests.rcutorture  # noqa: E402,F401
 import tuxlava.tests.systemdanalyze  # noqa: E402,F401
+import tuxlava.tests.tfatests  # noqa: E402,F401
 import tuxlava.tests.v4l2  # noqa: E402,F401
 import tuxlava.tests.vdso  # noqa: E402,F401
 import tuxlava.tests.xfstests  # noqa: E402,F401

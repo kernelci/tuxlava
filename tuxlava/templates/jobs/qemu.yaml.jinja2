@@ -91,6 +91,7 @@ actions:
 {% endif %}
     timeout:
       minutes: {{ boot_timeout }}
+{% if not enable_trustzone %}
     auto_login:
       login_prompt: 'login:'
       username: root
@@ -103,3 +104,4 @@ actions:
     - 'root@(.*):[/~]#'
 {% for prompt in tux_prompt %}
     - "{{ prompt }}"{% endfor %}
+{% endif %}

@@ -55,6 +55,7 @@ def main() -> int:
             mcp_romfw=options.mcp_romfw,
             fip=options.fip,
             enable_kvm=options.enable_kvm,
+            enable_trustzone=options.enable_trustzone,
             enable_network=options.enable_network,
             qemu_image=options.qemu_image,
             qemu_binary=options.qemu_binary,

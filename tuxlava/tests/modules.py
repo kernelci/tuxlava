@@ -9,7 +9,7 @@
 from tuxlava.tests import Test
 
 
-class SystemdAnalyze(Test):
+class Modules(Test):
     devices = [
         "qemu-*",
         "fvp-aemva",
@@ -18,12 +18,12 @@ class SystemdAnalyze(Test):
         "nfs-*",
         "fastboot-*",
     ]
-    name = "systemd-analyze"
-    timeout = 5
+    name = "modules"
+    timeout = 20
     need_test_definition = True
 
     def render(self, **kwargs):
         kwargs["name"] = self.name
         kwargs["timeout"] = self.timeout
 
-        return self._render("systemd-analyze.yaml.jinja2", **kwargs)
+        return self._render("modules.yaml.jinja2", **kwargs)

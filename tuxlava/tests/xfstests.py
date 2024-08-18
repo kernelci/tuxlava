@@ -10,7 +10,13 @@ from tuxlava.tests import Test
 
 
 class XfsTests(Test):
-    devices = ["qemu-arm64", "qemu-x86_64", "fvp-aemva"]
+    devices = [
+        "qemu-arm64",
+        "qemu-x86_64",
+        "fvp-aemva",
+        "nfs-*",
+        "fastboot-*",
+    ]
     configfile: str = ""
     timeout = 90
     need_test_definition = True

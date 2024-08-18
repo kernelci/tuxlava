@@ -476,6 +476,12 @@ class KSelftestRtc(KSelfTest):
     timeout = 5
 
 
+class KSelftestRust(KSelfTest):
+    name = "kselftest-rust"
+    cmdfile = "rust"
+    timeout = 5
+
+
 class KSelftestSafesetid(KSelfTest):
     name = "kselftest-safesetid"
     cmdfile = "safesetid"

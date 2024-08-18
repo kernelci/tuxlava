@@ -60,7 +60,7 @@ actions:
     timeout:
       minutes: 2
     definitions:
-    - repository: https://storage.tuxboot.com/test-definitions/2024.06.tar.zst
+    - repository: https://storage.tuxboot.com/test-definitions/2024.07.tar.zst
       lava-signal: kmsg
       from: url
       compression: zstd
@@ -80,7 +80,7 @@ actions:
     timeout:
       minutes: 2
     definitions:
-    - repository: https://storage.tuxboot.com/test-definitions/2024.06.tar.zst
+    - repository: https://storage.tuxboot.com/test-definitions/2024.07.tar.zst
       lava-signal: kmsg
       from: url
       compression: zstd
@@ -100,7 +100,7 @@ actions:
     timeout:
       minutes: 2
     definitions:
-    - repository: https://storage.tuxboot.com/test-definitions/2024.06.tar.zst
+    - repository: https://storage.tuxboot.com/test-definitions/2024.07.tar.zst
       lava-signal: kmsg
       from: url
       compression: zstd
@@ -120,7 +120,7 @@ actions:
     timeout:
       minutes: 30
     definitions:
-    - repository: https://storage.tuxboot.com/test-definitions/2024.06.tar.zst
+    - repository: https://storage.tuxboot.com/test-definitions/2024.07.tar.zst
       lava-signal: kmsg
       from: url
       compression: zstd
@@ -132,7 +132,7 @@ actions:
     timeout:
       minutes: 45
     definitions:
-    - repository: https://storage.tuxboot.com/test-definitions/2024.06.tar.zst
+    - repository: https://storage.tuxboot.com/test-definitions/2024.07.tar.zst
       lava-signal: kmsg
       from: url
       compression: zstd
@@ -149,7 +149,7 @@ actions:
     timeout:
       minutes: 20
     definitions:
-    - repository: https://storage.tuxboot.com/test-definitions/2024.06.tar.zst
+    - repository: https://storage.tuxboot.com/test-definitions/2024.07.tar.zst
       lava-signal: kmsg
       from: url
       compression: zstd
