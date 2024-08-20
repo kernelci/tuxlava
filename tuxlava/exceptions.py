@@ -18,3 +18,7 @@ class TuxLavaException(Exception):
 
 class InvalidArgument(TuxLavaException):
     pass
+
+
+class MissingArgument(TuxLavaException):
+    pass
