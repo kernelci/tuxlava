@@ -1,6 +1,6 @@
 device_type: "qemu"
 
-job_name: "tuxlava@qemu-mips32: commands"
+job_name: "tuxlava@qemu-mips32: commands, commands"
 priority: 50
 visibility: "public"
 
@@ -14,7 +14,7 @@ context:
     no_network: true
 timeouts:
   job:
-    minutes: 22
+    minutes: 24
   action:
    minutes: 5
   actions:
@@ -47,6 +47,21 @@ actions:
       username: root
     prompts:
     - 'root@(.*):[/~]#'
+- test:
+    timeout:
+      minutes: 2
+    definitions:
+    - repository:
+        metadata:
+          format: lava-test test definition 1.0
+          name: commands
+          description: "Run commands"
+        run:
+          steps:
+          - "lava-test-case command --shell cat /proc/cpuinfo"
+      from: inline
+      path: command
+      name: commands
 - test:
     timeout:
       minutes: 2

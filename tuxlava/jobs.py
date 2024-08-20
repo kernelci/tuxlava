@@ -13,7 +13,7 @@ import tempfile
 from pathlib import Path
 from typing import Dict, List
 from tuxlava.argparse import filter_options
-from tuxlava.exceptions import InvalidArgument
+from tuxlava.exceptions import InvalidArgument, MissingArgument
 from tuxlava.devices import Device
 from tuxlava.tests import Test
 from tuxlava.tuxmake import TuxBuildBuild, TuxMakeBuild
@@ -154,6 +154,16 @@ class Job:
                             "$BUILD/", tux.url + "/"
                         )
 
+        commands = None
+        if self.commands:
+            self.tests.append("commands")
+            commands = " ".join([shlex.quote(s) for s in self.commands])
+
+        if "hacking-session" in self.tests:
+            self.enable_network = True
+            if not self.parameters.get("PUB_KEY"):
+                raise MissingArgument("argument missing --parameters PUB_KEY='...'")
+
         self.device = Device.select(self.device)()
         self.tests = [Test.select(t)(self.timeouts.get(t)) for t in self.tests]
         self.device.validate(**filter_options(self))
@@ -169,10 +179,6 @@ class Job:
 
         for index, item in enumerate(self.overlays):
             overlays.append((f"overlay-{index:02}", item[0], item[1]))
-
-        commands = None
-        if self.commands:
-            commands = " ".join([shlex.quote(s) for s in self.commands])
 
         # Create the temp directory
         tmpdir = Path(tempfile.mkdtemp(prefix="tuxlava-"))
