@@ -13,7 +13,7 @@ import tempfile
 from pathlib import Path
 from typing import Dict, List
 from tuxlava.argparse import filter_options
-from tuxlava.exceptions import InvalidArgument, MissingArgument
+from tuxlava.exceptions import InvalidArgument, MissingArgument, TuxLavaError
 from tuxlava.devices import Device
 from tuxlava.tests import Test
 from tuxlava.tuxmake import TuxBuildBuild, TuxMakeBuild
@@ -63,6 +63,7 @@ class Job:
         shared: bool = False,
         scp_fw: str = None,
         scp_romfw: str = None,
+        shell: bool = False,
         ssh_host: str = None,
         ssh_prompt: str = None,
         ssh_port: int = 0,
@@ -104,6 +105,7 @@ class Job:
         self.shared = shared
         self.scp_fw = scp_fw
         self.scp_romfw = scp_romfw
+        self.shell = shell
         self.ssh_host = ssh_host
         self.ssh_prompt = ssh_prompt
         self.ssh_port = ssh_port
@@ -153,6 +155,17 @@ class Job:
                         self.parameters[k] = self.parameters[k].replace(
                             "$BUILD/", tux.url + "/"
                         )
+
+        if self.shell:
+            if "hacking-session" not in self.tests:
+                self.tests.append("hacking-session")
+            if not self.parameters.get("PUB_KEY"):
+                keys = list(Path("~/.ssh/").expanduser().glob("id_*.pub"))
+                if len(keys) == 0:
+                    raise TuxLavaError("no ssh public key in ~/.ssh/")
+                self.parameters["PUB_KEY"] = "\n\n".join(
+                    k.read_text(encoding="utf-8").rstrip() for k in keys
+                )
 
         commands = None
         if self.commands:

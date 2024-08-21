@@ -65,6 +65,7 @@ def main() -> int:
             rootfs_partition=options.partition,
             scp_fw=options.scp_fw,
             scp_romfw=options.scp_romfw,
+            shell=options.shell,
             ssh_host=options.ssh_host,
             ssh_prompt=options.ssh_prompt,
             ssh_port=options.ssh_port,
