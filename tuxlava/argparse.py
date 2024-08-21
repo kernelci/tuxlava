@@ -279,6 +279,11 @@ def setup_parser() -> argparse.ArgumentParser:
         action="extend",
     )
     group.add_argument(
+        "--shell",
+        action="store_true",
+        help="Start a shell in the VM",
+    )
+    group.add_argument(
         "commands",
         nargs="*",
         help="Space separated list of commands to run inside the VM",
