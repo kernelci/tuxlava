@@ -61,6 +61,11 @@ class LTPCVE(LTPTest):
     timeout = 60
 
 
+class LTPDIO(LTPTest):
+    name = "ltp-dio"
+    timeout = 2
+
+
 class LTPFcntlLockTests(LTPTest):
     name = "ltp-fcntl-locktests"
     timeout = 2
