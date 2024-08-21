@@ -133,6 +133,14 @@ class Job:
         # Render the job definition
         overlays = []
 
+        # Grab the modules path from parameters if available, else set it
+        # as "/" by default
+        if isinstance(self.modules, str):
+            self.modules = [
+                self.modules,
+                self.parameters.get("MODULES_PATH", "/") if self.parameters else "/",
+            ]
+
         if self.tuxbuild or self.tuxmake:
             tux = (
                 tuxbuild_url(self.tuxbuild)

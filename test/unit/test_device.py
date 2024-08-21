@@ -2420,6 +2420,19 @@ def artefacts(tmp_path):
             ],
             "network-basic-tests.yaml",
         ),
+        (
+            [
+                "--device",
+                "nfs-x86_64",
+                "--kernel",
+                "https://example.com/Image.gz",
+                "--modules",
+                "https://example.com/modules.tar.xz",
+                "--rootfs",
+                "https://example.com/rootfs.tar.xz",
+            ],
+            "test-modules-default-path.yaml",
+        ),
     ],
 )
 def test_definition(monkeypatch, mocker, capsys, tmpdir, artefacts, args, filename):
