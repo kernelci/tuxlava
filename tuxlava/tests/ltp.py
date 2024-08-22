@@ -51,6 +51,11 @@ class LTPController(LTPTest):
     timeout = 90
 
 
+class LTPCPUHotPlug(LTPTest):
+    name = "ltp-cpuhotplug"
+    timeout = 10
+
+
 class LTPCrypto(LTPTest):
     name = "ltp-crypto"
     timeout = 10
