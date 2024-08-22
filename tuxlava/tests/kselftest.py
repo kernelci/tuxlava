@@ -150,6 +150,42 @@ class KSelftestFilesystems(KSelfTest):
     timeout = 5
 
 
+class KSelftestFilesystemsBinderfs(KSelfTest):
+    name = "kselftest-filesystems-binderfs"
+    cmdfile = "filesystems.binderfs"
+    timeout = 5
+
+
+class KSelftestFilesystemsEpoll(KSelfTest):
+    name = "kselftest-filesystems-epoll"
+    cmdfile = "filesystems.epoll"
+    timeout = 5
+
+
+class KSelftestFilesystemsEventfd(KSelfTest):
+    name = "kselftest-filesystems-eventfd"
+    cmdfile = "filesystems.eventfd"
+    timeout = 5
+
+
+class KSelftestFilesystemsFat(KSelfTest):
+    name = "kselftest-filesystems-fat"
+    cmdfile = "filesystems.fat"
+    timeout = 5
+
+
+class KSelftestFilesystemsOverlayfs(KSelfTest):
+    name = "kselftest-filesystems-overlayfs"
+    cmdfile = "filesystems.overlayfs"
+    timeout = 5
+
+
+class KSelftestFilesystemsStatmount(KSelfTest):
+    name = "kselftest-filesystems-statmount"
+    cmdfile = "filesystems.statmount"
+    timeout = 5
+
+
 class KSelftestFirmware(KSelfTest):
     name = "kselftest-firmware"
     timeout = 5
