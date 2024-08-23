@@ -135,6 +135,90 @@ class KSelftestDrivers(KSelfTest):
     timeout = 5
 
 
+class KSelftestDriversDmaBuf(KSelfTest):
+    name = "kselftest-drivers-dma-buf"
+    cmdfile = "drivers.dma-buf"
+    timeout = 5
+
+
+class KSelftestDriversGpu(KSelfTest):
+    name = "kselftest-drivers-gpu"
+    cmdfile = "drivers.gpu"
+    timeout = 5
+
+
+class KSelftestDriversNetBonding(KSelfTest):
+    name = "kselftest-drivers-net-bonding"
+    cmdfile = "drivers.net.bonding"
+    timeout = 5
+
+
+class KSelftestDriversNetDsa(KSelfTest):
+    name = "kselftest-drivers-net-dsa"
+    cmdfile = "drivers.net.dsa"
+    timeout = 5
+
+
+class KSelftestDriversNetHW(KSelfTest):
+    name = "kselftest-drivers-net-hw"
+    cmdfile = "drivers.hw"
+    timeout = 5
+
+
+class KSelftestDriversNetLib(KSelfTest):
+    name = "kselftest-drivers-net-lib"
+    cmdfile = "drivers.net.lib"
+    timeout = 5
+
+
+class KSelftestDriversNetMicrochip(KSelfTest):
+    name = "kselftest-drivers-net-microchip"
+    cmdfile = "drivers.net.microchip"
+    timeout = 5
+
+
+class KSelftestDriversNetMlxsw(KSelfTest):
+    name = "kselftest-drivers-net-mlxsw"
+    cmdfile = "drivers.net.mlxsw"
+    timeout = 5
+
+
+class KSelftestDriversNetNetdevsim(KSelfTest):
+    name = "kselftest-drivers-net-netdevsim"
+    cmdfile = "drivers.net.netdevsim"
+    timeout = 5
+
+
+class KSelftestDriversNetOcelot(KSelfTest):
+    name = "kselftest-drivers-net-ocelot"
+    cmdfile = "drivers.net.ocelot"
+    timeout = 5
+
+
+class KSelftestDriversNetTeam(KSelfTest):
+    name = "kselftest-drivers-net-team"
+    cmdfile = "drivers.net.team"
+    timeout = 5
+
+
+class KSelftestDriversNetVirtio_net(KSelfTest):
+    name = "kselftest-drivers-net-virtio_net"
+    cmdfile = "drivers.net.virtio_net"
+    timeout = 5
+
+
+class KSelftestDriversSdsi(KSelfTest):
+    name = "kselftest-drivers-sdsi"
+    cmdfile = "drivers.sdsi"
+    timeout = 5
+
+
+class KSelftestDriversUsbUsbip(KSelfTest):
+    name = "kselftest-drivers-usb-usbip"
+    cmdfile = "drivers.usb.usbip"
+    timeout = 5
+
+
 class KSelftestEfivarfs(KSelfTest):
     name = "kselftest-efivarfs"
     timeout = 5
