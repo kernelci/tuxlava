@@ -38,11 +38,17 @@ context:
 timeouts:
   job:
     minutes: {{ deploy_timeout + boot_timeout + tests_timeout }}
-  action:
-   minutes: 5
+  connection:
+    minutes: 2
   actions:
     power-off:
       seconds: 30
+    finalize:
+      seconds: 60
+{% if LAVA_QUEUE_TIMEOUT is defined %}
+  queue:
+    hours: {{ LAVA_QUEUE_TIMEOUT }}
+{% endif %}
 {% endblock %}
 
 actions:
