@@ -13,11 +13,13 @@ context:
 timeouts:
   job:
     minutes: 121
-  action:
-   minutes: 5
+  connection:
+    minutes: 2
   actions:
     power-off:
       seconds: 30
+    finalize:
+      seconds: 60
 
 actions:
 - deploy:
