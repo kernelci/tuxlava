@@ -96,6 +96,7 @@ actions:
     prompts:
     - 'root@(.*):[/~]#'
     - 'dragonboard-845c:'
+
 - test:
     timeout:
       minutes: 2

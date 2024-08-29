@@ -57,3 +57,4 @@ actions:
       username: root
     prompts:
     - 'root@(.*):[/~]#'
+
