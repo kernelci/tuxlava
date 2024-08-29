@@ -104,8 +104,8 @@ actions:
             compression: {{ compression(overlay)[1] }}
 {% endfor %}
 {% elif tests %}
-          overlays:
-            lava: true
+        overlays:
+          lava: true
 {% endif %}
     postprocess:
       docker:
