@@ -5,6 +5,10 @@ priority: 50
 visibility: "public"
 
 reboot_to_fastboot: false
+
+tags:
+  - lts
+
 context:
     test_character_delay: 10
 timeouts:
