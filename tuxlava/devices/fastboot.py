@@ -129,7 +129,6 @@ class FastbootDevice(Device):
         for key in kwargs.get("parameters").keys():
             kwargs[key] = kwargs.get("parameters").get(key)
 
-
         # render the template
         tests = [
             t.render(
