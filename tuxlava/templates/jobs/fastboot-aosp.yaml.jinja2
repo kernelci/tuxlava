@@ -52,6 +52,10 @@ timeouts:
   actions:
     power-off:
       seconds: 30
+{% if LAVA_QUEUE_TIMEOUT is defined %}
+  queue:
+    hours: {{ LAVA_QUEUE_TIMEOUT }}
+{% endif %}
 {% endblock %}
 
 actions:

@@ -125,6 +125,11 @@ class FastbootDevice(Device):
         kwargs["LAVA_JOB_PRIORITY"] = tmp_ljp
         kwargs["tags"] = self.tags
 
+        # populate all other parameters supplied
+        for key in kwargs.get("parameters").keys():
+            kwargs[key] = kwargs.get("parameters").get(key)
+
+
         # render the template
         tests = [
             t.render(

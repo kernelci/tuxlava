@@ -27,6 +27,8 @@ timeouts:
   actions:
     power-off:
       seconds: 30
+  queue:
+    hours: 100
 
 actions:
 - deploy:
