@@ -115,13 +115,13 @@ class FastbootDevice(Device):
             kwargs.get("parameters").get("command-name", "command")
         )
 
-        tmp_ljp = kwargs.get("parameters").get("lava_job_priority") or 50
-        if "lava_job_priority" in kwargs.get("parameters").keys():
+        tmp_ljp = kwargs.get("parameters").get("LAVA_JOB_PRIORITY") or 50
+        if "LAVA_JOB_PRIORITY" in kwargs.get("parameters").keys():
             if int(tmp_ljp) > 100 or int(tmp_ljp) <= 0:
                 raise InvalidArgument(
-                    "argument --parameters lava_job_priority must be a value between 1-100"
+                    "argument --parameters LAVA_JOB_PRIORITY must be a value between 1-100"
                 )
-        kwargs["lava_job_priority"] = tmp_ljp
+        kwargs["LAVA_JOB_PRIORITY"] = tmp_ljp
 
         # render the template
         tests = [
@@ -132,7 +132,6 @@ class FastbootDevice(Device):
                 device=kwargs["device"],
                 overlays=kwargs["overlays"],
                 parameters=kwargs["parameters"],
-                lava_job_priority=kwargs["lava_job_priority"],
                 test_definitions=kwargs["test_definitions"],
             )
             for t in kwargs["tests"]
@@ -265,13 +264,13 @@ class FastbootAOSPDevice(Device):
             kwargs.get("parameters").get("command-name", "command")
         )
 
-        tmp_ljp = kwargs.get("parameters").get("lava_job_priority") or 50
-        if "lava_job_priority" in kwargs.get("parameters").keys():
+        tmp_ljp = kwargs.get("parameters").get("LAVA_JOB_PRIORITY") or 50
+        if "LAVA_JOB_PRIORITY" in kwargs.get("parameters").keys():
             if int(tmp_ljp) > 100 or int(tmp_ljp) <= 0:
                 raise InvalidArgument(
-                    "argument --parameters lava_job_priority must be a value between 1-100"
+                    "argument --parameters LAVA_JOB_PRIORITY must be a value between 1-100"
                 )
-        kwargs["lava_job_priority"] = tmp_ljp
+        kwargs["LAVA_JOB_PRIORITY"] = tmp_ljp
 
         if "TUXSUITE_BAKE_VENDOR_DOWNLOAD_URL" not in kwargs.get("parameters").keys():
             raise InvalidArgument(
@@ -295,7 +294,6 @@ class FastbootAOSPDevice(Device):
                 device=kwargs["device"],
                 overlays=kwargs["overlays"],
                 parameters=kwargs["parameters"],
-                lava_job_priority=kwargs["lava_job_priority"],
                 test_definitions=kwargs["test_definitions"],
             )
             for t in kwargs["tests"]
