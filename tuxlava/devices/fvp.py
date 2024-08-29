@@ -95,13 +95,13 @@ class AEMvAFVPDevice(FVPDevice):
             kwargs.get("parameters").get("command-name", "command")
         )
 
-        tmp_ljp = kwargs.get("parameters").get("lava_job_priority") or 50
-        if "lava_job_priority" in kwargs.get("parameters").keys():
+        tmp_ljp = kwargs.get("parameters").get("LAVA_JOB_PRIORITY") or 50
+        if "LAVA_JOB_PRIORITY" in kwargs.get("parameters").keys():
             if int(tmp_ljp) > 100 or int(tmp_ljp) <= 0:
                 raise InvalidArgument(
-                    "argument --parameters lava_job_priority must be a value between 1-100"
+                    "argument --parameters LAVA_JOB_PRIORITY must be a value between 1-100"
                 )
-        kwargs["lava_job_priority"] = tmp_ljp
+        kwargs["LAVA_JOB_PRIORITY"] = tmp_ljp
 
         # render the template
         tests = [
@@ -113,7 +113,6 @@ class AEMvAFVPDevice(FVPDevice):
                 tmpdir=kwargs["tmpdir"],
                 overlays=kwargs["overlays"],
                 parameters=kwargs["parameters"],
-                lava_job_priority=kwargs["lava_job_priority"],
                 test_definitions=kwargs["test_definitions"],
             )
             for t in kwargs["tests"]
@@ -205,13 +204,13 @@ class MorelloFVPDevice(FVPDevice):
         kwargs["support_tests"] = self.support_tests
         kwargs["boot_timeout"] = self.boot_timeout
 
-        tmp_ljp = kwargs.get("parameters").get("lava_job_priority") or 50
-        if "lava_job_priority" in kwargs.get("parameters").keys():
+        tmp_ljp = kwargs.get("parameters").get("LAVA_JOB_PRIORITY") or 50
+        if "LAVA_JOB_PRIORITY" in kwargs.get("parameters").keys():
             if int(tmp_ljp) > 100 or int(tmp_ljp) <= 0:
                 raise InvalidArgument(
-                    "argument --parameters lava_job_priority must be a value between 1-100"
+                    "argument --parameters LAVA_JOB_PRIORITY must be a value between 1-100"
                 )
-        kwargs["lava_job_priority"] = tmp_ljp
+        kwargs["LAVA_JOB_PRIORITY"] = tmp_ljp
 
         # render the template
         tests = [
@@ -312,8 +311,7 @@ class FVPLAVA(FVPDevice):
                 raise InvalidArgument("Unable to load LAVA job definition")
         return
 
-    def default(self, options) -> None:
-        ...  # noqa: E704
+    def default(self, options) -> None: ...  # noqa: E704
 
     def definition(self, **kwargs):
         return self.job_definition

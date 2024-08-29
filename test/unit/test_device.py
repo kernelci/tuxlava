@@ -2396,7 +2396,7 @@ def artefacts(tmp_path):
                 "--prompt",
                 "blaah",
                 "--parameters",
-                "lava_job_priority=99",
+                "LAVA_JOB_PRIORITY=99",
                 "LKFT_BUILD_CONFIG=lkft-db845c-aosp-master-mainline-gki",
                 "IMAGE_SUPPORTED_VENDOR_BOOT='true'",
                 "TUXSUITE_BAKE_VENDOR_DOWNLOAD_URL=https://stylesen.dev.storage.tuxsuite.com/public/tuxsuite/senthil/oebuilds/2k0BQ4PP7MJG21NqvHmWZpCA6RC/",
@@ -2557,9 +2557,9 @@ def test_definition(monkeypatch, mocker, capsys, tmpdir, artefacts, args, filena
                 "--rootfs",
                 "https://example.com/rootfs.tar.xz",
                 "--parameters",
-                "lava_job_priority=101",
+                "LAVA_JOB_PRIORITY=101",
             ],
-            "argument --parameters lava_job_priority must be a value between 1-100",
+            "argument --parameters LAVA_JOB_PRIORITY must be a value between 1-100",
         ),
         (
             [
@@ -2682,9 +2682,9 @@ def test_definition(monkeypatch, mocker, capsys, tmpdir, artefacts, args, filena
                 "--rootfs",
                 "https://example.com/rootfs.tar.xz",
                 "--parameters",
-                "lava_job_priority=101",
+                "LAVA_JOB_PRIORITY=101",
             ],
-            "argument --parameters lava_job_priority must be a value between 1-100",
+            "argument --parameters LAVA_JOB_PRIORITY must be a value between 1-100",
         ),
         (
             [
@@ -2738,9 +2738,9 @@ def test_definition(monkeypatch, mocker, capsys, tmpdir, artefacts, args, filena
                 "TUXSUITE_BAKE_VENDOR_DOWNLOAD_URL=https://stylesen.dev.storage.tuxsuite.com/public/tuxsuite/senthil/oebuilds/2k0BQ4PP7MJG21NqvHmWZpCA6RC/",
                 "BUILD_REFERENCE_IMAGE_GZ_URL=https://stylesen.dev.storage.tuxsuite.com/public/tuxsuite/senthil/oebuilds/2k0BQ4PP7MJG21NqvHmWZpCA6RC/Image.gz",
                 "--parameters",
-                "lava_job_priority=101",
+                "LAVA_JOB_PRIORITY=101",
             ],
-            "argument --parameters lava_job_priority must be a value between 1-100",
+            "argument --parameters LAVA_JOB_PRIORITY must be a value between 1-100",
         ),
         (
             [
