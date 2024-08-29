@@ -14,6 +14,18 @@ reboot_to_fastboot: true
 {% else %}
 reboot_to_fastboot: false
 {% endif %}
+
+{% block tags %}
+{% if tags is defined and tags is sequence and tags is not string %}
+tags:
+{% for tag in tags %}
+{% if tag|length %}
+  - {{ tag }}
+{% endif %}
+{% endfor %}
+{% endif %}
+{% endblock tags %}
+
 context:
     test_character_delay: 10
 
