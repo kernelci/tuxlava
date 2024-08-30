@@ -147,6 +147,12 @@ class KSelftestDriversGpu(KSelfTest):
     timeout = 5
 
 
+class KSelftestDriversNet(KSelfTest):
+    name = "kselftest-drivers-net"
+    cmdfile = "drivers.net"
+    timeout = 5
+
+
 class KSelftestDriversNetBonding(KSelfTest):
     name = "kselftest-drivers-net-bonding"
     cmdfile = "drivers.net.bonding"
