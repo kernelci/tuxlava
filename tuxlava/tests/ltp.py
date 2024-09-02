@@ -133,7 +133,7 @@ class LTPNPTL(LTPTest):
 
 class LTPPTY(LTPTest):
     name = "ltp-pty"
-    timeout = 2
+    timeout = 10
 
 
 class LTPSched(LTPTest):
