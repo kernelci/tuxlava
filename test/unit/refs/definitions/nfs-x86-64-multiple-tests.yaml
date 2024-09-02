@@ -10,7 +10,7 @@ context:
 
 timeouts:
   job:
-    minutes: 81
+    minutes: 106
   connection:
     minutes: 2
   actions:
@@ -23,7 +23,7 @@ actions:
 - deploy:
     to: tftp
     timeout:
-      minutes: 5
+      minutes: 30
     os: debian
     kernel:
       url: "https://example.com/Image.gz"

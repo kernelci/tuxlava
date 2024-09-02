@@ -31,7 +31,7 @@ context:
     extra_kernel_args: rootwait
 {% endif %}
 
-{%- set deploy_timeout = timeouts.deploy|default(5) %}
+{%- set deploy_timeout = timeouts.deploy|default(30) %}
 {%- set boot_timeout = timeouts.boot|default(15) %}
 
 {% block timeouts %}
