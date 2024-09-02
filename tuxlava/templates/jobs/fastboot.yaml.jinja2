@@ -9,11 +9,7 @@ job_name: "tuxlava@{{ device.name }}: boot"
 priority: {{ LAVA_JOB_PRIORITY }}
 visibility: "public"
 
-{% if device.name == 'fastboot-x15' %}
-reboot_to_fastboot: true
-{% else %}
-reboot_to_fastboot: false
-{% endif %}
+reboot_to_fastboot: {{ reboot_to_fastboot|default("false") }}
 
 {% block tags %}
 {% if tags is defined and tags is sequence and tags is not string %}

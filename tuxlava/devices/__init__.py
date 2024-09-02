@@ -21,6 +21,7 @@ class Device:
     name: str = ""
     flag_use_pre_run_cmd: bool = False
     flag_cache_rootfs: bool = False
+    reboot_to_fastboot: str = "false"
 
     @classmethod
     def select(cls, name):
