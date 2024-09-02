@@ -22,6 +22,7 @@ class Device:
     flag_use_pre_run_cmd: bool = False
     flag_cache_rootfs: bool = False
     reboot_to_fastboot: str = "false"
+    redirect_to_kmsg: bool = True
 
     @classmethod
     def select(cls, name):

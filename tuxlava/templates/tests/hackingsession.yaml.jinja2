@@ -21,7 +21,9 @@
     definitions:
     - repository: https://gitlab.com/lava/hacking-session.git
       from: git
+{%if device.redirect_to_kmsg %}
       lava-signal: kmsg
+{% endif %}
       path: hacking-session-tmate.yaml
       parameters:
         PUB_KEY: '{{ parameters.get("PUB_KEY", "") }}'

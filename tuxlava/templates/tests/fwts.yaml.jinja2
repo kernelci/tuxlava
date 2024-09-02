@@ -3,7 +3,7 @@
       minutes: {{ timeout }}
     definitions:
     - repository: {{ test_definitions }}
-{%if device.name != 'ssh-device' %}
+{%if device.redirect_to_kmsg %}
       lava-signal: kmsg
 {% endif %}
       from: url

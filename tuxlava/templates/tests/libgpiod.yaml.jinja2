@@ -3,7 +3,9 @@
       minutes: {{ timeout }}
     definitions:
     - repository: {{ test_definitions }}
+{%if device.redirect_to_kmsg %}
       lava-signal: kmsg
+{% endif %}
       from: url
       compression: zstd
       path: automated/linux/gpiod/gpiod.yaml

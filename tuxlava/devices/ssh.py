@@ -15,6 +15,7 @@ from tuxlava.utils import notnone, slugify
 class SSHDevice(Device):
     name = "ssh-device"
     ssh_port = 22
+    redirect_to_kmsg = False
 
     def validate(
         self,
@@ -51,6 +52,8 @@ class SSHDevice(Device):
         kwargs["command_name"] = slugify(
             kwargs.get("parameters").get("command-name", "command")
         )
+
+        kwargs["redirect_to_kmsg"] = self.redirect_to_kmsg
 
         tmp_ljp = kwargs.get("parameters").get("LAVA_JOB_PRIORITY") or 50
         if "LAVA_JOB_PRIORITY" in kwargs.get("parameters").keys():

@@ -101,6 +101,7 @@ class FastbootDevice(Device):
         kwargs["ramdisk"] = notnone(kwargs.get("ramdisk"), self.ramdisk)
         kwargs["rootfs"] = notnone(kwargs.get("rootfs"), self.rootfs)
         kwargs["reboot_to_fastboot"] = self.reboot_to_fastboot
+        kwargs["redirect_to_kmsg"] = self.redirect_to_kmsg
         if self.extra_boot_args:
             if kwargs["tux_boot_args"]:
                 kwargs["tux_boot_args"] = kwargs.get("tux_boot_args") + " "
@@ -184,6 +185,7 @@ class FastbootDragonboard_845c(FastbootDevice):
     arch = "arm64"
     lava_arch = "arm64"
     real_device = True
+    redirect_to_kmsg = False
 
     kernel = "https://storage.tuxboot.com/buildroot/arm64/Image"
     rootfs = "https://storage.tuxboot.com/buildroot/arm64/rootfs.tar.zst"

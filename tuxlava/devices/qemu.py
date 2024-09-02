@@ -133,6 +133,8 @@ class QemuDevice(Device):
             kwargs.get("parameters").get("command-name", "command")
         )
 
+        kwargs["redirect_to_kmsg"] = self.redirect_to_kmsg
+
         tmp_ljp = kwargs.get("parameters").get("LAVA_JOB_PRIORITY") or 50
         if "LAVA_JOB_PRIORITY" in kwargs.get("parameters").keys():
             if int(tmp_ljp) > 100 or int(tmp_ljp) <= 0:

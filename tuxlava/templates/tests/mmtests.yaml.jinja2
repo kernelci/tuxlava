@@ -3,7 +3,7 @@
       minutes: {{ timeout }}
     definitions:
     - repository: https://github.com/roxell/test-definitions.git
-{%if device.name != 'ssh-device' %}
+{%if device.redirect_to_kmsg %}
       lava-signal: kmsg
 {%endif%}
       from: git
