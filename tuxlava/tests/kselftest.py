@@ -288,12 +288,12 @@ class KSelftestFpu(KSelfTest):
 
 class KSelftestFtrace(KSelfTest):
     name = "kselftest-ftrace"
-    timeout = 5
+    timeout = 10
 
 
 class KSelftestFutex(KSelfTest):
     name = "kselftest-futex"
-    timeout = 5
+    timeout = 10
 
 
 class KSelftestGpio(KSelfTest):
@@ -383,7 +383,7 @@ class KSelftestMembarrier(KSelfTest):
 
 class KSelftestMemfd(KSelfTest):
     name = "kselftest-memfd"
-    timeout = 5
+    timeout = 15
 
 
 class KSelftestMm(KSelfTest):
@@ -618,7 +618,7 @@ class KSelftestTimens(KSelfTest):
 
 class KSelftestTimers(KSelfTest):
     name = "kselftest-timers"
-    timeout = 5
+    timeout = 15
 
 
 class KSelftestTmpfs(KSelfTest):
