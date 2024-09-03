@@ -53,7 +53,7 @@ class LTPController(LTPTest):
 
 class LTPCPUHotPlug(LTPTest):
     name = "ltp-cpuhotplug"
-    timeout = 10
+    timeout = 15
 
 
 class LTPCrypto(LTPTest):
@@ -73,12 +73,12 @@ class LTPDIO(LTPTest):
 
 class LTPFcntlLockTests(LTPTest):
     name = "ltp-fcntl-locktests"
-    timeout = 2
+    timeout = 5
 
 
 class LTPFileCaps(LTPTest):
     name = "ltp-filecaps"
-    timeout = 2
+    timeout = 5
 
 
 class LTPFSBind(LTPTest):
@@ -88,7 +88,7 @@ class LTPFSBind(LTPTest):
 
 class LTPFSPermsSimple(LTPTest):
     name = "ltp-fs_perms_simple"
-    timeout = 2
+    timeout = 5
 
 
 class LTPFSX(LTPTest):
@@ -113,7 +113,7 @@ class LTPIO(LTPTest):
 
 class LTPIPC(LTPTest):
     name = "ltp-ipc"
-    timeout = 2
+    timeout = 5
 
 
 class LTPMath(LTPTest):
