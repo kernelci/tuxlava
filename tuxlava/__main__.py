@@ -50,6 +50,7 @@ def main() -> int:
             commands=options.commands,
             dtb=options.dtb,
             kernel=options.kernel,
+            boot=options.boot,
             ap_romfw=options.ap_romfw,
             mcp_fw=options.mcp_fw,
             mcp_romfw=options.mcp_romfw,

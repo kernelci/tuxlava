@@ -49,6 +49,7 @@ class Job:
         qemu_binary: str = None,
         dtb: str = None,
         kernel: str = None,
+        boot: str = None,
         ap_romfw: str = None,
         mcp_fw: str = None,
         mcp_romfw: str = None,
@@ -91,6 +92,7 @@ class Job:
         self.qemu_binary = qemu_binary
         self.dtb = dtb
         self.kernel = kernel
+        self.boot = boot
         self.ap_romfw = ap_romfw
         self.mcp_fw = mcp_fw
         self.mcp_romfw = mcp_romfw
@@ -213,6 +215,7 @@ class Job:
             "qemu_binary": self.qemu_binary,
             "dtb": self.dtb,
             "kernel": self.kernel,
+            "boot": self.boot,
             "ap_romfw": self.ap_romfw,
             "mcp_fw": self.mcp_fw,
             "mcp_romfw": self.mcp_romfw,

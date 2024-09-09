@@ -34,8 +34,10 @@ class FastbootDevice(Device):
     dtb: str = ""
     bios: str = ""
     kernel: str = ""
+    boot: str = ""
     rootfs: str = ""
     ramdisk: str = ""
+    template: str = "fastboot.yaml.jinja2"
 
     test_character_delay: int = 0
 
@@ -53,6 +55,7 @@ class FastbootDevice(Device):
         ramdisk,
         rootfs,
         tests,
+        boot,
         **kwargs,
     ):
         invalid_args = ["--" + k.replace("_", "-") for (k, v) in kwargs.items() if v]
@@ -84,6 +87,7 @@ class FastbootDevice(Device):
 
     def default(self, options) -> None:
         options.kernel = notnone(options.kernel, self.kernel)
+        options.boot = notnone(options.boot, self.boot)
         options.rootfs = notnone(options.rootfs, self.rootfs)
 
     def definition(self, **kwargs):
@@ -98,6 +102,7 @@ class FastbootDevice(Device):
         kwargs["bios"] = notnone(kwargs.get("bios"), self.bios)
         kwargs["dtb"] = notnone(kwargs.get("dtb"), self.dtb)
         kwargs["kernel"] = notnone(kwargs.get("kernel"), self.kernel)
+        kwargs["boot"] = notnone(kwargs.get("boot"), self.boot)
         kwargs["ramdisk"] = notnone(kwargs.get("ramdisk"), self.ramdisk)
         kwargs["rootfs"] = notnone(kwargs.get("rootfs"), self.rootfs)
         kwargs["reboot_to_fastboot"] = self.reboot_to_fastboot
@@ -145,9 +150,9 @@ class FastbootDevice(Device):
             )
             for t in kwargs["tests"]
         ]
-        return templates.jobs().get_template("fastboot.yaml.jinja2").render(
-            **kwargs
-        ) + "".join(tests)
+        return templates.jobs().get_template(self.template).render(**kwargs) + "".join(
+            tests
+        )
 
     def device_dict(self, context):
         if self.test_character_delay:
@@ -191,6 +196,20 @@ class FastbootDragonboard_845c(FastbootDevice):
     rootfs = "https://storage.tuxboot.com/buildroot/arm64/rootfs.tar.zst"
     bios = "https://images.validation.linaro.org/snapshots.linaro.org/96boards/dragonboard845c/linaro/rescue/28/dragonboard-845c-bootloader-ufs-linux-28/gpt_both0.bin"
     ramdisk = "https://snapshots.linaro.org/member-builds/qcomlt/boards/qcom-armv8a/openembedded/master/56008/rpb/initramfs-rootfs-image-qcom-armv8a.rootfs-20240118001247-92260.cpio.gz"
+
+
+class FastbootOEDragonboard_845c(FastbootDevice):
+    name = "fastboot-oe-dragonboard-845c"
+    tags = ["lts"]
+    arch = "arm64"
+    lava_arch = "arm64"
+    real_device = True
+    redirect_to_kmsg = False
+
+    boot = "https://storage.tuxboot.com/buildroot/arm64/boot.img"
+    rootfs = "https://storage.tuxboot.com/buildroot/arm64/rootfs.tar.zst"
+    bios = "https://images.validation.linaro.org/snapshots.linaro.org/96boards/dragonboard845c/linaro/rescue/28/dragonboard-845c-bootloader-ufs-linux-28/gpt_both0.bin"
+    template = "fastboot-oe.yaml.jinja2"
 
 
 class FastbootX15(FastbootDevice):

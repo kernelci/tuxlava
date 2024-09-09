@@ -1,0 +1,105 @@
+{% set prefix_len = 'fastboot-oe-'|length %}
+device_type: "{{ device.name[prefix_len:] }}"
+
+{% if tests %}
+job_name: "tuxlava@{{ device.name }}: {{ tests|map(attribute="name")|join(", ")}}"
+{% else %}
+job_name: "tuxlava@{{ device.name }}: boot"
+{% endif %}
+priority: {{ LAVA_JOB_PRIORITY }}
+visibility: "public"
+
+reboot_to_fastboot: {{ reboot_to_fastboot|default("false") }}
+
+{% block tags %}
+{% if tags is defined and tags is sequence and tags is not string %}
+tags:
+{% for tag in tags %}
+{% if tag|length %}
+  - {{ tag }}
+{% endif %}
+{% endfor %}
+{% endif %}
+{% endblock tags %}
+
+context:
+    test_character_delay: 10
+
+{%- set deploy_download_timeout = timeouts.deploy|default(25) %}
+{%- set deploy_timeout = timeouts.deploy|default(30) %}
+{%- set boot_timeout = timeouts.boot|default(25) %}
+
+{% block timeouts %}
+timeouts:
+  job:
+    minutes: {{ deploy_download_timeout + deploy_timeout + boot_timeout + tests_timeout }}
+  connection:
+    minutes: 2
+  actions:
+    power-off:
+      seconds: 30
+    finalize:
+      seconds: 60
+{% if LAVA_QUEUE_TIMEOUT is defined %}
+  queue:
+    hours: {{ LAVA_QUEUE_TIMEOUT }}
+{% endif %}
+{% endblock %}
+
+actions:
+- deploy:
+    to: fastboot
+    docker:
+      image: "{{ deploy_fastboot_docker_image|default('linaro/kir:20240606') }}"
+      local: true
+    timeout:
+      minutes: {{ deploy_download_timeout }}
+    os: {{ deploy_os|default(oe) }}
+    images:
+      partition:0:
+        url: "{{ bios }}"
+      boot:
+        url: "{{ boot }}"
+      rootfs:
+        url: "{{ rootfs }}"
+{% if compression(rootfs)[1] is not none %}
+        compression: {{ compression(rootfs)[1] }}
+{% endif %}
+        sparse: false
+        format: ext4
+        apply-overlay: true
+{% if overlays %}
+        overlays:
+{% for name, overlay, dst in overlays %}
+          {{ name }}:
+            url: "{{ overlay }}"
+            path: "{{ dst }}"
+            format: tar
+            compression: {{ compression(overlay)[1] }}
+{% endfor %}
+{% elif tests %}
+        overlays:
+          lava: true
+{% endif %}
+
+- command:
+    name: pre_os_command
+- command:
+    name: pre_power_command
+- boot:
+    docker:
+      image: "{{ boot_docker_image|default('linaro/kir:master') }}"
+      local: true
+    method: fastboot
+    timeout:
+      minutes: {{ boot_timeout }}
+    auto_login:
+      login_prompt: 'login:'
+      username: root
+    prompts:
+    - 'root@(.*):[/~]#'
+{% if device.name == 'fastboot-dragonboard-845c' %}
+    - 'root@qcom-armv8a:'
+{% endif %}
+{% for prompt in tux_prompt %}
+    - "{{ prompt }}"{% endfor %}
