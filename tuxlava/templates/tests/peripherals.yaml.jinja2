@@ -2,12 +2,12 @@
     timeout:
       minutes: {{ timeout }}
     definitions:
-    - repository: {{ test_definitions }}
+    - repository: https://github.com/Linaro/test-definitions.git
 {%if device.name != 'ssh-device' %}
       lava-signal: kmsg
 {% endif %}
-      from: url
-      compression: zstd
+      from: git
+      branch: master
       path: automated/linux/peripherals/{{ name }}.yaml
       name: {{ name }}
 
