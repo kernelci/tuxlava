@@ -10,7 +10,7 @@ from tuxlava.tests import Test
 
 
 class Peripherals(Test):
-    devices = ["qemu-*", "fvp-aemva", "avh-imx93", "avh-rpi4b"]
+    devices = ["qemu-*", "fvp-aemva", "avh-imx93", "avh-rpi4b", "fastboot-*"]
     need_test_definition = True
 
     def render(self, **kwargs):
