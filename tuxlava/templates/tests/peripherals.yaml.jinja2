@@ -7,7 +7,7 @@
       lava-signal: kmsg
 {% endif %}
       from: git
-      branch: master
+      branch: {{ branch }}
       path: automated/linux/peripherals/{{ name }}.yaml
       name: {{ name }}
 
