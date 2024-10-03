@@ -1,0 +1,40 @@
+strict: true
+site_name: TuxLAVA
+site_author: TuxSuite Team
+site_dir: public
+site_description: |
+  TuxLAVA, by Linaro, is a python library and a command line tool to generate
+  LAVA jobs for devices of type avh, fastboot, fvp, nfs, qemu, and ssh. TuxLAVA
+  has a standard list of devices that are supported along with tests that
+  could be run on these devices.
+repo_url: https://gitlab.com/Linaro/tuxlava/
+
+theme:
+  name: material
+  logo: tuxlava.svg
+  favicon: tuxlava_icon.svg
+  font: false
+  features:
+    - content.code.copy
+    - navigation.footer
+extra_css:
+  - style.css
+
+markdown_extensions:
+- admonition
+- pymdownx.highlight
+- pymdownx.superfences
+- pymdownx.tabbed:
+    alternate_style: true
+- toc:
+    permalink: true
+
+nav:
+- Getting Started: index.md
+- Installing TuxLAVA:
+  - PyPI: install-pypi.md
+  - Debian package: install-deb.md
+  - RPM package: install-rpm.md
+- Features:
+  - Devices: devices.md
+  - Tests: tests.md

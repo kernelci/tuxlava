@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="docs/tuxlava_full.svg" alt="TuxLAVA Logo" width="40%" />
+  <img src="tuxlava_full.svg" alt="TuxLAVA Logo" width="40%" />
 </div>
 
 [![Pipeline Status](https://gitlab.com/Linaro/tuxrun/badges/master/pipeline.svg)](https://gitlab.com/LinaroLtd/tuxsuite.com/tuxlava/pipelines)
@@ -26,11 +26,10 @@ are supported along with tests that could be run on these devices.
 TuxLAVA is a part of [TuxSuite](https://tuxsuite.com), a suite of
 tools and services to help with Linux kernel development.
 
-[[_TOC_]]
 
 # Installing TuxLAVA
 
-- [From PyPI](docs/install-pypi.md)
+- [From PyPI](install-pypi.md)
 
 # Using TuxLAVA as a library
 
