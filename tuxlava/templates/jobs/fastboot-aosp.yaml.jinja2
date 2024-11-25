@@ -1,6 +1,6 @@
 {% set prefix_len = 'fastboot-aosp-'|length %}
-{% set DOCKER_IMAGE_POSTPROCESS = DOCKER_IMAGE_POSTPROCESS|default("linaro/lava-android-postprocess:bulleye-2023.09.14-01") %}
-{% set DOCKER_IMAGE_DEPLOY = DOCKER_IMAGE_DEPLOY|default("linaro/lava-android-test:focal-2023.10.18-01") %}
+{% set DOCKER_IMAGE_POSTPROCESS = DOCKER_IMAGE_POSTPROCESS|default("linaro/lava-android-postprocess:bullseye-2024.03.13-01") %}
+{% set DOCKER_IMAGE_DEPLOY = DOCKER_IMAGE_DEPLOY|default("linaro/lava-android-test:focal-2024.02.20-01") %}
 device_type: "{{ device.name[prefix_len:] }}"
 
 {% if tests %}
@@ -165,3 +165,4 @@ actions:
       local: true
     timeout:
       minutes: {{ boot_timeout }}
+

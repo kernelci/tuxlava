@@ -41,7 +41,7 @@ actions:
         url: "https://images.validation.linaro.org/snapshots.linaro.org/96boards/qrb5165-rb5/linaro/rescue/27/rb5-bootloader-ufs-aosp-27/gpt_both0.bin"
     postprocess:
       docker:
-        image: linaro/lava-android-postprocess:bulleye-2023.09.14-01
+        image: linaro/lava-android-postprocess:bullseye-2024.03.13-01
         local: true
         steps:
         - linaro-lkft-android.sh -g -k https://stylesen.dev.storage.tuxsuite.com/public/tuxsuite/senthil/oebuilds/2k0BQ4PP7MJG21NqvHmWZpCA6RC/Image.gz -v https://stylesen.dev.storage.tuxsuite.com/public/tuxsuite/senthil/oebuilds/2k0BQ4PP7MJG21NqvHmWZpCA6RC/ -c lkft-db845c-aosp-master-mainline-gki
@@ -51,7 +51,7 @@ actions:
       minutes: 30
     to: fastboot
     docker:
-      image: linaro/lava-android-test:focal-2023.10.18-01
+      image: linaro/lava-android-test:focal-2024.02.20-01
       local: true
     images:
       partition:0:
@@ -75,7 +75,7 @@ actions:
     - oem select-display-panel hdmi
     - reboot
     docker:
-      image: linaro/lava-android-test:focal-2023.10.18-01
+      image: linaro/lava-android-test:focal-2024.02.20-01
       local: true
     method: fastboot
     prompts:
@@ -123,7 +123,7 @@ actions:
           - lava-test-case "android-boot-screencap" --shell adb shell screencap -p
             /data/local/tmp/screencap.png
     docker:
-      image: linaro/lava-android-test:focal-2023.10.18-01
+      image: linaro/lava-android-test:focal-2024.02.20-01
       local: true
     timeout:
       minutes: 25

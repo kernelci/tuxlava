@@ -243,6 +243,7 @@ class FastbootAOSPDevice(Device):
     console: str = ""
     rootfs_dev: str = ""
     rootfs_arg: str = ""
+    device_type: str = ""
 
     test_character_delay: int = 0
 
@@ -300,14 +301,14 @@ class FastbootAOSPDevice(Device):
             kwargs.get("parameters").get("command-name", "command")
         )
 
-        if "TUXSUITE_BAKE_VENDOR_DOWNLOAD_URL" not in kwargs.get("parameters").keys():
-            raise InvalidArgument(
-                "argument --parameters TUXSUITE_BAKE_VENDOR_DOWNLOAD_URL must be provided"
-            )
-
-        kwargs["TUXSUITE_BAKE_VENDOR_DOWNLOAD_URL"] = kwargs.get("parameters").get(
-            "TUXSUITE_BAKE_VENDOR_DOWNLOAD_URL"
-        )
+        for v in [
+            "TUXSUITE_BAKE_VENDOR_DOWNLOAD_URL",
+            "BUILD_REFERENCE_IMAGE_GZ_URL",
+            "LKFT_BUILD_CONFIG",
+        ]:
+            if v not in kwargs.get("parameters").keys():
+                raise InvalidArgument(f"argument --parameters {v} must be provided")
+            kwargs[v] = kwargs["parameters"][v]
 
         # populate all other parameters supplied
         for key in kwargs.get("parameters").keys():
@@ -320,6 +321,7 @@ class FastbootAOSPDevice(Device):
                 commands=kwargs["commands"],
                 command_name=kwargs["command_name"],
                 device=kwargs["device"],
+                device_type=self.device_type,
                 overlays=kwargs["overlays"],
                 parameters=kwargs["parameters"],
                 test_definitions=kwargs["test_definitions"],
@@ -337,6 +339,7 @@ class FastbootAOSPDragonboard_845c(FastbootAOSPDevice):
     arch = "arm64"
     lava_arch = "arm64"
     real_device = True
+    device_type = "dragonboard-845c"
 
     ptable = "https://images.validation.linaro.org/snapshots.linaro.org/96boards/dragonboard845c/linaro/rescue/101/dragonboard-845c-bootloader-ufs-aosp-101/gpt_both0.bin"
 
@@ -347,5 +350,7 @@ class FastbootAOSPQRB5165rb5(FastbootAOSPDevice):
     arch = "arm64"
     lava_arch = "arm64"
     real_device = True
+    device_type = "qrb5165-rb5"
 
     ptable = "https://images.validation.linaro.org/snapshots.linaro.org/96boards/qrb5165-rb5/linaro/rescue/27/rb5-bootloader-ufs-aosp-27/gpt_both0.bin"
+    ramdisk = "https://snapshots.linaro.org/member-builds/qcomlt/boards/qcom-armv8a/openembedded/master/56008/rpb/initramfs-rootfs-image-qcom-armv8a.rootfs-20240118001247-92260.cpio.gz"

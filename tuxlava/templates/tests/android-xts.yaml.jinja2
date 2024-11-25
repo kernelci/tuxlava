@@ -1,0 +1,24 @@
+- test:
+    timeout:
+      minutes: {{ timeout }}
+    docker:
+      image: linaro/lava-android-test:focal-2024.02.20-01
+      local: true
+    definitions:
+    - repository: https://github.com/Linaro/test-definitions.git
+      branch: master
+      from: git
+      path: automated/android/noninteractive-tradefed/tradefed.yaml
+      parameters:
+        TEST_PARAMS: {{ test_params }}
+        TEST_URL: "{{test_url}}/{{pkg_name}}"
+        TEST_PATH: "{{test_path}}"
+        RESULTS_FORMAT: "aggregated"
+        ANDROID_VERSION: "{{ANDROID_VERSION}}"
+        TEST_REBOOT_EXPECTED: "{{expect_reboot}}"
+{% if SQUAD_URL is defined %}
+        SQUAD_UPLOAD_URL: "{{SQUAD_URL}}/{{device_type}}"
+{% endif %}
+        INTERNET_ACCESS: 'true'
+      name: {{ name }}
+

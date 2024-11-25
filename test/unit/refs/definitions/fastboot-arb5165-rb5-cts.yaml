@@ -1,6 +1,6 @@
-device_type: "dragonboard-845c"
+device_type: "qrb5165-rb5"
 
-job_name: "tuxlava@fastboot-aosp-dragonboard-845c: boot"
+job_name: "tuxlava@fastboot-aosp-qrb5165-rb5: android-cts"
 priority: low
 visibility: "public"
 reboot_to_fastboot: false
@@ -13,7 +13,7 @@ metadata:
   android.name: "unknown"
   android.url: "unknown"
   android.version: "unknown"
-  lkft.build.config: "lkft-db845c-aosp-master-mainline-gki"
+  lkft.build.config: "lkft-config"
   git branch: "unknown"
   git repo: "unknown"
   git commit: "unknown"
@@ -21,14 +21,12 @@ metadata:
   build-url: "unknown"
 timeouts:
   job:
-    minutes: 80
+    minutes: 560
   action:
    minutes: 5
   actions:
     power-off:
       seconds: 30
-  queue:
-    hours: 100
 
 actions:
 - deploy:
@@ -38,13 +36,13 @@ actions:
     os: debian
     images:
       partition:0:
-        url: "https://images.validation.linaro.org/snapshots.linaro.org/96boards/dragonboard845c/linaro/rescue/101/dragonboard-845c-bootloader-ufs-aosp-101/gpt_both0.bin"
+        url: "https://images.validation.linaro.org/snapshots.linaro.org/96boards/qrb5165-rb5/linaro/rescue/27/rb5-bootloader-ufs-aosp-27/gpt_both0.bin"
     postprocess:
       docker:
         image: linaro/lava-android-postprocess:bullseye-2024.03.13-01
         local: true
         steps:
-        - linaro-lkft-android.sh -g -k https://stylesen.dev.storage.tuxsuite.com/public/tuxsuite/senthil/oebuilds/2k0BQ4PP7MJG21NqvHmWZpCA6RC/Image.gz -v https://stylesen.dev.storage.tuxsuite.com/public/tuxsuite/senthil/oebuilds/2k0BQ4PP7MJG21NqvHmWZpCA6RC/ -c lkft-db845c-aosp-master-mainline-gki
+        - linaro-lkft-android.sh -g -k https://reference/image/url -v https://vendor/url -c lkft-config
 
 - deploy:
     timeout:
@@ -127,3 +125,23 @@ actions:
       local: true
     timeout:
       minutes: 25
+- test:
+    timeout:
+      minutes: 480
+    docker:
+      image: linaro/lava-android-test:focal-2024.02.20-01
+      local: true
+    definitions:
+    - repository: https://github.com/Linaro/test-definitions.git
+      branch: master
+      from: git
+      path: automated/android/noninteractive-tradefed/tradefed.yaml
+      parameters:
+        TEST_PARAMS: cts
+        TEST_URL: "https://test/cts/url/android-cts.zip"
+        TEST_PATH: "android-cts"
+        RESULTS_FORMAT: "aggregated"
+        ANDROID_VERSION: "master"
+        TEST_REBOOT_EXPECTED: "false"
+        INTERNET_ACCESS: 'true'
+      name: android-cts
