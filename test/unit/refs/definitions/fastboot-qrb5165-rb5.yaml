@@ -1,0 +1,113 @@
+device_type: "qrb5165-rb5"
+
+job_name: "tuxlava@fastboot-qrb5165-rb5: commands, commands"
+priority: low
+visibility: "public"
+
+reboot_to_fastboot: false
+
+
+context:
+    test_character_delay: 10
+timeouts:
+  job:
+    minutes: 84
+  connection:
+    minutes: 2
+  actions:
+    power-off:
+      seconds: 30
+    finalize:
+      seconds: 60
+
+actions:
+- deploy:
+    to: downloads
+    timeout:
+      minutes: 25
+    os: debian
+    images:
+      partition:0:
+        url: "https://bios/url"
+      ramdisk:
+        url: "https://snapshots.linaro.org/member-builds/qcomlt/boards/qcom-armv8a/openembedded/master/56008/rpb/initramfs-rootfs-image-qcom-armv8a.rootfs-20240118001247-92260.cpio.gz"
+      kernel:
+        url: "https://storage.tuxboot.com/buildroot/arm64/Image"
+      rootfs:
+        url: "https://storage.tuxboot.com/buildroot/arm64/rootfs.tar.zst"
+        compression: zstd
+        format: ext4
+        apply-overlay: true
+          overlays:
+            lava: true
+    postprocess:
+      docker:
+        image: "linaro/kir:20241203"
+        local: true
+        steps:
+        - /kir/lava/board_setup.sh qrb5165-rb5 rootfs "/usr/"
+- deploy:
+    to: fastboot
+    os: debian
+    timeout:
+      minutes: 30
+    docker:
+      image: "linaro/kir:20241203"
+      local: true
+    images:
+      partition:0:
+        url: downloads://gpt_both0.bin
+        reboot: hard-reset
+      boot:
+        url: downloads://boot.img
+        reboot: hard-reset
+      rootfs:
+        url: downloads://rootfs.img
+        apply-overlay: true
+
+- command:
+    name: pre_os_command
+- command:
+    name: pre_power_command
+- boot:
+    docker:
+      image: "linaro/kir:20241203"
+    method: fastboot
+    timeout:
+      minutes: 25
+    auto_login:
+      login_prompt: 'login:'
+      username: root
+    prompts:
+    - 'root@(.*):[/~]#'
+
+- test:
+    timeout:
+      minutes: 2
+    definitions:
+    - repository:
+        metadata:
+          format: lava-test test definition 1.0
+          name: commands
+          description: "Run commands"
+        run:
+          steps:
+          - "lava-test-case command --shell commands 'cd /opt/ && ls'"
+      from: inline
+      path: command
+      name: commands
+- test:
+    timeout:
+      minutes: 2
+    definitions:
+    - repository:
+        metadata:
+          format: lava-test test definition 1.0
+          name: commands
+          description: "Run commands"
+        run:
+          steps:
+          - "lava-test-case command --shell commands 'cd /opt/ && ls'"
+      from: inline
+      path: command
+      name: commands

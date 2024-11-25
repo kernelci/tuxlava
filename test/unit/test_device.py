@@ -2500,6 +2500,17 @@ def artefacts(tmp_path):
             ],
             "test-modules-default-path.yaml",
         ),
+        (
+            [
+                "--device",
+                "fastboot-qrb5165-rb5",
+                "commands",
+                "cd /opt/ && ls",
+                "--bios",
+                "https://bios/url",
+            ],
+            "fastboot-qrb5165-rb5.yaml",
+        ),
     ],
 )
 def test_definition(monkeypatch, mocker, capsys, tmpdir, artefacts, args, filename):
@@ -2673,7 +2684,7 @@ def test_definition(monkeypatch, mocker, capsys, tmpdir, artefacts, args, filena
                 "--bios",
                 "https://example.com/bios.img",
             ],
-            "argument --bios is only valid for 'fastboot-dragonboard-845c' device",
+            "argument --bios is only valid for 'fastboot-dragonboard-845c' and 'fastboot-qrb5165-rb5' device",
         ),
         (
             [
@@ -2689,7 +2700,7 @@ def test_definition(monkeypatch, mocker, capsys, tmpdir, artefacts, args, filena
                 "--ramdisk",
                 "https://example.com/ramdisk.gz",
             ],
-            "argument --ramdisk is only valid for 'fastboot-dragonboard-845c' device",
+            "argument --ramdisk is only valid for 'fastboot-dragonboard-845c' and 'fastboot-qrb5165-rb5' device",
         ),
         (
             [

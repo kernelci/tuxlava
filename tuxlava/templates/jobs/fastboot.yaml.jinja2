@@ -53,11 +53,11 @@ actions:
       minutes: {{ deploy_download_timeout }}
     os: {{ deploy_os|default(debian) }}
     images:
-{% if bios and device.name == 'fastboot-dragonboard-845c' %}
+{% if bios and device.name in ['fastboot-dragonboard-845c', 'fastboot-qrb5165-rb5'] %}
       partition:0:
         url: "{{ bios }}"
 {% endif %}
-{% if ramdisk and device.name == 'fastboot-dragonboard-845c' %}
+{% if ramdisk and device.name in ['fastboot-dragonboard-845c', 'fastboot-qrb5165-rb5'] %}
       ramdisk:
         url: "{{ ramdisk }}"
 {% endif %}
@@ -120,7 +120,7 @@ actions:
       image: "{{ deploy_fastboot_docker_image|default('linaro/kir:20241203') }}"
       local: true
     images:
-{% if device.name == 'fastboot-dragonboard-845c' %}
+{% if device.name in ['fastboot-dragonboard-845c', 'fastboot-qrb5165-rb5'] %}
       partition:0:
         url: downloads://gpt_both0.bin
         reboot: hard-reset
@@ -131,7 +131,7 @@ actions:
       boot:
         url: downloads://boot.img
 {% endif %}
-{% if device.name == 'fastboot-dragonboard-845c' or device.name == 'fastboot-dragonboard-410c' %}
+{% if device.name in ['fastboot-dragonboard-845c', 'fastboot-dragonboard-410c', 'fastboot-qrb5165-rb5'] %}
       rootfs:
 {% else %}
       super:
@@ -139,7 +139,7 @@ actions:
         url: downloads://rootfs.img
         apply-overlay: true
 
-{% if device.name == 'fastboot-dragonboard-410c' or device.name == 'fastboot-dragonboard-845c' %}
+{% if device.name in ['fastboot-dragonboard-410c', 'fastboot-dragonboard-845c', 'fastboot-qrb5165-rb5'] %}
 - command:
     name: pre_os_command
 - command:

@@ -64,13 +64,19 @@ class FastbootDevice(Device):
                 f"Invalid option(s) for fastboot devices: {', '.join(sorted(invalid_args))}"
             )
 
-        if bios and self.name not in ["fastboot-dragonboard-845c"]:
+        if bios and self.name not in [
+            "fastboot-dragonboard-845c",
+            "fastboot-qrb5165-rb5",
+        ]:
             raise InvalidArgument(
-                "argument --bios is only valid for 'fastboot-dragonboard-845c' device"
+                "argument --bios is only valid for 'fastboot-dragonboard-845c' and 'fastboot-qrb5165-rb5' device"
             )
-        if ramdisk and self.name not in ["fastboot-dragonboard-845c"]:
+        if ramdisk and self.name not in [
+            "fastboot-dragonboard-845c",
+            "fastboot-qrb5165-rb5",
+        ]:
             raise InvalidArgument(
-                "argument --ramdisk is only valid for 'fastboot-dragonboard-845c' device"
+                "argument --ramdisk is only valid for 'fastboot-dragonboard-845c' and 'fastboot-qrb5165-rb5' device"
             )
         if boot_args and '"' in boot_args:
             raise InvalidArgument('argument --boot-args should not contain "')
@@ -209,6 +215,19 @@ class FastbootX15(FastbootDevice):
 
     kernel = "https://storage.tuxboot.com/buildroot/arm64/Image"
     rootfs = "https://storage.tuxboot.com/buildroot/arm64/rootfs.tar.zst"
+
+
+class FastbootQRB5165rb5(FastbootDevice):
+    name = "fastboot-qrb5165-rb5"
+
+    arch = "arm64"
+    lava_arch = "arm64"
+    real_device = True
+
+    kernel = "https://storage.tuxboot.com/buildroot/arm64/Image"
+    rootfs = "https://storage.tuxboot.com/buildroot/arm64/rootfs.tar.zst"
+    bios = "https://images.validation.linaro.org/snapshots.linaro.org/96boards/qrb5165-rb5/linaro/rescue/27/rb5-bootloader-ufs-linux-27/gpt_both0.bin"
+    ramdisk = "https://snapshots.linaro.org/member-builds/qcomlt/boards/qcom-armv8a/openembedded/master/56008/rpb/initramfs-rootfs-image-qcom-armv8a.rootfs-20240118001247-92260.cpio.gz"
 
 
 class FastbootAOSPDevice(Device):
