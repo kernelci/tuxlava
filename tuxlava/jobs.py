@@ -7,6 +7,7 @@
 #
 # SPDX-License-Identifier: MIT
 
+import re
 import shlex
 import tempfile
 
@@ -131,6 +132,17 @@ class Job:
         tests = "_".join(self.tests) if self.tests else "boot"
         return f"Job {self.device}/{tests}"
 
+    @property
+    def lava_job_priority(self):
+        priority = (
+            self.parameters.get("LAVA_JOB_PRIORITY", 50) if self.parameters else 50
+        )
+        if not re.match("^(100|[1-9][0-9]?|low|medium|high)$", str(priority)):
+            raise InvalidArgument(
+                "argument --parameters LAVA_JOB_PRIORITY must be a value between 1-100 or one of 'low', 'medium' or 'high'"
+            )
+        return priority
+
     def render(self) -> str:
         # Render the job definition
         overlays = []
@@ -251,6 +263,7 @@ class Job:
             "boot_args": self.boot_args,
             "secrets": self.secrets,
             "deploy_os": self.deploy_os,
+            "LAVA_JOB_PRIORITY": self.lava_job_priority,
         }
         definition = self.device.definition(**def_arguments)
         return definition
