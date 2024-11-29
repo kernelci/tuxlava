@@ -159,7 +159,7 @@ actions:
     method: u-boot
 {% else %}
     docker:
-      image: "{{ boot_docker_image|default('linaro/kir:master') }}"
+      image: "{{ boot_docker_image|default('linaro/kir:20240606') }}"
 {% if device.name == 'fastboot-dragonboard-845c' %}
       local: true
 {% endif %}

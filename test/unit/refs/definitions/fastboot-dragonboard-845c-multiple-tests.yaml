@@ -85,7 +85,7 @@ actions:
     name: pre_power_command
 - boot:
     docker:
-      image: "linaro/kir:master"
+      image: "linaro/kir:20240606"
       local: true
     method: fastboot
     timeout:
