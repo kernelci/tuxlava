@@ -1,7 +1,7 @@
 device_type: "dragonboard-845c"
 
 job_name: "tuxlava@fastboot-dragonboard-845c: ltp-smoke, ltp-io, ltp-math, perf, kselftest-arm64, kunit"
-priority: 50
+priority: low
 visibility: "public"
 
 reboot_to_fastboot: false

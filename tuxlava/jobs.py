@@ -135,7 +135,9 @@ class Job:
     @property
     def lava_job_priority(self):
         priority = (
-            self.parameters.get("LAVA_JOB_PRIORITY", 50) if self.parameters else 50
+            self.parameters.get("LAVA_JOB_PRIORITY", "low")
+            if self.parameters
+            else "low"
         )
         if not re.match("^(100|[1-9][0-9]?|low|medium|high)$", str(priority)):
             raise InvalidArgument(

@@ -1,7 +1,7 @@
 device_type: "bcm2711-rpi-4-b"
 
 job_name: "tuxlava@nfs-bcm2711-rpi-4-b: boot"
-priority: 50
+priority: low
 visibility: "public"
 
 context:

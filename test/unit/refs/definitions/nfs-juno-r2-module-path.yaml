@@ -1,7 +1,7 @@
 device_type: "juno-r2"
 
 job_name: "tuxlava@nfs-juno-r2: boot"
-priority: 50
+priority: low
 visibility: "public"
 
 context:

@@ -1,7 +1,7 @@
 device_type: "avh"
 
 job_name: "tuxlava@avh-rpi4b: boot"
-priority: 50
+priority: low
 visibility: "public"
 timeouts:
   job:

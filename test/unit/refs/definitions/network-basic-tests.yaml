@@ -1,7 +1,7 @@
 device_type: "x86_64"
 
 job_name: "tuxlava@nfs-x86_64: network-basic"
-priority: 50
+priority: low
 visibility: "public"
 
 context:

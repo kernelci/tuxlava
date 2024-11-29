@@ -1,7 +1,7 @@
 device_type: "dragonboard-410c"
 
 job_name: "tuxlava@fastboot-dragonboard-410c: ltp-smoke, ltp-io, ltp-math, perf, kselftest-arm64, kunit"
-priority: 50
+priority: low
 visibility: "public"
 
 reboot_to_fastboot: false

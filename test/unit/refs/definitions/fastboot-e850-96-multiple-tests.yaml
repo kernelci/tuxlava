@@ -1,7 +1,7 @@
 device_type: "e850-96"
 
 job_name: "tuxlava@fastboot-e850-96: ltp-smoke, ltp-io, ltp-math, perf, kselftest-arm64, kunit"
-priority: 50
+priority: low
 visibility: "public"
 
 reboot_to_fastboot: false

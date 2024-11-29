@@ -1,7 +1,7 @@
 device_type: "i386"
 
 job_name: "tuxlava@nfs-i386: ltp-smoke, ltp-io, ltp-math, perf, kselftest-x86, kunit"
-priority: 50
+priority: low
 visibility: "public"
 
 context:
