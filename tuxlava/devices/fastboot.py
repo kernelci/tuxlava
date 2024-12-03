@@ -182,7 +182,6 @@ class FastbootDragonboard_845c(FastbootDevice):
     arch = "arm64"
     lava_arch = "arm64"
     real_device = True
-    redirect_to_kmsg = False
 
     kernel = "https://storage.tuxboot.com/buildroot/arm64/Image"
     rootfs = "https://storage.tuxboot.com/buildroot/arm64/rootfs.tar.zst"
@@ -196,7 +195,6 @@ class FastbootOEDragonboard_845c(FastbootDevice):
     arch = "arm64"
     lava_arch = "arm64"
     real_device = True
-    redirect_to_kmsg = False
 
     boot = "https://storage.tuxboot.com/buildroot/arm64/boot.img"
     rootfs = "https://storage.tuxboot.com/buildroot/arm64/rootfs.tar.zst"

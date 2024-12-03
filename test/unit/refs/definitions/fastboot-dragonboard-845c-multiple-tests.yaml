@@ -102,6 +102,7 @@ actions:
       minutes: 2
     definitions:
     - repository: https://storage.tuxboot.com/test-definitions/2024.07.tar.zst
+      lava-signal: kmsg
       from: url
       compression: zstd
       path: automated/linux/ltp/ltp.yaml
@@ -122,6 +123,7 @@ actions:
       minutes: 2
     definitions:
     - repository: https://storage.tuxboot.com/test-definitions/2024.07.tar.zst
+      lava-signal: kmsg
       from: url
       compression: zstd
       path: automated/linux/ltp/ltp.yaml
@@ -142,6 +144,7 @@ actions:
       minutes: 2
     definitions:
     - repository: https://storage.tuxboot.com/test-definitions/2024.07.tar.zst
+      lava-signal: kmsg
       from: url
       compression: zstd
       path: automated/linux/ltp/ltp.yaml
@@ -162,6 +165,7 @@ actions:
       minutes: 30
     definitions:
     - repository: https://storage.tuxboot.com/test-definitions/2024.07.tar.zst
+      lava-signal: kmsg
       from: url
       compression: zstd
       path: automated/linux/perf/perf.yaml
@@ -173,6 +177,7 @@ actions:
       minutes: 45
     definitions:
     - repository: https://storage.tuxboot.com/test-definitions/2024.07.tar.zst
+      lava-signal: kmsg
       from: url
       compression: zstd
       path: automated/linux/kselftest/kselftest.yaml
@@ -189,6 +194,7 @@ actions:
       minutes: 20
     definitions:
     - repository: https://storage.tuxboot.com/test-definitions/2024.07.tar.zst
+      lava-signal: kmsg
       from: url
       compression: zstd
       path: automated/linux/kunit/kunit.yaml
