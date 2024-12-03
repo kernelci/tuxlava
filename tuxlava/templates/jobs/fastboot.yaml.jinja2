@@ -105,7 +105,7 @@ actions:
 {% endif %}
     postprocess:
       docker:
-        image: "{{ deploy_docker_image|default('linaro/kir:20240606') }}"
+        image: "{{ deploy_docker_image|default('linaro/kir:20241203') }}"
         local: true
         steps:
         - /kir/lava/board_setup.sh {{ device.name[9:] }} rootfs "/usr/"
@@ -115,7 +115,7 @@ actions:
     timeout:
       minutes: {{ deploy_timeout }}
     docker:
-      image: "{{ deploy_fastboot_docker_image|default('linaro/kir:20240606') }}"
+      image: "{{ deploy_fastboot_docker_image|default('linaro/kir:20241203') }}"
       local: true
     images:
 {% if device.name == 'fastboot-dragonboard-845c' %}
@@ -159,7 +159,7 @@ actions:
     method: u-boot
 {% else %}
     docker:
-      image: "{{ boot_docker_image|default('linaro/kir:20240606') }}"
+      image: "{{ boot_docker_image|default('linaro/kir:20241203') }}"
 {% if device.name == 'fastboot-dragonboard-845c' %}
       local: true
 {% endif %}
