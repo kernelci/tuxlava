@@ -1,5 +1,6 @@
 export PROJECT := tuxlava
 export TUXPKG_MIN_COVERAGE := 90
+export TUXPKG_FLAKE8_OPTIONS := "--exclude=site-packages"
 check: spellcheck stylecheck test
 
 include $(shell tuxpkg get-makefile)
