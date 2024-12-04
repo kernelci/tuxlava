@@ -7,7 +7,7 @@ include $(shell tuxpkg get-makefile)
 .PHONY: htmlcov tags
 
 htmlcov:
-	python3 -m pytest --cov=tuxrun --cov-report=html
+	python3 -m pytest --cov=$(PROJECT) --cov-report=html
 
 stylecheck: style flake8
 
