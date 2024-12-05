@@ -5,6 +5,7 @@ tuxlava.egg-info/
 build/
 dist/
 env/
+/htmlcov
 public/
 /tags
 coverage.xml
