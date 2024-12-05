@@ -5,10 +5,7 @@ check: spellcheck stylecheck test
 
 include $(shell tuxpkg get-makefile)
 
-.PHONY: htmlcov tags
-
-htmlcov:
-	python3 -m pytest --cov=$(PROJECT) --cov-report=html
+.PHONY: tags
 
 stylecheck: style flake8
 
