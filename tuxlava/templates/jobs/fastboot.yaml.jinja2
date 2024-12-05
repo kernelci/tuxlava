@@ -79,7 +79,9 @@ actions:
         compression: {{ compression(modules[0])[1] }}
 {% endif %}
 {% endif %}
-{% if device.name == 'fastboot-x15' or device.name == 'fastboot-e850-96' %}
+{% if device.name == 'fastboot-e850-96' %}
+      userdata:
+{% elif device.name == 'fastboot-x15' %}
       super:
 {% else %}
       rootfs:
