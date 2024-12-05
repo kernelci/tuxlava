@@ -39,7 +39,7 @@ stylecheck:
   image: $CI_REGISTRY_IMAGE:ci-debian
   extends: .code-checks
   script:
-    - python3 -m pip install --break-system-packages -r requirements-dev.txt
+    - python3 -m pip install --break-system-packages -e ".[dev]"
     - make stylecheck
 
 codespell:
@@ -95,7 +95,7 @@ docker-arm64:
   extends: .tuxlava
   stage: unit-tests
   script:
-    - pip install -r requirements-dev.txt
+    - pip install -e ".[dev]"
     - make test
 
 unit-tests-python3.9:
