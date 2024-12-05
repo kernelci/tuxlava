@@ -23,3 +23,6 @@ docs/index.md: README.md scripts/readme2index.sh
 
 doc-serve:
 	mkdocs serve
+
+tags:
+	ctags -R $(PROJECT)/ test/
