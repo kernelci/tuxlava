@@ -21,7 +21,7 @@ from tuxlava.tuxmake import TuxBuildBuild, TuxMakeBuild
 from tuxlava.utils import pathurlnone
 
 
-TEST_DEFINITIONS = "https://storage.tuxboot.com/test-definitions/2024.07.tar.zst"
+TEST_DEFINITIONS = "https://storage.tuxboot.com/test-definitions/2024.12.tar.zst"
 
 
 def tuxbuild_url(s):
