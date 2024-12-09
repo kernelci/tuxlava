@@ -36,6 +36,11 @@ class LTPCapBounds(LTPTest):
     timeout = 2
 
 
+class LTPCapability(LTPTest):
+    name = "ltp-capability"
+    timeout = 2
+
+
 class LTPCommands(LTPTest):
     name = "ltp-commands"
     timeout = 10
