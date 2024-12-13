@@ -133,6 +133,15 @@ class Job:
         return f"Job {self.device}/{tests}"
 
     @property
+    def lava_job_tags(self):
+        tags = (
+            self.parameters.get("TAGS", "").split(",")
+            if self.parameters
+            else ""
+        )
+        return tags
+
+    @property
     def lava_job_priority(self):
         priority = (
             self.parameters.get("LAVA_JOB_PRIORITY", "low")
@@ -266,6 +275,7 @@ class Job:
             "secrets": self.secrets,
             "deploy_os": self.deploy_os,
             "LAVA_JOB_PRIORITY": self.lava_job_priority,
+            "tags": self.lava_job_tags,
         }
         definition = self.device.definition(**def_arguments)
         return definition

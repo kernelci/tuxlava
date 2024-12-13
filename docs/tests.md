@@ -20,6 +20,14 @@ other jobs in the queue.
 Example:
 `--parameters LAVA_JOB_PRIORITY=low`.
 
+### LAVA tags
+`TAG` can be set to a single string or a comma-separated list of strings. This
+allows a job writer to target specific devices within a particular group of
+DUTs (Devices Under Test).
+
+Example:
+`--parameters TAGS=lts` or `--parameters TAGS=lts,production`.
+
 ## Devices
 
 This section outlines which tests are supported on various devices.

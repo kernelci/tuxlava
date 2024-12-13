@@ -22,7 +22,6 @@ class FastbootDevice(Device):
     machine: str = ""
     cpu: str = ""
     memory: str = "4G"
-    tags: str = ""
 
     extra_options: List[str] = []
     extra_boot_args: str = ""
@@ -122,7 +121,6 @@ class FastbootDevice(Device):
         kwargs["command_name"] = slugify(
             kwargs.get("parameters").get("command-name", "command")
         )
-        kwargs["tags"] = self.tags
 
         # populate all other parameters supplied
         for key in kwargs.get("parameters").keys():
@@ -137,7 +135,6 @@ class FastbootDevice(Device):
                 device=kwargs["device"],
                 overlays=kwargs["overlays"],
                 parameters=kwargs["parameters"],
-                tags=kwargs["tags"],
                 test_definitions=kwargs["test_definitions"],
             )
             for t in kwargs["tests"]
@@ -178,7 +175,6 @@ class FastbootDragonboard_410c(FastbootDevice):
 
 class FastbootDragonboard_845c(FastbootDevice):
     name = "fastboot-dragonboard-845c"
-    tags = ["lts"]
     arch = "arm64"
     lava_arch = "arm64"
     real_device = True
@@ -192,7 +188,6 @@ class FastbootDragonboard_845c(FastbootDevice):
 
 class FastbootOEDragonboard_845c(FastbootDevice):
     name = "fastboot-oe-dragonboard-845c"
-    tags = ["lts"]
     arch = "arm64"
     lava_arch = "arm64"
     real_device = True
