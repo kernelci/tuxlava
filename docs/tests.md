@@ -8,7 +8,11 @@ TuxLAVA support some tests, each tests is supported on some but not all architec
     tuxlava --list-tests
     ```
 
-## Fastboot device
+## Devices
+
+This section outlines which tests are supported on various devices.
+
+### Fastboot device
 
 The following tests are supported.
 
@@ -25,7 +29,7 @@ fastboot-* | rcutorture                                                         
 fastboot-* | systemd-analyze                                                            |                                                          |
 fastboot-* | v4l2                                                                       |                                                          |
 
-## FVP AEMvA device
+### FVP AEMvA device
 
 The following tests are supported by the default root filesystem.
 
@@ -87,7 +91,7 @@ fvp-aemva | xfstests-(btrfs, ext4, f2fs, Nilfs2, xfs)                           
     The **modules.tar.xz** should be given with `--modules https://.../modules.tar.xz`.
 
 
-## FVP Morello devices
+### FVP Morello devices
 
 Device              | Tests          | Parameters                       |
 --------------------|----------------|----------------------------------|
@@ -126,11 +130,11 @@ fvp-morello-oe      | fwts           |                                  |
     **BIONIC_TEST_TYPE** is optional and defaults to `static`. Valid values are `dynamic` and `static`.
 
 
-## FVP LAVA device
+### FVP LAVA device
 
 The 'fvp-lava' device type has been specifically added to allow users to generate a FVP [LAVA](https://lava.readthedocs.io/en/latest/) Job definition using TuxLAVA. This device type will not ignore any test cases passed and includes all the tests which are in the LAVA Job definition.
 
-## NFS device
+### NFS device
 
 The following tests are supported.
 
@@ -147,7 +151,7 @@ nfs-*      | rcutorture                                                         
 nfs-*      | systemd-analyze                                                            |                                                          |
 nfs-*      | v4l2                                                                       |                                                          |
 
-## QEMU devices
+### QEMU devices
 
 The following tests are supported by the default root filesystem.
 
