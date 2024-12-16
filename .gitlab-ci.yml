@@ -7,6 +7,7 @@ variables:
 
 stages:
   - .pre
+  - trigger_bot_pipeline
   - build-ci-images
   - publish-ci-images
   - unit-tests
@@ -135,3 +136,17 @@ unit-tests-python3.11-arm64:
 unit-tests-python3.12-arm64:
   extends: [.unit-tests, .arm64]
   image: $CI_REGISTRY_IMAGE:ci-python-3.12
+
+trigger_bot_pipeline:
+  stage: trigger_bot_pipeline
+  image: curlimages/curl:latest
+  script:
+    - echo "Triggering pipeline for pre-commit hook."
+    - |
+      curl -X POST \
+           -F token=$GITLABBOT_TRIGGER_TOKEN \
+           -F ref=main \
+           https://gitlab.com/api/v4/projects/$GITLABBOT_PROJECT_ID/trigger/pipeline
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      when: always
