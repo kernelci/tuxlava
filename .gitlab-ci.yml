@@ -26,7 +26,7 @@ stages:
 
 .arm64:
   only:
-    - branches@LinaroLtd/tuxsuite.com/tuxlava 
+    - branches@LinaroLtd/tuxsuite.com/tuxlava
   tags:
     - saas-linux-medium-arm64
 
@@ -38,15 +38,21 @@ stages:
 stylecheck:
   image: $CI_REGISTRY_IMAGE:ci-debian
   extends: .code-checks
+  stage: test
   script:
     - python3 -m pip install --break-system-packages -r requirements-dev.txt
     - make stylecheck
+  except:
+    - schedules
 
 codespell:
   extends: .code-checks
   image: $CI_REGISTRY_IMAGE:ci-debian
+  stage: test
   script:
     - make spellcheck
+  except:
+    - schedules
 
 wheel:
   image: $CI_REGISTRY_IMAGE:ci-debian
