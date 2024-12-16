@@ -133,6 +133,8 @@ actions:
 {% endif %}
 {% if device.name in ['fastboot-dragonboard-845c', 'fastboot-dragonboard-410c', 'fastboot-qrb5165-rb5'] %}
       rootfs:
+{% elif device.name == 'fastboot-e850-96' %}
+      userdata:
 {% else %}
       super:
 {% endif %}
