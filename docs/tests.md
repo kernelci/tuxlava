@@ -8,6 +8,18 @@ TuxLAVA support some tests, each tests is supported on some but not all architec
     tuxlava --list-tests
     ```
 
+## LAVA specific Parameters
+
+This section describes LAVA specific parameters that can be specified.
+
+### LAVA job priority
+`LAVA_JOB_PRIORITY` can be set to a value between 1 and 100, or to 'low',
+'medium', or 'high'. This determines the job's scheduling priority relative to
+other jobs in the queue.
+
+Example:
+`--parameters LAVA_JOB_PRIORITY=low`.
+
 ## Devices
 
 This section outlines which tests are supported on various devices.
