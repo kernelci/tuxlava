@@ -134,7 +134,8 @@ class Job:
 
     @property
     def lava_job_tags(self):
-        return self.parameters.get("TAGS", "").split(",") if self.parameters else ""
+        tags = self.parameters.get("TAGS") if self.parameters else ""
+        return tags.split(",") if tags else ""
 
     @property
     def lava_job_priority(self):
