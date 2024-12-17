@@ -2971,6 +2971,27 @@ def test_definition(monkeypatch, mocker, capsys, tmpdir, artefacts, args, filena
             ],
             "argument missing --parameters 'TEST_VTS_URL='...'",
         ),
+        (
+            [
+                "--device",
+                "ssh-device",
+                "--ssh-user",
+                "testuser",
+                "--ssh-identity-file",
+                f"{BASE}/refs/dummy.pem",
+                "--ssh-prompt",
+                "testuser",
+                "--overlay",
+                "https://storage.tuxboot.com/overlays/debian/bookworm/arm64/mmtests/master/config-io-blogbench2.tar.xz",
+                "/mmtests",
+                "--overlay",
+                "https://storage.tuxboot.com/overlays/debian/bookworm/arm64/mmtests/master/config-io-blogbench.tar.xz",
+                "/mmtests",
+                "--tests",
+                "ltp-smoke",
+            ],
+            "'ssh-host', ssh-user', 'ssh-identity-file' are required argument for ssh device",
+        ),
     ],
 )
 def test_failures(monkeypatch, mocker, capsys, tmpdir, args, error_str):

@@ -35,6 +35,10 @@ class SSHDevice(Device):
             raise InvalidArgument(
                 f"Invalid option(s) for ssh device: {', '.join(sorted(invalid_args))}"
             )
+        if any(arg is None for arg in [ssh_host, ssh_user, ssh_identity_file]):
+            raise InvalidArgument(
+                "'ssh-host', ssh-user', 'ssh-identity-file' are required argument for ssh device"
+            )
         self.ssh_host = ssh_host
         self.ssh_user = ssh_user
         self.ssh_identity_file = ssh_identity_file.replace("file://", "")
