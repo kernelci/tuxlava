@@ -63,15 +63,53 @@ actions:
       vendor_boot:
         url: downloads://vendor_boot.img
 
+- test:
+    definitions:
+    - from: inline
+      name: format-metatdata
+      path: format-metatdata.yaml
+      repository:
+        metadata:
+          description: format-metatdata
+          format: Lava-Test Test Definition 1.0
+          name: format-metatdata
+        run:
+          steps:
+          - lava-test-case "format-metadata" --shell fastboot format:ext4 metadata
+    docker:
+      image: linaro/lava-android-test:focal-2024.02.20-01
+      local: true
+    timeout:
+      minutes: 5
+
+- test:
+    definitions:
+    - from: inline
+      name: select-display-panel
+      path: select-display-panel.yaml
+      repository:
+        metadata:
+          description: select-display-panel
+          format: Lava-Test Test Definition 1.0
+          name: select-display-panel
+        run:
+          steps:
+          - lava-test-case "select-display-panel-1" --shell fastboot oem select-display-panel
+            hdmi
+          - lava-test-case "reboot-bootloader-1" --shell fastboot reboot bootloader
+          - lava-test-case "select-display-panel-2" --shell fastboot oem select-display-panel
+            hdmi
+          - lava-test-case "reboot-bootloader-2" --shell fastboot reboot bootloader
+          - lava-test-case "select-display-panel-3" --shell fastboot oem select-display-panel
+            hdmi
+          - lava-test-case "reboot" --shell fastboot reboot
+    docker:
+      image: linaro/lava-android-test:focal-2024.02.20-01
+      local: true
+    timeout:
+      minutes: 5
+
 - boot:
-    commands:
-    - format:ext4 metadata
-    - oem select-display-panel hdmi
-    - reboot bootloader
-    - oem select-display-panel hdmi
-    - reboot bootloader
-    - oem select-display-panel hdmi
-    - reboot
     docker:
       image: linaro/lava-android-test:focal-2024.02.20-01
       local: true
