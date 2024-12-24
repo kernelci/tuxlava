@@ -7,6 +7,15 @@ include $(shell tuxpkg get-makefile)
 
 .PHONY: tags
 
+help:
+	@echo 'Possible targets:'
+	@echo ''
+	@echo '  doc          - Build documentation'
+	@echo '  stylecheck   - Check code style'
+	@echo '  spellcheck   - Check code spelling'
+	@echo '  tags         - Generate an index file of the surce and test code (ctags)'
+	@echo '  test         - Run unit tests'
+
 stylecheck: style flake8
 
 spellcheck:
