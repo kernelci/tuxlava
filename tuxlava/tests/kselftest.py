@@ -45,6 +45,21 @@ class KSelfTest(Test):
         return self._render("kselftest.yaml.jinja2", **kwargs)
 
 
+class KSelftestAcct(KSelfTest):
+    name = "kselftest-acct"
+    timeout = 5
+
+
+class KSelftestAlsa(KSelfTest):
+    name = "kselftest-alsa"
+    timeout = 5
+
+
+class KSelftestAmdPstate(KSelfTest):
+    name = "kselftest-amd-pstate"
+    timeout = 5
+
+
 class KSelftestArm64(KSelfTest):
     devices = [
         "qemu-arm64",
@@ -85,6 +100,11 @@ class KSelftestBPF(KSelfTest):
     timeout = 45
 
 
+class KSelftestCachestat(KSelfTest):
+    name = "kselftest-cachestat"
+    timeout = 5
+
+
 class KSelftestCapabilities(KSelfTest):
     name = "kselftest-capabilities"
     timeout = 5
@@ -97,6 +117,11 @@ class KSelftestCgroup(KSelfTest):
 
 class KSelftestClone3(KSelfTest):
     name = "kselftest-clone3"
+    timeout = 5
+
+
+class KSelftestConnector(KSelfTest):
+    name = "kselftest-connector"
     timeout = 5
 
 
@@ -117,6 +142,16 @@ class KSelftestCpuHotplug(KSelfTest):
 
 class KSelftestDamon(KSelfTest):
     name = "kselftest-damon"
+    timeout = 5
+
+
+class KSelftestDevicesErrorLogs(KSelfTest):
+    name = "kselftest-devices-error_logs"
+    timeout = 5
+
+
+class KSelftestDevicesProbe(KSelfTest):
+    name = "kselftest-devices-probe"
     timeout = 5
 
 
@@ -150,67 +185,67 @@ class KSelftestDriversGpu(KSelfTest):
 class KSelftestDriversNet(KSelfTest):
     name = "kselftest-drivers-net"
     cmdfile = "drivers.net"
-    timeout = 5
+    timeout = 15
 
 
 class KSelftestDriversNetBonding(KSelfTest):
     name = "kselftest-drivers-net-bonding"
     cmdfile = "drivers.net.bonding"
-    timeout = 5
+    timeout = 15
 
 
 class KSelftestDriversNetDsa(KSelfTest):
     name = "kselftest-drivers-net-dsa"
     cmdfile = "drivers.net.dsa"
-    timeout = 5
+    timeout = 15
 
 
 class KSelftestDriversNetHW(KSelfTest):
     name = "kselftest-drivers-net-hw"
     cmdfile = "drivers.hw"
-    timeout = 5
+    timeout = 15
 
 
 class KSelftestDriversNetLib(KSelfTest):
     name = "kselftest-drivers-net-lib"
     cmdfile = "drivers.net.lib"
-    timeout = 5
+    timeout = 15
 
 
 class KSelftestDriversNetMicrochip(KSelfTest):
     name = "kselftest-drivers-net-microchip"
     cmdfile = "drivers.net.microchip"
-    timeout = 5
+    timeout = 15
 
 
 class KSelftestDriversNetMlxsw(KSelfTest):
     name = "kselftest-drivers-net-mlxsw"
     cmdfile = "drivers.net.mlxsw"
-    timeout = 5
+    timeout = 15
 
 
 class KSelftestDriversNetNetdevsim(KSelfTest):
     name = "kselftest-drivers-net-netdevsim"
     cmdfile = "drivers.net.netdevsim"
-    timeout = 5
+    timeout = 15
 
 
 class KSelftestDriversNetOcelot(KSelfTest):
     name = "kselftest-drivers-net-ocelot"
     cmdfile = "drivers.net.ocelot"
-    timeout = 5
+    timeout = 15
 
 
 class KSelftestDriversNetTeam(KSelfTest):
     name = "kselftest-drivers-net-team"
     cmdfile = "drivers.net.team"
-    timeout = 5
+    timeout = 15
 
 
-class KSelftestDriversNetVirtio_net(KSelfTest):
+class KSelftestDriversNetVirtioNet(KSelfTest):
     name = "kselftest-drivers-net-virtio_net"
     cmdfile = "drivers.net.virtio_net"
-    timeout = 5
+    timeout = 15
 
 
 class KSelftestDriversSdsi(KSelfTest):
@@ -222,7 +257,7 @@ class KSelftestDriversSdsi(KSelfTest):
 class KSelftestDriversUsbUsbip(KSelfTest):
     name = "kselftest-drivers-usb-usbip"
     cmdfile = "drivers.usb.usbip"
-    timeout = 5
+    timeout = 15
 
 
 class KSelftestEfivarfs(KSelfTest):
@@ -235,21 +270,26 @@ class KSelftestExec(KSelfTest):
     timeout = 5
 
 
+class KSelftestFchmodat2(KSelfTest):
+    name = "kselftest-fchmodat2"
+    timeout = 15
+
+
 class KSelftestFilesystems(KSelfTest):
     name = "kselftest-filesystems"
-    timeout = 5
+    timeout = 15
 
 
 class KSelftestFilesystemsBinderfs(KSelfTest):
     name = "kselftest-filesystems-binderfs"
-    cmdfile = "filesystems.binderfs"
-    timeout = 5
+    cmdfile = "filesystem.binderfs"
+    timeout = 15
 
 
 class KSelftestFilesystemsEpoll(KSelfTest):
     name = "kselftest-filesystems-epoll"
-    cmdfile = "filesystems.epoll"
-    timeout = 5
+    cmdfile = "filesystem.epoll"
+    timeout = 15
 
 
 class KSelftestFilesystemsEventfd(KSelfTest):
@@ -260,20 +300,20 @@ class KSelftestFilesystemsEventfd(KSelfTest):
 
 class KSelftestFilesystemsFat(KSelfTest):
     name = "kselftest-filesystems-fat"
-    cmdfile = "filesystems.fat"
-    timeout = 5
+    cmdfile = "filesystem.fat"
+    timeout = 15
 
 
 class KSelftestFilesystemsOverlayfs(KSelfTest):
     name = "kselftest-filesystems-overlayfs"
     cmdfile = "filesystems.overlayfs"
-    timeout = 5
+    timeout = 15
 
 
 class KSelftestFilesystemsStatmount(KSelfTest):
     name = "kselftest-filesystems-statmount"
     cmdfile = "filesystems.statmount"
-    timeout = 5
+    timeout = 15
 
 
 class KSelftestFirmware(KSelfTest):
@@ -288,7 +328,7 @@ class KSelftestFpu(KSelfTest):
 
 class KSelftestFtrace(KSelfTest):
     name = "kselftest-ftrace"
-    timeout = 10
+    timeout = 15
 
 
 class KSelftestFutex(KSelfTest):
@@ -298,6 +338,11 @@ class KSelftestFutex(KSelfTest):
 
 class KSelftestGpio(KSelfTest):
     name = "kselftest-gpio"
+    timeout = 5
+
+
+class KSelftestHid(KSelfTest):
+    name = "kselftest-hid"
     timeout = 5
 
 
@@ -376,6 +421,11 @@ class KSelftestLocking(KSelfTest):
     timeout = 5
 
 
+class KSelftestLsm(KSelfTest):
+    name = "kselftest-lsm"
+    timeout = 5
+
+
 class KSelftestMembarrier(KSelfTest):
     name = "kselftest-membarrier"
     timeout = 5
@@ -388,7 +438,7 @@ class KSelftestMemfd(KSelfTest):
 
 class KSelftestMm(KSelfTest):
     name = "kselftest-mm"
-    timeout = 5
+    timeout = 15
 
 
 class KSelftestMemoryHotplug(KSelfTest):
@@ -403,10 +453,10 @@ class KSelftestMincore(KSelfTest):
 
 class KSelftestMount(KSelfTest):
     name = "kselftest-mount"
-    timeout = 5
+    timeout = 15
 
 
-class KSelftestMount_setattr(KSelfTest):
+class KSelftestMountSetattr(KSelfTest):
     name = "kselftest-mount_setattr"
     timeout = 5
 
@@ -418,7 +468,7 @@ class KSelftestMoveMountSetGroup(KSelfTest):
 
 class KSelftestMqueue(KSelfTest):
     name = "kselftest-mqueue"
-    timeout = 5
+    timeout = 15
 
 
 class KSelftestNci(KSelfTest):
@@ -428,13 +478,13 @@ class KSelftestNci(KSelfTest):
 
 class KSelftestNet(KSelfTest):
     name = "kselftest-net"
-    timeout = 5
+    timeout = 15
 
 
-class KSelftestNetAf_unix(KSelfTest):
+class KSelftestNetAfUnix(KSelfTest):
     name = "kselftest-net-af_unix"
     cmdfile = "net.af_unix"
-    timeout = 5
+    timeout = 15
 
 
 class KSelftestNetForwarding(KSelfTest):
@@ -452,12 +502,24 @@ class KSelftestNetHsr(KSelfTest):
 class KSelftestNetMptcp(KSelfTest):
     name = "kselftest-net-mptcp"
     cmdfile = "net.mptcp"
-    timeout = 5
+    timeout = 15
 
 
 class KSelftestNetfilter(KSelfTest):
     name = "kselftest-netfilter"
-    timeout = 5
+    timeout = 15
+
+
+class KSelftestNetRds(KSelfTest):
+    name = "kselftest-net-rds"
+    cmdfile = "net.rds"
+    timeout = 15
+
+
+class KSelftestNetTcpAo(KSelfTest):
+    name = "kselftest-net-tcp_ao"
+    cmdfile = "net.tcp_ao"
+    timeout = 15
 
 
 class KSelftestNolibc(KSelfTest):
@@ -467,7 +529,7 @@ class KSelftestNolibc(KSelfTest):
 
 class KSelftestNsfs(KSelfTest):
     name = "kselftest-nsfs"
-    timeout = 5
+    timeout = 15
 
 
 class KSelftestNtb(KSelfTest):
@@ -482,7 +544,7 @@ class KSelftestOpenat2(KSelfTest):
 
 class KSelftestPerfEvents(KSelfTest):
     name = "kselftest-perf_events"
-    timeout = 5
+    timeout = 15
 
 
 class KSelftestPidfd(KSelfTest):
@@ -538,12 +600,12 @@ class KSelftestRlimits(KSelfTest):
 
 class KSelftestRseq(KSelfTest):
     name = "kselftest-rseq"
-    timeout = 5
+    timeout = 15
 
 
 class KSelftestRtc(KSelfTest):
     name = "kselftest-rtc"
-    timeout = 5
+    timeout = 15
 
 
 class KSelftestRust(KSelfTest):
@@ -563,7 +625,7 @@ class KSelftestSched(KSelfTest):
 
 class KSelftestSeccomp(KSelfTest):
     name = "kselftest-seccomp"
-    timeout = 5
+    timeout = 15
 
 
 class KSelftestSgx(KSelfTest):
@@ -603,7 +665,7 @@ class KSelftestSysctl(KSelfTest):
 
 class KSelftestTcTesting(KSelfTest):
     name = "kselftest-tc-testing"
-    timeout = 5
+    timeout = 15
 
 
 class KSelftestTdx(KSelfTest):
