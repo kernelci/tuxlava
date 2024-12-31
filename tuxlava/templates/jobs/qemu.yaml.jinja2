@@ -92,7 +92,7 @@ actions:
 {% endif %}
     timeout:
       minutes: {{ boot_timeout }}
-{% if not enable_trustzone %}
+{% if not enable_trustzone or "tfa-tests" not in tests|map(attribute="name")|join(", ") %}
     auto_login:
       login_prompt: 'login:'
       username: root
