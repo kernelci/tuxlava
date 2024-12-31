@@ -71,6 +71,7 @@ actions:
         SKIP_INSTALL: 'true'
         MMTESTS_CONFIG_FILE: 'configs/config-hpc-scimarkc-small'
         MMTEST_ITERATIONS: '20'
+        MMTESTS_OVERRIDE: ''
         TEST_DIR: '/mmtests'
         FULL_ARCHIVE: 'false'
         SHARED_DIR: 'true'

@@ -71,6 +71,7 @@ actions:
         SKIP_INSTALL: 'true'
         MMTESTS_CONFIG_FILE: 'configs/config-scheduler-schbench'
         MMTEST_ITERATIONS: '10'
+        MMTESTS_OVERRIDE: ''
         TEST_DIR: '/mmtests'
         FULL_ARCHIVE: 'false'
         SHARED_DIR: 'true'
