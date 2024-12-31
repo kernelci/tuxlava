@@ -35,7 +35,7 @@ actions:
         image_arg: "-bios {bios}"
         url: "https://example.com/Bios"
       rootfs:
-        image_arg: "-drive file={rootfs},if=none,format=raw,id=hd0 -device virtio-blk-device,drive=hd0"
+        image_arg: "-drive file={rootfs},if=none,format=raw,id=hd0,if=virtio"
         url: "https://storage.tuxboot.com/buildroot/arm64/rootfs.ext4.zst"
         compression: zstd
         format: ext4
