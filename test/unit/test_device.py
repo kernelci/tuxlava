@@ -2,6 +2,7 @@
 
 import json
 import os
+import yaml
 from pathlib import Path
 
 import pytest
@@ -2647,6 +2648,11 @@ def test_definition(monkeypatch, mocker, capsys, tmpdir, artefacts, args, filena
     assert output == (BASE / "refs" / "definitions" / filename).read_text(
         encoding="utf-8"
     )
+    try:
+        with open((BASE / "refs" / "definitions" / filename), "r") as yaml_file:
+            yaml.load(yaml_file, Loader=yaml.FullLoader)
+    except yaml.YAMLError as e:
+        pytest.fail(f"YAML file '{filename}' is invalid. Error: {e}")
 
 
 @pytest.mark.parametrize(
