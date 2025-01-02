@@ -90,6 +90,9 @@ class QemuDevice(Device):
         options.kernel = notnone(options.kernel, self.kernel)
         options.rootfs = notnone(options.rootfs, self.rootfs)
 
+    def arch_customization(self, kwargs):
+        pass
+
     def definition(self, **kwargs):
         kwargs = kwargs.copy()
 
@@ -120,18 +123,11 @@ class QemuDevice(Device):
         else:
             kwargs["tux_prompt"] = []
 
-        if "cpu.lpa2" in kwargs.get("parameters").keys() and kwargs["parameters"].get(
-            "cpu.lpa2"
-        ) in ["off", "on"]:
-            if self.name not in ["qemu-arm64", "qemu-arm64be"]:
-                raise InvalidArgument(
-                    "argument '--parameters cpu.lpa2=on/off' is only valid for qemu-arm64 and qemu-arm64be device"
-                )
-            kwargs["cpu"] += f',lpa2={kwargs["parameters"]["cpu.lpa2"]}'
-
         kwargs["command_name"] = slugify(
             kwargs.get("parameters").get("command-name", "command")
         )
+        self.arch_customization(kwargs)
+
         kwargs["redirect_to_kmsg"] = self.redirect_to_kmsg
 
         # render the template
@@ -186,6 +182,19 @@ class QemuArm64(QemuDevice):
         if enable_trustzone:
             self.machine = f"{self.machine},secure=on"
 
+    def arch_customization(self, kwargs):
+        """
+        cpu.lpa2 defaults to on in QEMU, for kernel version <= 5.4, cpu.lpa2
+        needs to be set to off.
+        """
+        if "cpu.lpa2" not in kwargs.get("parameters").keys():
+            return
+
+        if kwargs["parameters"]["cpu.lpa2"] not in ["off", "on"]:
+            return
+
+        kwargs["cpu"] += f',lpa2={kwargs["parameters"]["cpu.lpa2"]}'
+
 
 class QemuArm64BE(QemuArm64):
     name = "qemu-arm64be"
@@ -230,6 +239,21 @@ class QemuArmv7(QemuDevice):
 
     kernel = "https://storage.tuxboot.com/buildroot/armv7/zImage"
     rootfs = "https://storage.tuxboot.com/buildroot/armv7/rootfs.ext4.zst"
+
+    def arch_customization(self, kwargs):
+        """
+        We need to make sure that armv7 machines use up to <= 3G of RAM
+        """
+        if "machine.highmem" not in kwargs.get("parameters").keys():
+            return
+
+        if kwargs["parameters"]["machine.highmem"] not in ["off", "on"]:
+            return
+
+        kwargs["machine"] += f',highmem={kwargs["parameters"]["machine.highmem"]}'
+        if "highmem=off" in kwargs["machine"]:
+            self.memory = "3G"
+            kwargs["memory"] = self.memory
 
 
 class QemuArmv7BE(QemuArmv7):
