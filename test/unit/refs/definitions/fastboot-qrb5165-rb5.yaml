@@ -38,8 +38,8 @@ actions:
         compression: zstd
         format: ext4
         apply-overlay: true
-          overlays:
-            lava: true
+        overlays:
+          lava: true
     postprocess:
       docker:
         image: "linaro/kir:20241203"
