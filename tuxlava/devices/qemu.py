@@ -165,7 +165,7 @@ class QemuArm64(QemuDevice):
 
     console = "ttyAMA0"
     rootfs_dev = "/dev/vda"
-    rootfs_arg = "-drive file={rootfs},if=none,format=raw,id=hd0,if=virtio"
+    rootfs_arg = "-drive file={rootfs},format=raw,id=hd0,if=virtio"
 
     kernel = "https://storage.tuxboot.com/buildroot/arm64/Image"
     rootfs = "https://storage.tuxboot.com/buildroot/arm64/rootfs.ext4.zst"
@@ -216,7 +216,7 @@ class QemuArmv5(QemuDevice):
 
     console = "ttyAMA0"
     rootfs_dev = "/dev/vda"
-    rootfs_arg = "-drive file={rootfs},if=none,format=raw,id=hd0,if=virtio"
+    rootfs_arg = "-drive file={rootfs},format=raw,id=hd0,if=virtio"
 
     dtb = "https://storage.tuxboot.com/buildroot/armv5/versatile-pb.dtb"
     kernel = "https://storage.tuxboot.com/buildroot/armv5/zImage"
@@ -235,7 +235,7 @@ class QemuArmv7(QemuDevice):
 
     console = "ttyAMA0"
     rootfs_dev = "/dev/vda"
-    rootfs_arg = "-drive file={rootfs},if=none,format=raw,id=hd0,if=virtio"
+    rootfs_arg = "-drive file={rootfs},format=raw,id=hd0,if=virtio"
 
     kernel = "https://storage.tuxboot.com/buildroot/armv7/zImage"
     rootfs = "https://storage.tuxboot.com/buildroot/armv7/rootfs.ext4.zst"
@@ -468,7 +468,7 @@ class QemuS390(QemuDevice):
 
     console = "ttyS0"
     rootfs_dev = "/dev/vda net.ifnames=0"
-    rootfs_arg = "-drive file={rootfs},if=none,format=raw,id=hd0,if=virtio"
+    rootfs_arg = "-drive file={rootfs},format=raw,id=hd0,if=virtio"
 
     kernel = "https://storage.tuxboot.com/buildroot/s390/bzImage"
     rootfs = "https://storage.tuxboot.com/buildroot/s390/rootfs.ext4.zst"
