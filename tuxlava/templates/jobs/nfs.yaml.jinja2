@@ -94,7 +94,7 @@ actions:
           format: tar
           compression: {{ compression(overlay)[1] }}
 {% endfor %}
-{% elif tests and overlays %}
+{% elif tests %}
       overlays:
         lava: true
 {% endif %}

@@ -38,6 +38,8 @@ actions:
       compression: xz
       format: tar
       apply-overlay: true
+      overlays:
+        lava: true
 - boot:
     method:
       ipxe
