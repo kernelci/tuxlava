@@ -2,6 +2,7 @@
 
 import json
 import os
+import requests
 import yaml
 from pathlib import Path
 
@@ -2653,6 +2654,17 @@ def test_definition(monkeypatch, mocker, capsys, tmpdir, artefacts, args, filena
             yaml.load(yaml_file, Loader=yaml.SafeLoader)
     except yaml.YAMLError as e:
         pytest.fail(f"YAML file '{filename}' is invalid. Error: {e}")
+
+    url = "https://lkft-staging.validation.linaro.org/api/v0.2/jobs/validate/"
+    headers = {
+        "Content-Type": "application/json",
+    }
+    payload = {
+        "definition": json.dumps(content),
+    }
+    response = requests.post(url, json=payload)
+    if response.json["message"] == "Job invalid":
+        pytest.fail(f"LAVA validate YAML file '{filename}'")
 
 
 @pytest.mark.parametrize(
