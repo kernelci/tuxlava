@@ -91,7 +91,6 @@ actions:
         compression: {{ compression(rootfs)[1] }}
 {% endif %}
         format: ext4
-        apply-overlay: true
 {% if overlays %}
         overlays:
 {% if tests %}
@@ -142,7 +141,6 @@ actions:
       super:
 {% endif %}
         url: downloads://rootfs.img
-        apply-overlay: true
 
 {% if device.name in ['fastboot-dragonboard-410c', 'fastboot-dragonboard-845c', 'fastboot-qrb5165-rb5'] %}
 - command:

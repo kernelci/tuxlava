@@ -47,7 +47,6 @@ actions:
         url: "https://example.com/rootfs.tar.xz"
         compression: xz
         format: ext4
-        apply-overlay: true
         overlays:
           lava: true
           overlay-00:
@@ -78,7 +77,6 @@ actions:
         reboot: hard-reset
       rootfs:
         url: downloads://rootfs.img
-        apply-overlay: true
 
 - command:
     name: pre_os_command

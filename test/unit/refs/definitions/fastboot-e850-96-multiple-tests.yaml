@@ -41,7 +41,6 @@ actions:
         url: "https://example.com/rootfs.tar.xz"
         compression: xz
         format: ext4
-        apply-overlay: true
         overlays:
           lava: true
           overlay-00:
@@ -68,7 +67,6 @@ actions:
         url: downloads://boot.img
       userdata:
         url: downloads://rootfs.img
-        apply-overlay: true
 
 - command:
     name: pre_power_command

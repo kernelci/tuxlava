@@ -37,7 +37,6 @@ actions:
         url: "https://storage.tuxboot.com/buildroot/arm64/rootfs.tar.zst"
         compression: zstd
         format: ext4
-        apply-overlay: true
         overlays:
           lava: true
     postprocess:
@@ -63,7 +62,6 @@ actions:
         reboot: hard-reset
       rootfs:
         url: downloads://rootfs.img
-        apply-overlay: true
 
 - command:
     name: pre_os_command

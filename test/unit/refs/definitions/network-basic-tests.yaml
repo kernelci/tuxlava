@@ -37,7 +37,6 @@ actions:
       url: "https://example.com/rootfs.tar.xz"
       compression: xz
       format: tar
-      apply-overlay: true
       overlays:
         lava: true
 - boot:

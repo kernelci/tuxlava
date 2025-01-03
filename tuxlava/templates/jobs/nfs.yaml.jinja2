@@ -81,7 +81,6 @@ actions:
       compression: {{ compression(rootfs)[1] }}
 {% endif %}
       format: tar
-      apply-overlay: true
 {% if overlays %}
       overlays:
 {% if tests %}
