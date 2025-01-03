@@ -49,6 +49,7 @@ actions:
         format: ext4
         apply-overlay: true
         overlays:
+          lava: true
           overlay-00:
             url: "https://example.com/ltp.tar.xz"
             path: "/"

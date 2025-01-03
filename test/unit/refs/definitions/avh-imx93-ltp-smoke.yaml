@@ -34,6 +34,7 @@ actions:
         root_partition: 1
         partition: 1
         overlays:
+          lava: true
           modules:
             url: "https://example.com/modules.tar.xz"
             path: "/"

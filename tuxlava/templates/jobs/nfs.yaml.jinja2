@@ -84,6 +84,9 @@ actions:
       apply-overlay: true
 {% if overlays %}
       overlays:
+{% if tests %}
+        lava: true
+{% endif %}
 {% for name, overlay, dst in overlays %}
         {{ name }}:
           url: "{{ overlay }}"
