@@ -38,7 +38,6 @@ actions:
         image_arg: "-drive file={rootfs},if=none,format=raw,id=hd0 -device virtio-blk-pci,drive=hd0"
         url: "https://storage.tuxboot.com/buildroot/armv5/rootfs.ext4.zst"
         compression: zstd
-        format: ext4
 - boot:
     method: qemu
     timeout:
