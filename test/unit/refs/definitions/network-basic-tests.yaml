@@ -37,8 +37,6 @@ actions:
       url: "https://example.com/rootfs.tar.xz"
       compression: xz
       format: tar
-      overlays:
-        lava: true
 - boot:
     method:
       ipxe
