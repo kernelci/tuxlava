@@ -82,6 +82,7 @@ actions:
 {% endif %}
       format: tar
 {% if overlays %}
+      apply-overlay: true
       overlays:
 {% if tests %}
         lava: true
