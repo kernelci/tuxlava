@@ -31,16 +31,17 @@ actions:
       url: "https://example.com/Image.gz"
       compression: gz
       type: image
-    modules:
-      url: "https://example.com/modules.tar.xz"
-      path: /usr/
-      compression: xz
     nfsrootfs:
       url: "https://example.com/rootfs.tar.xz"
       compression: xz
       format: tar
       overlays:
         lava: true
+        modules:
+          url: "https://example.com/modules.tar.xz"
+          path: "/usr/"
+          format: tar
+          compression: xz
         overlay-00:
           url: "https://example.com/ltp.tar.xz"
           path: "/"

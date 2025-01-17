@@ -67,14 +67,6 @@ actions:
     dtb:
       url: "{{ dtb }}"
 {% endif %}
-{% if modules %}
-    modules:
-      url: "{{ modules[0] }}"
-      path: {{ modules[1] }}
-{% if compression(modules[0])[1] is not none %}
-      compression: {{ compression(modules[0])[1] }}
-{% endif %}
-{% endif %}
     nfsrootfs:
       url: "{{ rootfs }}"
 {% if compression(rootfs)[1] is not none %}

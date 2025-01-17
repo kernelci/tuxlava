@@ -29,14 +29,16 @@ actions:
       url: "https://example.com/Image.gz"
       compression: gz
       type: image
-    modules:
-      url: "https://example.com/modules.tar.xz"
-      path: /
-      compression: xz
     nfsrootfs:
       url: "https://example.com/rootfs.tar.xz"
       compression: xz
       format: tar
+      overlays:
+        modules:
+          url: "https://example.com/modules.tar.xz"
+          path: "/"
+          format: tar
+          compression: xz
 - boot:
     method:
       ipxe
