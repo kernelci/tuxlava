@@ -38,6 +38,8 @@ class FastbootDevice(Device):
     ramdisk: str = ""
     template: str = "fastboot.yaml.jinja2"
 
+    real_device = True
+
     test_character_delay: int = 0
 
     def validate(
@@ -162,7 +164,6 @@ class FastbootE850_96(FastbootDevice):
 
     arch = "arm64"
     lava_arch = "arm64"
-    real_device = True
 
     kernel = "https://storage.tuxboot.com/buildroot/arm64/Image"
     rootfs = "https://storage.tuxboot.com/buildroot/arm64/rootfs.tar.zst"
@@ -173,7 +174,6 @@ class FastbootDragonboard_410c(FastbootDevice):
 
     arch = "arm64"
     lava_arch = "arm64"
-    real_device = True
 
     kernel = "https://storage.tuxboot.com/buildroot/arm64/Image"
     rootfs = "https://storage.tuxboot.com/buildroot/arm64/rootfs.tar.zst"
@@ -183,7 +183,6 @@ class FastbootDragonboard_845c(FastbootDevice):
     name = "fastboot-dragonboard-845c"
     arch = "arm64"
     lava_arch = "arm64"
-    real_device = True
     redirect_to_kmsg = False
 
     kernel = "https://storage.tuxboot.com/buildroot/arm64/Image"
@@ -196,7 +195,6 @@ class FastbootOEDragonboard_845c(FastbootDevice):
     name = "fastboot-oe-dragonboard-845c"
     arch = "arm64"
     lava_arch = "arm64"
-    real_device = True
     redirect_to_kmsg = False
 
     boot = "https://storage.tuxboot.com/buildroot/arm64/boot.img"
@@ -210,7 +208,6 @@ class FastbootX15(FastbootDevice):
 
     arch = "arm64"
     lava_arch = "arm64"
-    real_device = True
     reboot_to_fastboot = "true"
 
     kernel = "https://storage.tuxboot.com/buildroot/arm64/Image"
@@ -222,7 +219,6 @@ class FastbootQRB5165rb5(FastbootDevice):
 
     arch = "arm64"
     lava_arch = "arm64"
-    real_device = True
 
     kernel = "https://storage.tuxboot.com/buildroot/arm64/Image"
     rootfs = "https://storage.tuxboot.com/buildroot/arm64/rootfs.tar.zst"
@@ -338,7 +334,6 @@ class FastbootAOSPDragonboard_845c(FastbootAOSPDevice):
 
     arch = "arm64"
     lava_arch = "arm64"
-    real_device = True
     device_type = "dragonboard-845c"
 
     ptable = "https://images.validation.linaro.org/snapshots.linaro.org/96boards/dragonboard845c/linaro/rescue/101/dragonboard-845c-bootloader-ufs-aosp-101/gpt_both0.bin"
@@ -349,7 +344,6 @@ class FastbootAOSPQRB5165rb5(FastbootAOSPDevice):
 
     arch = "arm64"
     lava_arch = "arm64"
-    real_device = True
     device_type = "qrb5165-rb5"
 
     ptable = "https://images.validation.linaro.org/snapshots.linaro.org/96boards/qrb5165-rb5/linaro/rescue/27/rb5-bootloader-ufs-aosp-27/gpt_both0.bin"

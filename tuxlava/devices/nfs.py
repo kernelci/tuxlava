@@ -35,6 +35,8 @@ class NfsDevice(Device):
     kernel: str = ""
     rootfs: str = ""
 
+    real_device = True
+
     test_character_delay: int = 0
 
     def validate(
@@ -143,7 +145,6 @@ class NfsJunoR2(NfsDevice):
 
     arch = "arm64"
     lava_arch = "arm64"
-    real_device = True
 
     kernel = "https://storage.tuxboot.com/buildroot/arm64/Image"
     rootfs = "https://storage.tuxboot.com/buildroot/arm64/rootfs.tar.zst"
@@ -154,7 +155,6 @@ class NfsRpi4(NfsDevice):
 
     arch = "arm64"
     lava_arch = "arm64"
-    real_device = True
 
     kernel = "https://storage.tuxboot.com/buildroot/arm64/Image"
     rootfs = "https://storage.tuxboot.com/buildroot/arm64/rootfs.tar.zst"
@@ -165,7 +165,6 @@ class NfsRockPi4(NfsDevice):
 
     arch = "arm64"
     lava_arch = "arm64"
-    real_device = True
 
     kernel = "https://storage.tuxboot.com/buildroot/arm64/Image"
     rootfs = "https://storage.tuxboot.com/buildroot/arm64/rootfs.tar.zst"
@@ -176,7 +175,6 @@ class NfsI386(NfsDevice):
 
     arch = "i386"
     lava_arch = "i386"
-    real_device = True
 
     kernel = "https://storage.tuxboot.com/buildroot/x86_64/bzImage"
     rootfs = "https://storage.tuxboot.com/buildroot/x86_64/rootfs.tar.zst"
@@ -187,7 +185,6 @@ class NfsX86_64(NfsDevice):
 
     arch = "x86_64"
     lava_arch = "x86_64"
-    real_device = True
 
     kernel = "https://storage.tuxboot.com/buildroot/x86_64/bzImage"
     rootfs = "https://storage.tuxboot.com/buildroot/x86_64/rootfs.tar.zst"
