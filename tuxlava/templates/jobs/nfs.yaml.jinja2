@@ -76,7 +76,6 @@ actions:
 {% if overlays %}
       overlays:
 {% if tests %}
-        lava: true
 {% endif %}
 {% for name, overlay, dst in overlays %}
         {{ name }}:
@@ -85,9 +84,6 @@ actions:
           format: tar
           compression: {{ compression(overlay)[1] }}
 {% endfor %}
-{% elif tests and overlays %}
-      overlays:
-        lava: true
 {% endif %}
 - boot:
     method:
