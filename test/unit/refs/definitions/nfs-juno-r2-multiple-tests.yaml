@@ -36,7 +36,6 @@ actions:
       compression: xz
       format: tar
       overlays:
-        lava: true
         modules:
           url: "https://example.com/modules.tar.xz"
           path: "/usr/"
