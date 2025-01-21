@@ -2998,6 +2998,7 @@ def test_definition(monkeypatch, mocker, capsys, tmpdir, artefacts, args, filena
             ],
             "'ssh-host', ssh-user', 'ssh-identity-file' are required argument for ssh device",
         ),
+        (["--device", "fvp-lava"], "Missing argument --job-definition"),
     ],
 )
 def test_failures(monkeypatch, mocker, capsys, tmpdir, args, error_str):
