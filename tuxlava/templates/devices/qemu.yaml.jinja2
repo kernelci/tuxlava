@@ -246,7 +246,7 @@ actions:
 {% endif %}
 {# end arch cpu #}
           - -nographic
-{% if no_network is defined and no_network is same as true %}
+{% if no_network is defined and no_network is sameas true %}
           - -nic none
 {% else %}
           - -net nic,{{ model|default('model=virtio') }},macaddr={{ mac_addr|default('52:54:00:12:34:58') }} -net {{ netdevice|default('user') }}
