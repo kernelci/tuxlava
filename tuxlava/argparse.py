@@ -22,16 +22,19 @@ from tuxlava.utils import pathurlnone
 ###########
 def filter_options(options):
     keys = [
+        "cache_dir",
+        "debug",
+        "deploy_os",
         "device",
+        "lava_definition",
+        "qemu_binary",
+        "qemu_image",
+        "shell",
+        "shared",
+        "timeouts",
+        "tmpdir",
         "tuxbuild",
         "tuxmake",
-        "timeouts",
-        "qemu_image",
-        "qemu_binary",
-        "shell",
-        "debug",
-        "lava_definition",
-        "deploy_os",
     ]
     return {k: getattr(options, k) for k in vars(options) if k not in keys}
 
