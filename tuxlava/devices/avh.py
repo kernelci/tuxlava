@@ -17,6 +17,7 @@ from tuxlava.utils import compression, notnone, slugify
 class AvhDevice(Device):
     flag_use_pre_run_cmd = True
     flag_cache_rootfs = True
+    real_device = False
 
     api_endpoint: str = "https://app.avh.arm.com/api"
     api_token: str = ""

@@ -17,6 +17,7 @@ from tuxlava.utils import compression, notnone, slugify
 
 class QemuDevice(Device):
     flag_cache_rootfs = True
+    real_device = False
 
     arch: str = ""
     lava_arch: str = ""

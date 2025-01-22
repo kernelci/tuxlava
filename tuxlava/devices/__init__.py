@@ -23,6 +23,7 @@ class Device:
     flag_cache_rootfs: bool = False
     reboot_to_fastboot: str = "false"
     redirect_to_kmsg: bool = True
+    real_device: bool = True
 
     @classmethod
     def select(cls, name):

@@ -16,6 +16,7 @@ class SSHDevice(Device):
     name = "ssh-device"
     ssh_port = 22
     redirect_to_kmsg = False
+    real_device = False
 
     def validate(
         self,

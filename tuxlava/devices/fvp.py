@@ -18,6 +18,7 @@ from tuxlava.utils import compression, notnone, slugify
 
 class FVPDevice(Device):
     flag_use_pre_run_cmd = True
+    real_device = False
 
     def device_dict(self, context):
         return templates.devices().get_template("fvp.yaml.jinja2").render(**context)

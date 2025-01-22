@@ -34,9 +34,6 @@ class NfsDevice(Device):
     bios: str = ""
     kernel: str = ""
     rootfs: str = ""
-
-    real_device = True
-
     test_character_delay: int = 0
 
     enable_network: bool = True
