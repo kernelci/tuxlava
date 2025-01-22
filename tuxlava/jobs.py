@@ -216,7 +216,7 @@ class Job:
         if any(t.need_test_definition for t in self.tests):
             test_definitions = pathurlnone(TEST_DEFINITIONS)
 
-        if self.modules and not hasattr(self.device, "fastboot_device"):
+        if self.modules and not self.device.name.startswith("fastboot-"):
             overlays.append(("modules", self.modules[0], self.modules[1]))
 
         for index, item in enumerate(self.overlays):

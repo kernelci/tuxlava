@@ -37,8 +37,6 @@ class FastbootDevice(Device):
     rootfs: str = ""
     ramdisk: str = ""
     template: str = "fastboot.yaml.jinja2"
-
-    fastboot_device = True
     real_device = True
 
     test_character_delay: int = 0
