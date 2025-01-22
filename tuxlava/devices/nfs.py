@@ -15,8 +15,6 @@ from tuxlava.utils import compression, notnone, slugify
 
 
 class NfsDevice(Device):
-    flag_cache_rootfs = True
-
     arch: str = ""
     lava_arch: str = ""
     machine: str = ""
