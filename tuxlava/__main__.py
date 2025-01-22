@@ -32,9 +32,6 @@ def main() -> int:
         if not (options.tuxmake or options.tuxbuild):
             parser.error("argument --device is required")
 
-    if options.commands:
-        options.tests.append("commands")
-
     if "hacking-session" in options.tests:
         options.enable_network = True
         if not options.parameters.get("PUB_KEY"):

@@ -1,6 +1,6 @@
 device_type: "qrb5165-rb5"
 
-job_name: "tuxlava@fastboot-qrb5165-rb5: commands, commands"
+job_name: "tuxlava@fastboot-qrb5165-rb5: commands"
 priority: low
 visibility: "public"
 
@@ -11,7 +11,7 @@ context:
     test_character_delay: 10
 timeouts:
   job:
-    minutes: 84
+    minutes: 82
   connection:
     minutes: 2
   actions:
@@ -79,21 +79,6 @@ actions:
     prompts:
     - 'root@(.*):[/~]#'
 
-- test:
-    timeout:
-      minutes: 2
-    definitions:
-    - repository:
-        metadata:
-          format: Lava-Test Test Definition 1.0
-          name: commands
-          description: "Run commands"
-        run:
-          steps:
-          - "lava-test-case command --shell commands 'cd /opt/ && ls'"
-      from: inline
-      path: command
-      name: commands
 - test:
     timeout:
       minutes: 2
