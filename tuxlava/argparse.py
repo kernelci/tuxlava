@@ -36,27 +36,6 @@ def filter_options(options):
     return {k: getattr(options, k) for k in vars(options) if k not in keys}
 
 
-def filter_artefacts(options):
-    keys = [
-        "ap-romfw",
-        "bios",
-        "bl1",
-        "dtb",
-        "fip",
-        "kernel",
-        "mcp-fw",
-        "mcp-romfw",
-        "modules",
-        "overlays",
-        "ramdisk",
-        "rootfs",
-        "scp-fw",
-        "scp-romfw",
-        "uefi",
-    ]
-    return {k: getattr(options, k) for k in vars(options) if k in keys}
-
-
 ###########
 # Actions #
 ###########

@@ -11,7 +11,7 @@ import logging
 import sys
 
 from tuxlava.jobs import Job
-from tuxlava.argparse import filter_artefacts, setup_parser
+from tuxlava.argparse import setup_parser
 
 
 LOG = logging.getLogger("tuxlava")
@@ -36,8 +36,6 @@ def main() -> int:
         options.enable_network = True
         if not options.parameters.get("PUB_KEY"):
             parser.error("argument missing --parameters PUB_KEY='...'")
-
-    filter_artefacts(options)
 
     try:
         job = Job(
