@@ -2646,6 +2646,15 @@ def artefacts(tmp_path):
             ],
             "fastboot-arb5165-rb5-vts-kernel-v8a.yaml",
         ),
+        (
+            [
+                "--device",
+                "qemu-arm64",
+                "--tests",
+                "usb-gadget-framework",
+            ],
+            "qemu-arm64-pheripherals.yaml",
+        ),
     ],
 )
 def test_definition(monkeypatch, mocker, capsys, tmpdir, artefacts, args, filename):
@@ -3019,6 +3028,41 @@ def test_definition(monkeypatch, mocker, capsys, tmpdir, artefacts, args, filena
             "'ssh-host', ssh-user', 'ssh-identity-file' are required argument for ssh device",
         ),
         (["--device", "fvp-lava"], "Missing argument --job-definition"),
+        (
+            [
+                "--device",
+                "avh-imx93",
+            ],
+            "'--secrets' is required by AVH device",
+        ),
+        (
+            ["--device", "fvp-aemva", "--boot-args", '"rw'],
+            '--boot-args should not contains "',
+        ),
+        (
+            ["--device", "fvp-morello-android"],
+            "Missing option(s) for fvp devices: --ap-romfw, --fip, --mcp-fw, --mcp-romfw, --rootfs, --scp-fw, --scp-romfw",
+        ),
+        (
+            [
+                "--device",
+                "fvp-morello-baremetal",
+                *FVP_MORELLO_ANDROID,
+                "--tests",
+                "binder",
+            ],
+            "Tests are not supported on this device",
+        ),
+        (
+            [
+                "--device",
+                "fvp-morello-ubuntu",
+                *FVP_MORELLO_ANDROID,
+                "--rootfs",
+                "https://url/rootfs",
+            ],
+            "Invalid option for this fvp device: --rootfs",
+        ),
     ],
 )
 def test_failures(monkeypatch, mocker, capsys, tmpdir, args, error_str):
