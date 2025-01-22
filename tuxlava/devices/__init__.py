@@ -35,7 +35,12 @@ class Device:
         )
 
     @classmethod
-    def list(cls) -> List["Device"]:
+    def list(cls, virtual_device=False) -> List["Device"]:
+        if virtual_device:
+            return sorted(
+                [s for s in subclasses(cls) if s.name and not s.real_device],
+                key=lambda d: d.name,
+            )
         return sorted([s for s in subclasses(cls) if s.name], key=lambda d: d.name)
 
     def validate(self, **kwargs):

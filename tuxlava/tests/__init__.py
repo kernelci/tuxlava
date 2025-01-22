@@ -10,6 +10,7 @@ import fnmatch
 from typing import List
 
 from tuxlava import templates
+from tuxlava.devices import Device
 from tuxlava.exceptions import InvalidArgument
 
 
@@ -17,6 +18,16 @@ def subclasses(cls):
     return set(cls.__subclasses__()).union(
         [s for c in cls.__subclasses__() for s in subclasses(c)]
     )
+
+
+def is_test_supported(test, devices):
+    # checks if the given test is available/supported for any device in devices list
+    for d in devices:
+        for pat in test.devices:
+            if fnmatch.fnmatch(d.name, pat):
+                return True
+
+    return False
 
 
 class Test:
@@ -37,7 +48,14 @@ class Test:
         raise InvalidArgument(f"Unknown test {name}")
 
     @classmethod
-    def list(cls, device=None):
+    def list(cls, device=None, virtual_device=False):
+        if virtual_device:
+            virtual_devices = Device.list(virtual_device=True)
+            return sorted(
+                t.name
+                for t in subclasses(cls)
+                if t.name and is_test_supported(t, virtual_devices)
+            )
         if device is None:
             return sorted(s.name for s in subclasses(cls) if s.name)
         return sorted(
