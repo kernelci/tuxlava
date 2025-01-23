@@ -1,0 +1,106 @@
+device_type: "x15"
+
+job_name: "tuxlava@fastboot-x15: boot"
+priority: low
+visibility: "public"
+
+reboot_to_fastboot: true
+
+
+context:
+    test_character_delay: 10
+timeouts:
+  job:
+    minutes: 80
+  connection:
+    minutes: 2
+  actions:
+    power-off:
+      seconds: 30
+    finalize:
+      seconds: 60
+
+actions:
+- deploy:
+    to: downloads
+    timeout:
+      minutes: 25
+    os: debian
+    images:
+      kernel:
+        url: "https://example.com/Image.gz"
+        compression: gz
+        type: image
+      dtb:
+        url: "https://example.com/dtbs/am57xx-beagle-x15.dtb"
+      modules:
+        url: "https://example.com/modules.tar.xz"
+        path: /usr/
+        compression: xz
+      super:
+        url: "https://example.com/rootfs.tar.xz"
+        compression: xz
+        format: ext4
+        overlays:
+          lava: true
+          overlay-00:
+            url: "https://example.com/ltp.tar.xz"
+            path: "/"
+            format: tar
+            compression: xz
+    postprocess:
+      docker:
+        image: "linaro/kir:20241203"
+        local: true
+        steps:
+        - /kir/lava/board_setup.sh x15 rootfs "/usr/"
+- deploy:
+    to: fastboot
+    os: debian
+    timeout:
+      minutes: 30
+    docker:
+      image: "linaro/kir:20241203"
+      local: true
+    images:
+      super:
+        url: downloads://rootfs.img
+
+- boot:
+    commands:
+    - setenv fdtfile am57xx-beagle-x15.dtb
+    - setenv console ttyS2,115200n8
+    - setenv mmcdev 1
+    - part number mmc 1 super part_num
+    - setenv bootpart 1:${part_num}
+    - run mmcboot
+    method: u-boot
+    timeout:
+      minutes: 25
+    auto_login:
+      login_prompt: 'login:'
+      username: root
+    prompts:
+    - 'root@(.*):[/~]#'
+
+- test:
+    timeout:
+      minutes: 5
+    definitions:
+    - from: inline
+      repository:
+        metadata:
+          format: Lava-Test Test Definition 1.0
+          name: prep-tmp-disk
+          description: "Mount local disk for tmp space"
+        run:
+          steps:
+          - export STORAGE_DEV=$(lava-target-storage SATA || lava-target-storage USB)
+          - test -n "${STORAGE_DEV}" || lava-test-raise "STORAGE_DEV not found; job exit"
+          - echo "y" | mkfs.ext4 ${STORAGE_DEV} || lava-test-raise "mkfs.ext4 ${STORAGE_DEV} failed; job exit"
+          - mkdir -p /scratch
+          - mount ${STORAGE_DEV} /scratch && echo "mounted" || lava-test-raise "mount ${STORAGE_DEV} failed; job exit"
+          - df -h
+          - mount
+      name: prep-tmp-disk
+      path: inline/prep.yaml

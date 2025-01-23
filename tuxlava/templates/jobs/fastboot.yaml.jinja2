@@ -93,7 +93,7 @@ actions:
         format: ext4
 {% if overlays %}
         overlays:
-{% if tests %}
+{% if tests or device.name == 'fastboot-x15' %}
           lava: true
 {% endif %}
 {% for name, overlay, dst in overlays %}
@@ -103,7 +103,7 @@ actions:
             format: tar
             compression: {{ compression(overlay)[1] }}
 {% endfor %}
-{% elif tests %}
+{% elif tests or device.name == 'fastboot-x15' %}
         overlays:
           lava: true
 {% endif %}
