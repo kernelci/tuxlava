@@ -45,7 +45,7 @@ class Job:
         device: str,
         bios: str = None,
         bl1: str = None,
-        commands: List[str] = None,
+        commands: List[str] = [],
         qemu_image: str = None,
         qemu_binary: str = None,
         dtb: str = None,
@@ -71,15 +71,15 @@ class Job:
         ssh_port: int = 0,
         ssh_user: str = None,
         ssh_identity_file: str = None,
-        tests: List[str] = None,
-        timeouts: Dict[str, int] = None,
+        tests: List[str] = [],
+        timeouts: Dict[str, int] = {},
         tux_prompt: str = None,
         uefi: str = None,
         boot_args: str = None,
         secrets: str = None,
         modules: str = None,
-        overlays: List[str] = None,
-        parameters: Dict[str, str] = None,
+        overlays: List[str] = [],
+        parameters: Dict[str, str] = {},
         deploy_os: str = None,
         tuxbuild: str = None,
         tuxmake: str = None,
@@ -121,7 +121,7 @@ class Job:
         self.boot_args = boot_args
         self.secrets = secrets
         self.modules = modules
-        self.overlays = overlays if overlays else []
+        self.overlays = overlays
         self.parameters = parameters
         self.deploy_os = deploy_os
         self.tuxbuild = tuxbuild
