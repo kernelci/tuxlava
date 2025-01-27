@@ -43,6 +43,8 @@ class FastbootDevice(Device):
 
     test_character_delay: int = 0
 
+    enable_network: bool = True
+
     def validate(
         self,
         bios,
@@ -56,6 +58,7 @@ class FastbootDevice(Device):
         prompt,
         ramdisk,
         rootfs,
+        enable_network,
         tests,
         boot,
         **kwargs,
