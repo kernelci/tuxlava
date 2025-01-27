@@ -39,6 +39,8 @@ class NfsDevice(Device):
 
     test_character_delay: int = 0
 
+    enable_network: bool = True
+
     def validate(
         self,
         bios,
@@ -51,6 +53,7 @@ class NfsDevice(Device):
         parameters,
         prompt,
         rootfs,
+        enable_network,
         tests,
         **kwargs,
     ):
