@@ -112,6 +112,20 @@ class OneTwoPathAction(argparse.Action):
             setattr(namespace, self.dest, values)
 
 
+class SharedAction(argparse.Action):
+    def __call__(self, parser, namespace, values, option_string=None):
+        if values is None:
+            return
+        if len(values) == 1:
+            values = [values[0], "/mnt/tuxrun"]
+        if len(values) > 2:
+            raise argparse.ArgumentError(
+                self,
+                "takes zero, one or two arguments, first is the source and the second the destination. The later is optional.",
+            )
+        setattr(namespace, self.dest, values)
+
+
 ##########
 # Setups #
 ##########
@@ -343,6 +357,14 @@ def setup_parser() -> argparse.ArgumentParser:
         default=False,
         action="store_true",
         help="Save the LAVA definition.yaml file",
+    )
+    group.add_argument(
+        "--shared",
+        default=None,
+        type=str,
+        help="Directory to share with the device",
+        action=SharedAction,
+        nargs="*",
     )
 
     group = parser.add_argument_group("debugging")

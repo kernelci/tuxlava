@@ -3063,6 +3063,10 @@ def test_definition(monkeypatch, mocker, capsys, tmpdir, artefacts, args, filena
             ],
             "Invalid option for this fvp device: --rootfs",
         ),
+        (
+            ["--device", "fastboot-dragonboard-845c", "--shared"],
+            "--shared options is only available for qemu devices",
+        ),
     ],
 )
 def test_failures(monkeypatch, mocker, capsys, tmpdir, args, error_str):

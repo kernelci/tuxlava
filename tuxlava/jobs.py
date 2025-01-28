@@ -62,7 +62,7 @@ class Job:
         ramdisk: str = None,
         rootfs: str = None,
         rootfs_partition: int = None,
-        shared: bool = False,
+        shared: str = None,
         scp_fw: str = None,
         scp_romfw: str = None,
         shell: bool = False,
@@ -210,6 +210,9 @@ class Job:
         self.tests = [Test.select(t)(self.timeouts.get(t)) for t in self.tests]
         self.device.validate(**filter_options(self))
         self.device.default(self)
+
+        if self.shared is not None and not self.device.name.startswith("qemu-"):
+            raise InvalidArgument("--shared options is only available for qemu devices")
 
         # get test definitions url, when required
         test_definitions = None

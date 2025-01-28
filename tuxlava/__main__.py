@@ -79,6 +79,7 @@ def main() -> int:
             tuxbuild=options.tuxbuild,
             tuxmake=options.tuxmake,
             job_definition=options.job_definition,
+            shared=options.shared,
         )
         sys.stdout.write(job.render())
     except Exception as exc:
