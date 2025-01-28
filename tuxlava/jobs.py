@@ -20,7 +20,6 @@ from tuxlava.tests import Test
 from tuxlava.tuxmake import TuxBuildBuild, TuxMakeBuild
 from tuxlava.utils import pathurlnone
 
-
 TEST_DEFINITIONS = "https://storage.tuxboot.com/test-definitions/2024.12.tar.zst"
 
 
@@ -84,6 +83,8 @@ class Job:
         tuxbuild: str = None,
         tuxmake: str = None,
         job_definition: str = None,
+        tmpdir: Path = None,
+        cache_dir: Path = None,
     ) -> None:
         self.device = device
         self.bios = bios
@@ -127,6 +128,11 @@ class Job:
         self.tuxbuild = tuxbuild
         self.tuxmake = tuxmake
         self.job_definition = job_definition
+        self.tmpdir = tmpdir
+        self.cache_dir = cache_dir
+        self.test_definitions = None
+        self.extra_assets = []
+        self.tux_boot_args = None
 
     def __str__(self) -> str:
         tests = "_".join(self.tests) if self.tests else "boot"
@@ -150,8 +156,8 @@ class Job:
             )
         return priority
 
-    def render(self) -> str:
-        # Render the job definition
+    def initialize(self) -> str:
+        # Initialize Job class
         overlays = []
 
         # Grab the modules path from parameters if available, else set it
@@ -196,10 +202,9 @@ class Job:
                     k.read_text(encoding="utf-8").rstrip() for k in keys
                 )
 
-        commands = None
         if self.commands:
             self.tests.append("commands")
-            commands = " ".join([shlex.quote(s) for s in self.commands])
+            self.commands = " ".join([shlex.quote(s) for s in self.commands])
 
         if "hacking-session" in self.tests:
             self.enable_network = True
@@ -219,24 +224,49 @@ class Job:
             if sorted(list(set(tests))) != sorted(tests):
                 raise InvalidArgument("each test should appear only once")
 
-        # get test definitions url, when required
-        test_definitions = None
-        if any(t.need_test_definition for t in self.tests):
-            test_definitions = pathurlnone(TEST_DEFINITIONS)
+        if self.device.flag_cache_rootfs:
+            self.rootfs = pathurlnone(self.rootfs)
 
         if self.modules and not self.device.name.startswith("fastboot-"):
             overlays.append(("modules", self.modules[0], self.modules[1]))
+            self.extra_assets.append(self.modules[0])
+
+        # When using --shared without any arguments, point to cache_dir
+        if self.shared is not None:
+            if not self.shared:
+                assert self.cache_dir
+                self.shared = [str(self.cache_dir), "/mnt/tuxrun"]
+            self.extra_assets.append(("file://" + self.shared[0], False))
 
         for index, item in enumerate(self.overlays):
             overlays.append((f"overlay-{index:02}", item[0], item[1]))
+            self.extra_assets.append(item[0])
+
+        # get test definitions url, when required
+        if any(t.need_test_definition for t in self.tests):
+            self.test_definitions = pathurlnone(TEST_DEFINITIONS)
+
+        for k, v in self.parameters.items():
+            if v.startswith("file://"):
+                self.extra_assets.append(v)
 
         # Create the temp directory
-        tmpdir = Path(tempfile.mkdtemp(prefix="tuxlava-"))
+        if self.tmpdir is None:
+            self.tmpdir = Path(tempfile.mkdtemp(prefix="tuxlava-"))
 
+        self.tux_boot_args = (
+            " ".join(shlex.split(self.boot_args)) if self.boot_args else None
+        )
+
+        self.overlays = overlays
+        # Add extra assets from device
+        self.extra_assets.extend(self.device.extra_assets(**vars(self)))
+
+    def render(self):
         def_arguments = {
             "bios": self.bios,
             "bl1": self.bl1,
-            "commands": commands,
+            "commands": self.commands,
             "device": self.device,
             "qemu_image": self.qemu_image,
             "qemu_binary": self.qemu_binary,
@@ -251,12 +281,12 @@ class Job:
             "enable_trustzone": self.enable_trustzone,
             "enable_network": self.enable_network,
             "modules": self.modules,
-            "overlays": overlays,
+            "overlays": self.overlays,
             "prompt": self.prompt,
             "ramdisk": self.ramdisk,
             "rootfs": self.rootfs,
             "rootfs_partition": self.rootfs_partition,
-            "shared": False,
+            "shared": self.shared,
             "scp_fw": self.scp_fw,
             "scp_romfw": self.scp_romfw,
             "ssh_host": self.ssh_host,
@@ -265,13 +295,11 @@ class Job:
             "ssh_user": self.ssh_user,
             "ssh_identity_file": self.ssh_identity_file,
             "tests": self.tests,
-            "test_definitions": test_definitions,
+            "test_definitions": self.test_definitions,
             "tests_timeout": sum(t.timeout for t in self.tests),
             "timeouts": self.timeouts,
-            "tmpdir": tmpdir,
-            "tux_boot_args": (
-                " ".join(shlex.split(self.boot_args)) if self.boot_args else None
-            ),
+            "tmpdir": self.tmpdir,
+            "tux_boot_args": self.tux_boot_args,
             "tux_prompt": self.prompt,
             "parameters": self.parameters,
             "uefi": self.uefi,

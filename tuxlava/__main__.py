@@ -82,6 +82,7 @@ def main() -> int:
             job_definition=options.job_definition,
             shared=options.shared,
         )
+        job.initialize()
         sys.stdout.write(job.render())
     except TuxLavaError as exc:
         parser.error(str(exc))
