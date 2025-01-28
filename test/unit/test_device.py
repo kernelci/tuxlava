@@ -3067,6 +3067,10 @@ def test_definition(monkeypatch, mocker, capsys, tmpdir, artefacts, args, filena
             ["--device", "fastboot-dragonboard-845c", "--shared"],
             "--shared options is only available for qemu devices",
         ),
+        (
+            ["--device", "qemu-arm64", "--tests", "ltp-smoke", "ltp-smoke"],
+            "each test should appear only once",
+        ),
     ],
 )
 def test_failures(monkeypatch, mocker, capsys, tmpdir, args, error_str):

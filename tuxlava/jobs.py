@@ -214,6 +214,11 @@ class Job:
         if self.shared is not None and not self.device.name.startswith("qemu-"):
             raise InvalidArgument("--shared options is only available for qemu devices")
 
+        if self.tests:
+            tests = [t.name for t in self.tests]
+            if sorted(list(set(tests))) != sorted(tests):
+                raise InvalidArgument("each test should appear only once")
+
         # get test definitions url, when required
         test_definitions = None
         if any(t.need_test_definition for t in self.tests):
