@@ -33,5 +33,8 @@ docs/index.md: README.md scripts/readme2index.sh
 doc-serve:
 	mkdocs serve
 
+lava-validate:
+	python3 test/validate.py
+
 tags:
 	ctags -R $(PROJECT)/ test/
