@@ -72,8 +72,8 @@ wheel:
 
 .docker:
   services:
-    - name: docker:dind
-  image: docker
+  - name: docker:20.10-dind
+  image: docker:20.10-dind
   only:
     - tags
   before_script:
