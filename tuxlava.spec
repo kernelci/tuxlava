@@ -59,5 +59,5 @@ ln -sf ../share/tuxlava/run %{buildroot}/usr/bin/tuxlava
 
 %changelog
 
-* Tue Jun 23 2024 Senthil Kumaran <senthil.kumaran@linaro.org> - 0.0.1-1
+* Mon Feb 03 2025 Senthil Kumaran <senthil.kumaran@linaro.org> - 0.0.1-1
 - Initial version of the package
