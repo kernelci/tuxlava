@@ -49,7 +49,7 @@ job = Job(
     parameters={"LAVA_JOB_PRIORITY": 50},
     timeouts={"deploy": 20},
 )
-
+job.initialize()
 print(job.render())
 ```
 
