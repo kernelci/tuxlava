@@ -79,8 +79,8 @@ wheel:
   before_script:
     - docker info
     - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
-    - export tag="tuxlava/tuxlava:${CI_COMMIT_TAG##v}${TAG_APPEND}"
-    - export latest="tuxlava/tuxlava:latest${TAG_APPEND}"
+    - export tag="tuxsuite/tuxlava:${CI_COMMIT_TAG##v}${TAG_APPEND}"
+    - export latest="tuxsuite/tuxlava:latest${TAG_APPEND}"
   script:
     - docker build --pull --tag "${tag}" --tag "${latest}" .
     - docker run "${tag}" tuxlava --version
