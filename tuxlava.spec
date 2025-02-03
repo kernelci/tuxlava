@@ -1,5 +1,5 @@
 Name:      tuxlava
-Version:   0.0.1
+Version:   0.1.0
 Release:   0%{?dist}
 Summary:   TuxLAVA, helps to generate LAVA jobs
 License:   MIT
