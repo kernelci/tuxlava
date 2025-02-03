@@ -121,6 +121,10 @@ unit-tests-python3.12:
   extends: .unit-tests
   image: $CI_REGISTRY_IMAGE:ci-python-3.12
 
+unit-tests-python3.13:
+  extends: .unit-tests
+  image: $CI_REGISTRY_IMAGE:ci-python-3.13
+
 unit-tests-python3.9-arm64:
   extends: [.unit-tests, .arm64]
   image: $CI_REGISTRY_IMAGE:ci-python-3.9
@@ -136,6 +140,10 @@ unit-tests-python3.11-arm64:
 unit-tests-python3.12-arm64:
   extends: [.unit-tests, .arm64]
   image: $CI_REGISTRY_IMAGE:ci-python-3.12
+
+unit-tests-python3.13-arm64:
+  extends: [.unit-tests, .arm64]
+  image: $CI_REGISTRY_IMAGE:ci-python-3.13
 
 trigger_bot_pipeline:
   stage: trigger_bot_pipeline
