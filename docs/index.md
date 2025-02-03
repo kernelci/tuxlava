@@ -2,11 +2,11 @@
   <img src="tuxlava_full.svg" alt="TuxLAVA Logo" width="40%" />
 </div>
 
-[![Pipeline Status](https://gitlab.com/Linaro/tuxrun/badges/master/pipeline.svg)](https://gitlab.com/LinaroLtd/tuxsuite.com/tuxlava/pipelines)
-[![coverage report](https://gitlab.com/Linaro/tuxrun/badges/master/coverage.svg)](https://gitlab.com/LinaroLtd/tuxsuite.com/tuxlava/commits/master)
-[![PyPI version](https://badge.fury.io/py/tuxrun.svg)](https://pypi.org/project/tuxlava/)
+[![Pipeline Status](https://gitlab.com/Linaro/tuxlava/badges/master/pipeline.svg)](https://gitlab.com/LinaroLtd/tuxsuite.com/tuxlava/pipelines)
+[![coverage report](https://gitlab.com/Linaro/tuxlava/badges/master/coverage.svg)](https://gitlab.com/LinaroLtd/tuxsuite.com/tuxlava/commits/master)
+[![PyPI version](https://badge.fury.io/py/tuxlava.svg)](https://pypi.org/project/tuxlava/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-[![PyPI - License](https://img.shields.io/pypi/l/tuxrun)](https://gitlab.com/LinaroLtd/tuxsuite.com/tuxlava/blob/main/LICENSE)
+[![PyPI - License](https://img.shields.io/pypi/l/tuxlava)](https://gitlab.com/LinaroLtd/tuxsuite.com/tuxlava/blob/main/LICENSE)
 
 [Documentation](https://tuxlava.org/) - [Repository](https://gitlab.com/LinaroLtd/tuxsuite.com/tuxlava) - [Issues](https://gitlab.com/LinaroLtd/tuxsuite.com/tuxlava/-/issues)
 
