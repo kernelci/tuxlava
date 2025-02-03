@@ -18,6 +18,12 @@ stages:
   - .post
 
 .job:
+  image: registry.gitlab.com/linaro/tuxpkg:ci-debian
+  before_script:
+    - apt update && apt install -y python3-pip virtualenv python3-virtualenv python3-venv python3-ruamel.yaml
+    - python3 -m venv $HOME/.foo-venv
+    - source $HOME/.foo-venv/bin/activate
+    - python3 -m pip install mkdocs-material tuxpkg ruamel.yaml # FIXME not in Debian
   script:
   - make $CI_JOB_NAME
 
@@ -158,3 +164,24 @@ trigger_bot_pipeline:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       when: always
+
+doc:
+  extends: .job
+  stage: build
+  artifacts:
+    paths:
+      - public
+
+pages:
+  extends: .job
+  stage: deploy
+  needs:
+    - doc
+    - repository
+  artifacts:
+    paths:
+      - public
+  only:
+    - tags
+  script:
+    - cp -r dist/repo public/packages/
