@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://gitlab.com/Linaro/tuxlava/-/blob/main/tuxlava_logo.png" alt="TuxLAVA Logo" width="40%" />
+  <img src="https://gitlab.com/Linaro/tuxlava/raw/main/tuxlava_logo.png" alt="TuxLAVA Logo" width="40%" />
 </div>
 
 [![Pipeline Status](https://gitlab.com/Linaro/tuxlava/badges/main/pipeline.svg)](https://gitlab.com/Linaro/tuxlava/pipelines)
