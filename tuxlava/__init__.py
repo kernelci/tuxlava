@@ -7,6 +7,6 @@
 # SPDX-License-Identifier: MIT
 
 """
-Command line tool for generating LAVA jobs
+Python library and command line tool for generating LAVA jobs
 """
 __version__ = "0.1.2"
