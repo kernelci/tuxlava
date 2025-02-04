@@ -33,7 +33,7 @@ stages:
 
 .arm64:
   only:
-    - branches@LinaroLtd/tuxsuite.com/tuxlava
+    - branches@Linaro/tuxlava
   tags:
     - saas-linux-medium-arm64
 
