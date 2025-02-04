@@ -2,13 +2,13 @@
   <img src="tuxlava_full.svg" alt="TuxLAVA Logo" width="40%" />
 </div>
 
-[![Pipeline Status](https://gitlab.com/Linaro/tuxlava/badges/master/pipeline.svg)](https://gitlab.com/LinaroLtd/tuxsuite.com/tuxlava/pipelines)
-[![coverage report](https://gitlab.com/Linaro/tuxlava/badges/master/coverage.svg)](https://gitlab.com/LinaroLtd/tuxsuite.com/tuxlava/commits/master)
+[![Pipeline Status](https://gitlab.com/Linaro/tuxlava/badges/main/pipeline.svg)](https://gitlab.com/Linaro/tuxlava/pipelines)
+[![coverage report](https://gitlab.com/Linaro/tuxlava/badges/main/coverage.svg)](https://gitlab.com/Linaro/tuxlava/commits/main)
 [![PyPI version](https://badge.fury.io/py/tuxlava.svg)](https://pypi.org/project/tuxlava/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-[![PyPI - License](https://img.shields.io/pypi/l/tuxlava)](https://gitlab.com/LinaroLtd/tuxsuite.com/tuxlava/blob/main/LICENSE)
+[![PyPI - License](https://img.shields.io/pypi/l/tuxlava)](https://gitlab.com/Linaro/tuxlava/blob/main/LICENSE)
 
-[Documentation](https://tuxlava.org/) - [Repository](https://gitlab.com/LinaroLtd/tuxsuite.com/tuxlava) - [Issues](https://gitlab.com/LinaroLtd/tuxsuite.com/tuxlava/-/issues)
+[Documentation](https://tuxlava.org/) - [Repository](https://gitlab.com/Linaro/tuxlava) - [Issues](https://gitlab.com/Linaro/tuxlava/-/issues)
 
 TuxLAVA, by [Linaro](https://www.linaro.org/), is a python library and
 a command line tool to generate Linaro Automated Validation
