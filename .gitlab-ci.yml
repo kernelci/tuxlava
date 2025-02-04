@@ -90,6 +90,10 @@ wheel:
   needs:
     - wheel
 
+docker-default:
+  extends: .docker
+  stage: deploy
+
 docker-amd64:
   extends: .docker
   stage: deploy
