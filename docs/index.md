@@ -30,6 +30,9 @@ tools and services to help with Linux kernel development.
 # Installing TuxLAVA
 
 - [From PyPI](install-pypi.md)
+- [Debian packages](install-deb.md)
+- [RPM packages](install-rpm.md)
+- [Run uninstalled](run-uninstalled.md)
 
 # Using TuxLAVA as a library
 
