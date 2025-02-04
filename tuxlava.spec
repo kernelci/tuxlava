@@ -18,7 +18,7 @@ BuildRequires: python3-pytest-cov
 BuildRequires: python3-pytest-mock
 BuildRequires: python3-yaml
 BuildRequires: wget
-Requires: python3 >= 3.6
+Requires: python3 >= 3.9
 Requires: python3-requests
 Requires: python3-yaml
 Requires: python3-jinja2

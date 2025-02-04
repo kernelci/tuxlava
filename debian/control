@@ -16,7 +16,7 @@ Homepage: https://tuxsuite.com/
 
 Package: tuxlava
 Architecture: all
-Depends: python3 (>= 3.6),
+Depends: python3 (>= 3.9),
          python3-attr,
          python3-requests,
          python3-yaml,

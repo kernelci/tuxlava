@@ -1,6 +1,6 @@
 # Running TuxLAVA uninstalled
 
-- TuxLAVA requires Python 3.6 or newer.
+- TuxLAVA requires Python 3.9 or newer.
 
 If you don't want to or can't install TuxLAVA, you can run it directly from the
 source directory. After getting the sources via git or something else, there is
