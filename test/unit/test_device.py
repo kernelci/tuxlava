@@ -3076,7 +3076,7 @@ def test_definition(monkeypatch, mocker, capsys, tmpdir, artefacts, args, filena
 def test_failures(monkeypatch, mocker, capsys, tmpdir, args, error_str):
     monkeypatch.setattr("tuxlava.__main__.sys.argv", ["tuxlava"] + args)
     mocker.patch("tempfile.mkdtemp", return_value=tmpdir)
-    with pytest.raises(Exception):
+    with pytest.raises(SystemExit):
         main()
-    output, error = capsys.readouterr()
-    assert error_str in output
+    _, error = capsys.readouterr()
+    assert error_str in error

@@ -11,7 +11,7 @@ import logging
 import sys
 
 from tuxlava.jobs import Job
-from tuxlava.exceptions import TuxLavaError
+from tuxlava.exceptions import TuxLavaException
 from tuxlava.argparse import setup_parser
 
 
@@ -84,7 +84,7 @@ def main() -> int:
         )
         job.initialize()
         sys.stdout.write(job.render())
-    except TuxLavaError as exc:
+    except TuxLavaException as exc:
         parser.error(str(exc))
     except Exception as exc:
         LOG.error("Raised an exception %s", exc)
