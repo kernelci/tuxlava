@@ -633,8 +633,8 @@ class KSelftestSgx(KSelfTest):
     timeout = 5
 
 
-class KSelftestSigaltstack(KSelfTest):
-    name = "kselftest-sigaltstack"
+class KSelftestSignal(KSelfTest):
+    name = "kselftest-signal"
     timeout = 5
 
 
