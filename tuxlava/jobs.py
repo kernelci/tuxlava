@@ -246,8 +246,8 @@ class Job:
         if any(t.need_test_definition for t in self.tests):
             self.test_definitions = pathurlnone(TEST_DEFINITIONS)
 
-        for k, v in self.parameters.items():
-            if v.startswith("file://"):
+        for _, v in self.parameters.items():
+            if isinstance(v, str) and v.startswith("file://"):
                 self.extra_assets.append(v)
 
         # Create the temp directory
