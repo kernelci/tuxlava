@@ -190,6 +190,12 @@ class Job:
                         self.parameters[k] = self.parameters[k].replace(
                             "$BUILD/", tux.url + "/"
                         )
+        else:
+            for k, v in self.parameters.items():
+                if isinstance(v, str) and "$BUILD/" in v:
+                    raise InvalidArgument(
+                        "parameter with '$BUILD/' substitution requires --tuxbuild or --tuxmake"
+                    )
 
         if self.shell:
             if "hacking-session" not in self.tests:
