@@ -1,0 +1,21 @@
+- test:
+    timeout:
+      minutes: {{ timeout }}
+    definitions:
+    #- repository: {{ test_definitions }}
+    - repository: https://github.com/roxell/test-definitions.git
+{%if device.name != 'ssh-device' %}
+      lava-signal: kmsg
+{% endif %}
+      #from: url
+      #compression: zstd
+      from: git
+      branch: rt-tests
+      path: automated/linux/{{subtest}}/{{subtest}}.yaml
+      parameters:
+        DURATION: "{{ duration }}"
+        BACKGROUND_CMD: "{{ bgcmd }}"
+        ITERATIONS: '{{ parameters.get("ITERATIONS", iterations) }}'
+      name: {{ name }}
+
+
