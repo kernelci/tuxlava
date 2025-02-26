@@ -90,6 +90,7 @@ class KSelftestBreakpoints(KSelfTest):
         "fastboot-dragonboard-410c",
         "fastboot-dragonboard-845c",
         "fastboot-e850-96",
+        "fastboot-x15",
     ]
     name = "kselftest-breakpoints"
     timeout = 5
