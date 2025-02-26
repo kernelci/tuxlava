@@ -1928,6 +1928,66 @@ def artefacts(tmp_path):
         (
             [
                 "--device",
+                "qemu-arm64",
+                "--overlay",
+                "https://storage.tuxboot.com/overlays/debian/trixie/arm64/rt-tests/v2.8/rt-tests.tar.xz",
+                "/",
+                "--tests",
+                "rt-tests-cyclicdeadline",
+            ],
+            "qemu-arm64-rt-tests-cyclicdeadline.yaml",
+        ),
+        (
+            [
+                "--device",
+                "qemu-arm64",
+                "--overlay",
+                "https://storage.tuxboot.com/overlays/debian/trixie/arm64/rt-tests/v2.8/rt-tests.tar.xz",
+                "/",
+                "--tests",
+                "rt-tests-rt-migrate-test",
+            ],
+            "qemu-arm64-rt-tests-rt-migrate-test.yaml",
+        ),
+        (
+            [
+                "--device",
+                "qemu-arm64",
+                "--overlay",
+                "https://storage.tuxboot.com/overlays/debian/trixie/arm64/rt-tests/v2.8/rt-tests.tar.xz",
+                "/",
+                "--tests",
+                "rt-tests-pi-stress",
+            ],
+            "qemu-arm64-rt-tests-pi-stress.yaml",
+        ),
+        (
+            [
+                "--device",
+                "qemu-arm64",
+                "--overlay",
+                "https://storage.tuxboot.com/overlays/debian/trixie/arm64/rt-tests/v2.8/rt-tests.tar.xz",
+                "/",
+                "--tests",
+                "rt-tests-pmqtest",
+            ],
+            "qemu-arm64-rt-tests-pmqtest.yaml",
+        ),
+        (
+            [
+                "--device",
+                "qemu-arm64",
+                "--overlay",
+                "https://storage.tuxboot.com/overlays/debian/trixie/arm64/rt-tests/v2.8/rt-tests.tar.xz",
+                "/",
+                "--tests",
+                "rt-tests-signaltest",
+            ],
+            "qemu-arm64-rt-tests-signaltest.yaml",
+        ),
+        (
+            [
+                "--device",
                 "ssh-device",
                 "--ssh-host",
                 "127.0.0.1",
