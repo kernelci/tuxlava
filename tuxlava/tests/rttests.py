@@ -37,3 +37,8 @@ class RTTestsPmqtest(RTTests):
     duration = "2m"
     subtest = name.replace("rt-tests-", "")
 
+class RTTestsPiStress(RTTests):
+    name = "rt-tests-pi-stress"
+    duration = "2m"
+    subtest = name.replace("rt-tests-", "")
+
