@@ -190,6 +190,11 @@ class MMTestsStressngZombie(MMTests):
     name = "mmtests-workload-stressng-zombie"
 
 
+class MMTestsUnixBench(MMTests):
+    configfile = "configs/config-workload-unixbench"
+    name = "mmtests-workload-unixbench"
+
+
 class MMTestsUsemem(MMTests):
     configfile = "configs/config-workload-usemem"
     name = "mmtests-workload-usemem"
