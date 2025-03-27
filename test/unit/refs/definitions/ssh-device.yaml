@@ -65,7 +65,7 @@ actions:
     timeout:
       minutes: 2
     definitions:
-    - repository: https://storage.tuxboot.com/test-definitions/2024.12.tar.zst
+    - repository: https://storage.tuxboot.com/test-definitions/2025.03.tar.zst
       from: url
       compression: zstd
       path: automated/linux/ltp/ltp.yaml
