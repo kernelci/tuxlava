@@ -65,4 +65,5 @@ actions:
       parameters:
         DURATION: '5m'
         BACKGROUND_CMD: ""
+        ITERATIONS: '1'
       name: rt-tests-cyclicdeadline

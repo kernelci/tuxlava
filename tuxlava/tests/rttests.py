@@ -18,6 +18,7 @@ class RTTests(Test):
     ]
     bgcmd: str = ""
     duration: str = "5m"
+    iterations: int = 1
     subtest: str = ""
     timeout: int = 7
     need_test_definition = True
@@ -26,6 +27,7 @@ class RTTests(Test):
         kwargs["name"] = self.name
         kwargs["bgcmd"] = self.bgcmd
         kwargs["duration"] = self.duration
+        kwargs["iterations"] = self.iterations
         kwargs["subtest"] = self.name.replace("rt-tests-", "")
         kwargs["timeout"] = self.timeout
         return self._render("rt-tests.yaml.jinja2", **kwargs)
