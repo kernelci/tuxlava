@@ -68,6 +68,7 @@ actions:
       compression: zstd
       path: automated/linux/kselftest/kselftest.yaml
       parameters:
+        SKIP_INSTALL: 'true'
         TST_CMDFILES: "cgroup"
         KSELFTEST_PATH: "/opt/kselftests/default-in-kernel"
         SKIPFILE: "skipfile-lkft.yaml"

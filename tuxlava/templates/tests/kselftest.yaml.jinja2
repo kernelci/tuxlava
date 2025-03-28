@@ -10,6 +10,7 @@
       compression: zstd
       path: automated/linux/kselftest/kselftest.yaml
       parameters:
+        SKIP_INSTALL: 'true'
         TST_CMDFILES: "{{ cmdfile }}"
         KSELFTEST_PATH: "/opt/kselftests/default-in-kernel"
         SKIPFILE: "{{ parameters.get("SKIPFILE", "skipfile-lkft.yaml") }}"
