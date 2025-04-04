@@ -37,7 +37,7 @@ class AEMvAFVPDevice(FVPDevice):
     fip = "https://storage.tuxboot.com/buildroot/fvp-aemva/fip.bin"
     kernel = "https://storage.tuxboot.com/buildroot/fvp-aemva/Image"
     rootfs = "https://storage.tuxboot.com/buildroot/fvp-aemva/rootfs.ext4.zst"
-    uefi = "https://storage.tuxboot.com/buildroot/fvp-aemva/edk2-flash.img"
+    uefi = "https://storage.tuxboot.com/buildroot/fvp-aemva/FVP_AARCH64_EFI.fd"
 
     def validate(
         self,

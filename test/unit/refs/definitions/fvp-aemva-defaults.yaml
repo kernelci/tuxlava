@@ -23,7 +23,7 @@ actions:
       startup:
         url: "/DATA/startup.nsh"
       uefi:
-        url: "https://storage.tuxboot.com/buildroot/fvp-aemva/edk2-flash.img"
+        url: "https://storage.tuxboot.com/buildroot/fvp-aemva/FVP_AARCH64_EFI.fd"
       bl1:
         url: "https://storage.tuxboot.com/buildroot/fvp-aemva/bl1.bin"
       dtb:
