@@ -60,7 +60,6 @@ actions:
       lava-signal: kmsg
       from: url
       compression: zstd
-      branch: rt-tests
       path: automated/linux/pi-stress/pi-stress.yaml
       parameters:
         DURATION: '5m'

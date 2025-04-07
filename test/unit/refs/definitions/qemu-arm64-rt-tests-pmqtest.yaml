@@ -60,7 +60,6 @@ actions:
       lava-signal: kmsg
       from: url
       compression: zstd
-      branch: rt-tests
       path: automated/linux/pmqtest/pmqtest.yaml
       parameters:
         DURATION: '5m'

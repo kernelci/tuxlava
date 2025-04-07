@@ -8,7 +8,6 @@
 {% endif %}
       from: url
       compression: zstd
-      branch: rt-tests
       path: automated/linux/{{subtest}}/{{subtest}}.yaml
       parameters:
         DURATION: '{{ parameters.get("DURATION", duration) }}'
