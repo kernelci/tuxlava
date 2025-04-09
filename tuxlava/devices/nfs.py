@@ -145,7 +145,7 @@ class NfsJunoR2(NfsDevice):
     lava_arch = "arm64"
 
     kernel = "https://storage.tuxboot.com/buildroot/arm64/Image"
-    rootfs = "https://storage.tuxboot.com/buildroot/arm64/rootfs.tar.zst"
+    rootfs = "https://storage.tuxboot.com/debian/20250326/trixie/arm64/rootfs.tar.xz"
 
 
 class NfsRpi4(NfsDevice):
@@ -155,7 +155,7 @@ class NfsRpi4(NfsDevice):
     lava_arch = "arm64"
 
     kernel = "https://storage.tuxboot.com/buildroot/arm64/Image"
-    rootfs = "https://storage.tuxboot.com/buildroot/arm64/rootfs.tar.zst"
+    rootfs = "https://storage.tuxboot.com/debian/20250326/trixie/arm64/rootfs.tar.xz"
 
 
 class NfsRockPi4(NfsDevice):
@@ -165,7 +165,7 @@ class NfsRockPi4(NfsDevice):
     lava_arch = "arm64"
 
     kernel = "https://storage.tuxboot.com/buildroot/arm64/Image"
-    rootfs = "https://storage.tuxboot.com/buildroot/arm64/rootfs.tar.zst"
+    rootfs = "https://storage.tuxboot.com/debian/20250326/trixie/arm64/rootfs.tar.xz"
 
 
 class NfsI386(NfsDevice):
@@ -175,7 +175,7 @@ class NfsI386(NfsDevice):
     lava_arch = "i386"
 
     kernel = "https://storage.tuxboot.com/buildroot/x86_64/bzImage"
-    rootfs = "https://storage.tuxboot.com/buildroot/x86_64/rootfs.tar.zst"
+    rootfs = "https://storage.tuxboot.com/debian/20250326/trixie/i386/rootfs.tar.xz"
 
 
 class NfsX86_64(NfsDevice):
@@ -185,4 +185,4 @@ class NfsX86_64(NfsDevice):
     lava_arch = "x86_64"
 
     kernel = "https://storage.tuxboot.com/buildroot/x86_64/bzImage"
-    rootfs = "https://storage.tuxboot.com/buildroot/x86_64/rootfs.tar.zst"
+    rootfs = "https://storage.tuxboot.com/debian/20250326/trixie/amd64/rootfs.tar.xz"

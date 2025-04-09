@@ -164,7 +164,7 @@ class FastbootE850_96(FastbootDevice):
     lava_arch = "arm64"
 
     kernel = "https://storage.tuxboot.com/buildroot/arm64/Image"
-    rootfs = "https://storage.tuxboot.com/buildroot/arm64/rootfs.tar.zst"
+    rootfs = "https://storage.tuxboot.com/debian/20250326/trixie/arm64/rootfs.tar.xz"
 
 
 class FastbootDragonboard_410c(FastbootDevice):
@@ -174,7 +174,7 @@ class FastbootDragonboard_410c(FastbootDevice):
     lava_arch = "arm64"
 
     kernel = "https://storage.tuxboot.com/buildroot/arm64/Image"
-    rootfs = "https://storage.tuxboot.com/buildroot/arm64/rootfs.tar.zst"
+    rootfs = "https://storage.tuxboot.com/debian/20250326/trixie/arm64/rootfs.tar.xz"
 
 
 class FastbootDragonboard_845c(FastbootDevice):
@@ -184,7 +184,7 @@ class FastbootDragonboard_845c(FastbootDevice):
     redirect_to_kmsg = False
 
     kernel = "https://storage.tuxboot.com/buildroot/arm64/Image"
-    rootfs = "https://storage.tuxboot.com/buildroot/arm64/rootfs.tar.zst"
+    rootfs = "https://storage.tuxboot.com/debian/20250326/trixie/arm64/rootfs.tar.xz"
     bios = "https://images.validation.linaro.org/snapshots.linaro.org/96boards/dragonboard845c/linaro/rescue/28/dragonboard-845c-bootloader-ufs-linux-28/gpt_both0.bin"
     ramdisk = "https://snapshots.linaro.org/member-builds/qcomlt/boards/qcom-armv8a/openembedded/master/56008/rpb/initramfs-rootfs-image-qcom-armv8a.rootfs-20240118001247-92260.cpio.gz"
 
@@ -196,7 +196,7 @@ class FastbootOEDragonboard_845c(FastbootDevice):
     redirect_to_kmsg = False
 
     boot = "https://storage.tuxboot.com/buildroot/arm64/boot.img"
-    rootfs = "https://storage.tuxboot.com/buildroot/arm64/rootfs.tar.zst"
+    rootfs = "https://storage.tuxboot.com/debian/20250326/trixie/arm64/rootfs.tar.xz"
     bios = "https://images.validation.linaro.org/snapshots.linaro.org/96boards/dragonboard845c/linaro/rescue/28/dragonboard-845c-bootloader-ufs-linux-28/gpt_both0.bin"
     template = "fastboot-oe.yaml.jinja2"
 
@@ -209,7 +209,7 @@ class FastbootX15(FastbootDevice):
     reboot_to_fastboot = "true"
 
     kernel = "https://storage.tuxboot.com/buildroot/arm64/Image"
-    rootfs = "https://storage.tuxboot.com/buildroot/arm64/rootfs.tar.zst"
+    rootfs = "https://storage.tuxboot.com/debian/20250326/trixie/arm64/rootfs.tar.xz"
 
 
 class FastbootQRB5165rb5(FastbootDevice):
@@ -219,7 +219,7 @@ class FastbootQRB5165rb5(FastbootDevice):
     lava_arch = "arm64"
 
     kernel = "https://storage.tuxboot.com/buildroot/arm64/Image"
-    rootfs = "https://storage.tuxboot.com/buildroot/arm64/rootfs.tar.zst"
+    rootfs = "https://storage.tuxboot.com/debian/20250326/trixie/arm64/rootfs.tar.xz"
     bios = "https://images.validation.linaro.org/snapshots.linaro.org/96boards/qrb5165-rb5/linaro/rescue/27/rb5-bootloader-ufs-linux-27/gpt_both0.bin"
     ramdisk = "https://snapshots.linaro.org/member-builds/qcomlt/boards/qcom-armv8a/openembedded/master/56008/rpb/initramfs-rootfs-image-qcom-armv8a.rootfs-20240118001247-92260.cpio.gz"
 
