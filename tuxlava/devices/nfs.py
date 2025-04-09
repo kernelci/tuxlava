@@ -197,3 +197,13 @@ class NfsX86_64(NfsDevice):
 
     kernel = "https://storage.tuxboot.com/buildroot/x86_64/bzImage"
     rootfs = "https://storage.tuxboot.com/debian/20250326/trixie/amd64/rootfs.tar.xz"
+
+
+class NfsAmpereOne(NfsDevice):
+    name = "nfs-ampereone"
+
+    arch = "arm64"
+    lava_arch = "arm64"
+
+    kernel = "https://storage.tuxboot.com/buildroot/arm64/Image"
+    rootfs = "https://storage.tuxboot.com/debian/trixie/arm64/rootfs.tar.xz"

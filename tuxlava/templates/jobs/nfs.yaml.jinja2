@@ -11,7 +11,9 @@ visibility: "public"
 
 {% set extra_kernel_args = '' %}
 context:
-{% if device.name == 'nfs-bcm2711-rpi-4-b' %}
+{% if device.name == 'nfs-ampereone' %}
+    arch: arm64
+{% elif device.name == 'nfs-bcm2711-rpi-4-b' %}
     arch: arm64
     booti_dtb_addr: '0x86000000'
     console_device: ttyS0
@@ -91,13 +93,15 @@ actions:
 {% endif %}
 - boot:
     method:
-{% if device.name == 'nfs-bcm2711-rpi-4-b' or device.name == 'nfs-juno-r2' or device.name == 'nfs-rk3399-rock-pi-4b' or device.name == 'nfs-s32g399a-rdb3' %}
+{% if device.name == 'nfs-ampereone' %}
+      grub
+{% elif device.name in ['nfs-bcm2711-rpi-4-b', 'nfs-juno-r2', 'nfs-rk3399-rock-pi-4b', 'nfs-s32g399a-rdb3'] %}
       u-boot
-{% elif device.name == 'nfs-i386' or device.name == 'nfs-x86_64' %}
+{% elif device.name in ['nfs-i386', 'nfs-x86_64'] %}
       ipxe
 {% endif %}
     commands: nfs
-{% if device.name == 'nfs-i386' or device.name == 'nfs-x86_64' %}
+{% if device.name in ['nfs-i386', 'nfs-x86_64'] %}
     parameters:
       shutdown-message: 'reboot: Restarting system'
 {% endif %}
@@ -115,7 +119,7 @@ actions:
 {% for prompt in tux_prompt %}
     - "{{ prompt }}"{% endfor %}
 
-{% if device.name == 'nfs-juno-r2' or device.name == 'nfs-i386' or device.name == 'nfs-x86_64' %}
+{% if device.name in ['nfs-ampereone', 'nfs-juno-r2', 'nfs-i386', 'nfs-x86_64'] %}
 - test:
     timeout:
       minutes: 5
