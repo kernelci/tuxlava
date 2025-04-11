@@ -114,6 +114,7 @@ actions:
         SHARD_NUMBER: 1
         SHARD_INDEX: 1
         RUNNER: 
+        KIRK_WORKERS: 1
         TIMEOUT_MULTIPLIER: 5
       name: ltp-smoke
 - test:
@@ -134,6 +135,7 @@ actions:
         SHARD_NUMBER: 1
         SHARD_INDEX: 1
         RUNNER: 
+        KIRK_WORKERS: 1
         TIMEOUT_MULTIPLIER: 5
       name: ltp-io
 - test:
@@ -154,6 +156,7 @@ actions:
         SHARD_NUMBER: 1
         SHARD_INDEX: 1
         RUNNER: 
+        KIRK_WORKERS: 1
         TIMEOUT_MULTIPLIER: 5
       name: ltp-math
 - test:
