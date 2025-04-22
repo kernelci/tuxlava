@@ -67,9 +67,10 @@ class NfsDevice(Device):
             "nfs-bcm2711-rpi-4-b",
             "nfs-juno-r2",
             "nfs-rk3399-rock-pi-4b",
+            "nfs-s32g399a-rdb3",
         ]:
             raise InvalidArgument(
-                "argument --dtb is only valid for 'nfs-bcm2711-rpi-4-b', 'nfs-juno-r2' and 'nfs-rk3399-rock-pi-4b' devices"
+                "argument --dtb is only valid for 'nfs-bcm2711-rpi-4-b', 'nfs-juno-r2', 'nfs-rk3399-rock-pi-4b' and 'nfs-s32g399a-rdb3' devices"
             )
         if modules and compression(modules[0]) not in [("tar", "gz"), ("tar", "xz")]:
             raise InvalidArgument(
@@ -150,6 +151,16 @@ class NfsJunoR2(NfsDevice):
 
 class NfsRpi4(NfsDevice):
     name = "nfs-bcm2711-rpi-4-b"
+
+    arch = "arm64"
+    lava_arch = "arm64"
+
+    kernel = "https://storage.tuxboot.com/buildroot/arm64/Image"
+    rootfs = "https://storage.tuxboot.com/debian/20250326/trixie/arm64/rootfs.tar.xz"
+
+
+class NfsNxpRdb3(NfsDevice):
+    name = "nfs-s32g399a-rdb3"
 
     arch = "arm64"
     lava_arch = "arm64"

@@ -1,0 +1,60 @@
+device_type: "s32g399a-rdb3"
+
+job_name: "tuxlava@nfs-s32g399a-rdb3: boot"
+priority: low
+visibility: "public"
+
+context:
+    arch: arm64
+    booti_dtb_addr: '0x86000000'
+    extra_kernel_args: 'rootwait earlycon systemd.log_level=warning '
+    extra_nfsroot_args: ',vers=3'
+
+timeouts:
+  job:
+    minutes: 45
+  connection:
+    minutes: 2
+  actions:
+    power-off:
+      seconds: 60
+    finalize:
+      seconds: 60
+
+actions:
+- deploy:
+    to: tftp
+    timeout:
+      minutes: 30
+    os: debian
+    kernel:
+      url: "https://example.com/Image.gz"
+      compression: gz
+      type: image
+    nfsrootfs:
+      url: "https://example.com/rootfs.tar.xz"
+      compression: xz
+      format: tar
+      overlays:
+        modules:
+          url: "https://example.com/modules.tar.xz"
+          path: "/usr/"
+          format: tar
+          compression: xz
+        overlay-00:
+          url: "https://example.com/ltp.tar.xz"
+          path: "/"
+          format: tar
+          compression: xz
+- boot:
+    method:
+      u-boot
+    commands: nfs
+    timeout:
+      minutes: 15
+    auto_login:
+      login_prompt: 'login:'
+      username: root
+    prompts:
+    - 'root@(.*):[/~]#'
+

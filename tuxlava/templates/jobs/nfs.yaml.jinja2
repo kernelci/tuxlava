@@ -21,7 +21,7 @@ context:
     booti_dtb_addr: '0x88000000'
     extra_nfsroot_args: ',wsize=65536'
     extra_kernel_args: 'default_hugepagesz=2M hugepages=256 earlycon'
-{% elif device.name == 'nfs-rk3399-rock-pi-4b' %}
+{% elif device.name == 'nfs-rk3399-rock-pi-4b' or device.name == 'nfs-s32g399a-rdb3' %}
     arch: arm64
     booti_dtb_addr: '0x86000000'
     extra_kernel_args: 'rootwait earlycon systemd.log_level=warning '
@@ -87,7 +87,7 @@ actions:
 {% endif %}
 - boot:
     method:
-{% if device.name == 'nfs-bcm2711-rpi-4-b' or device.name == 'nfs-juno-r2' or device.name == 'nfs-rk3399-rock-pi-4b' %}
+{% if device.name == 'nfs-bcm2711-rpi-4-b' or device.name == 'nfs-juno-r2' or device.name == 'nfs-rk3399-rock-pi-4b' or device.name == 'nfs-s32g399a-rdb3' %}
       u-boot
 {% elif device.name == 'nfs-i386' or device.name == 'nfs-x86_64' %}
       ipxe
