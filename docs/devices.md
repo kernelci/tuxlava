@@ -83,6 +83,12 @@ qemu-sh4      | 32-bit SH           |
 qemu-sparc64  | 64-bit Sparc        |
 qemu-x86_64   | 64-bit X86          |
 
+## Using Secrets to Authorize URIs downloads in QEMU
+
+QEMU devices support to allow downloading images from URLs
+that require Authorization headers. Secrets can now be injected into
+the job definition and used to authenticate downloads securely.
+
 ## SSH device
 
 Device        | Description            | Machine     | CPU              |

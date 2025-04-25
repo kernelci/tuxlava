@@ -43,6 +43,7 @@ class QemuDevice(Device):
 
     def validate(
         self,
+        secrets,
         bios,
         boot_args,
         commands,

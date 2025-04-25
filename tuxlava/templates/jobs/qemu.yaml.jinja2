@@ -46,6 +46,10 @@ actions:
 {% if compression(kernel)[1] is not none %}
         compression: {{ compression(kernel)[1] }}
 {% endif %}
+{% if secrets|length > 0 and secrets.keys()|list|first is not none %}
+        headers:
+           "Authorization": "{{ secrets.values()|list|first }}"
+{% endif %}
 {% if bios %}
       bios:
         image_arg: "-bios {bios}"
@@ -55,6 +59,10 @@ actions:
       dtb:
         image_arg: "-dtb {dtb}"
         url: "{{ dtb }}"
+{% if secrets|length > 0 and secrets.keys()|list|first is not none %}
+        headers:
+           "Authorization": "{{ secrets.values()|list|first }}"
+{% endif %}
 {% endif %}
       rootfs:
         image_arg: "{{ rootfs_arg }}"
@@ -77,6 +85,12 @@ actions:
             path: "{{ dst }}"
 {% else %}
             path: "{{ dst }}{{ overlay.split('/')[-1] }}"
+{% endif %}
+{% if name == "modules" %}
+{% if secrets|length > 0 and secrets.keys()|list|first is not none %}
+            headers:
+               "Authorization": "{{ secrets.values()|list|first }}"
+{% endif %}
 {% endif %}
 {% endfor %}
 {% elif tests %}
