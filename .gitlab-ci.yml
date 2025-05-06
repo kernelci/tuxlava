@@ -82,7 +82,7 @@ wheel:
     - export tag="tuxsuite/tuxlava:${CI_COMMIT_TAG##v}${TAG_APPEND}"
     - export latest="tuxsuite/tuxlava:latest${TAG_APPEND}"
   script:
-    - docker build --pull --tag "${tag}" --tag "${latest}" .
+    - docker build --network host --pull --tag "${tag}" --tag "${latest}" .
     - docker run "${tag}" tuxlava --version
     - docker run "${latest}" tuxlava --version
     - docker push "${tag}"
