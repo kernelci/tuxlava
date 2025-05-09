@@ -57,7 +57,7 @@ actions:
             compression: xz
     postprocess:
       docker:
-        image: "linaro/kir:20241203"
+        image: "linaro/kir:20250509"
         local: true
         steps:
         - /kir/lava/board_setup.sh dragonboard-845c rootfs "/usr/"
@@ -67,7 +67,7 @@ actions:
     timeout:
       minutes: 30
     docker:
-      image: "linaro/kir:20241203"
+      image: "linaro/kir:20250509"
       local: true
     images:
       partition:0:
@@ -85,7 +85,7 @@ actions:
     name: pre_power_command
 - boot:
     docker:
-      image: "linaro/kir:20241203"
+      image: "linaro/kir:20250509"
       local: true
     method: fastboot
     timeout:
