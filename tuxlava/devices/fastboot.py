@@ -212,6 +212,17 @@ class FastbootX15(FastbootDevice):
     rootfs = "https://storage.tuxboot.com/debian/20250326/trixie/arm64/rootfs.tar.xz"
 
 
+class FastbootGS101_Oriole(FastbootDevice):
+    name = "fastboot-gs101-oriole"
+
+    arch = "arm64"
+    lava_arch = "arm64"
+    reboot_to_fastboot = True
+
+    kernel = "https://storage.tuxboot.com/buildroot/arm64/Image"
+    rootfs = "https://storage.tuxboot.com/debian/20250326/trixie/arm64/rootfs.ext4.xz"
+
+
 class FastbootQRB5165rb5(FastbootDevice):
     name = "fastboot-qrb5165-rb5"
 

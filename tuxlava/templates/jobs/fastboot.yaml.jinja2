@@ -126,16 +126,23 @@ actions:
       partition:0:
         url: downloads://gpt_both0.bin
         reboot: hard-reset
+{% endif%}
+{% if device.name in ['fastboot-dragonboard-845c', 'fastboot-gs101-oriole', 'fastboot-qrb5165-rb5'] %}
       boot:
         url: downloads://boot.img
         reboot: hard-reset
-{% elif device.name == 'fastboot-e850-96' or device.name == 'fastboot-dragonboard-410c' %}
+{% endif%}
+{% if device.name in ['fastboot-e850-96', 'fastboot-dragonboard-410c'] %}
       boot:
         url: downloads://boot.img
 {% endif %}
+{% if device.name == 'fastboot-gs101-oriole' %}
+      vendor_boot:
+        url: downloads://vendor_boot.img
+{% endif %}
 {% if device.name in ['fastboot-dragonboard-845c', 'fastboot-dragonboard-410c', 'fastboot-qrb5165-rb5'] %}
       rootfs:
-{% elif device.name == 'fastboot-e850-96' %}
+{% elif device.name in ['fastboot-e850-96' , 'fastboot-gs101-oriole'] %}
       userdata:
 {% else %}
       super:

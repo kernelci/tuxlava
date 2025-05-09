@@ -71,6 +71,7 @@ class KSelftestArm64(KSelfTest):
         "nfs-rk3399-rock-pi-4b",
         "fastboot-dragonboard-410c",
         "fastboot-dragonboard-845c",
+        "fastboot-gs101-oriole",
         "fastboot-e850-96",
     ]
     name = "kselftest-arm64"
