@@ -65,4 +65,5 @@ actions:
         DURATION: '5m'
         BACKGROUND_CMD: ""
         ITERATIONS: '1'
+        USER_BASELINE: ''
       name: rt-tests-rt-migrate-test
