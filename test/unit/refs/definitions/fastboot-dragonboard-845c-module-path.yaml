@@ -18,9 +18,9 @@ timeouts:
     minutes: 2
   actions:
     power-off:
-      seconds: 30
-    finalize:
       seconds: 60
+    finalize:
+      seconds: 120
 
 actions:
 - deploy:
