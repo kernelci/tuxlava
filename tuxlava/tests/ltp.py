@@ -33,12 +33,12 @@ class LTPTest(Test):
 
 class LTPCapBounds(LTPTest):
     name = "ltp-cap_bounds"
-    timeout = 2
+    timeout = 5
 
 
 class LTPCapability(LTPTest):
     name = "ltp-capability"
-    timeout = 2
+    timeout = 5
 
 
 class LTPCommands(LTPTest):
@@ -73,7 +73,7 @@ class LTPCVE(LTPTest):
 
 class LTPDIO(LTPTest):
     name = "ltp-dio"
-    timeout = 2
+    timeout = 5
 
 
 class LTPFcntlLockTests(LTPTest):
@@ -98,7 +98,7 @@ class LTPFSPermsSimple(LTPTest):
 
 class LTPFSX(LTPTest):
     name = "ltp-fsx"
-    timeout = 1
+    timeout = 3
 
 
 class LTPFS(LTPTest):
@@ -108,12 +108,12 @@ class LTPFS(LTPTest):
 
 class LTPHugetlb(LTPTest):
     name = "ltp-hugetlb"
-    timeout = 2
+    timeout = 5
 
 
 class LTPIO(LTPTest):
     name = "ltp-io"
-    timeout = 2
+    timeout = 5
 
 
 class LTPIPC(LTPTest):
@@ -123,7 +123,7 @@ class LTPIPC(LTPTest):
 
 class LTPMath(LTPTest):
     name = "ltp-math"
-    timeout = 2
+    timeout = 5
 
 
 class LTPMM(LTPTest):
@@ -148,13 +148,13 @@ class LTPSched(LTPTest):
 
 class LTPSecurebits(LTPTest):
     name = "ltp-securebits"
-    timeout = 2
+    timeout = 5
 
 
 class LTPSmoke(LTPTest):
     name = "ltp-smoke"
     cmdfile = "smoketest"
-    timeout = 2
+    timeout = 5
 
 
 class LTPSyscalls(LTPTest):
@@ -164,4 +164,4 @@ class LTPSyscalls(LTPTest):
 
 class LTPTracing(LTPTest):
     name = "ltp-tracing"
-    timeout = 2
+    timeout = 5

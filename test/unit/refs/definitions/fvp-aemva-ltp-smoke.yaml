@@ -7,7 +7,7 @@ visibility: public
 
 timeouts:
   job:
-    minutes: 27
+    minutes: 20
   action:
     minutes: 10
   connection:
@@ -17,7 +17,7 @@ actions:
 - deploy:
     to: fvp
     timeout:
-      minutes: 15
+      minutes: 5
     uniquify: False
     images:
       startup:
@@ -189,7 +189,7 @@ actions:
     - 'root@(.*):[/~]#'
 - test:
     timeout:
-      minutes: 2
+      minutes: 5
     definitions:
     - repository: https://storage.tuxboot.com/test-definitions/2025.05.tar.zst
       lava-signal: kmsg

@@ -10,7 +10,7 @@ context:
 
 timeouts:
   job:
-    minutes: 106
+    minutes: 115
   connection:
     minutes: 2
   actions:
@@ -81,7 +81,7 @@ actions:
       path: inline/prep.yaml
 - test:
     timeout:
-      minutes: 2
+      minutes: 5
     definitions:
     - repository: https://storage.tuxboot.com/test-definitions/2025.05.tar.zst
       lava-signal: kmsg
@@ -103,7 +103,7 @@ actions:
       name: ltp-smoke
 - test:
     timeout:
-      minutes: 2
+      minutes: 5
     definitions:
     - repository: https://storage.tuxboot.com/test-definitions/2025.05.tar.zst
       lava-signal: kmsg
@@ -125,7 +125,7 @@ actions:
       name: ltp-io
 - test:
     timeout:
-      minutes: 2
+      minutes: 5
     definitions:
     - repository: https://storage.tuxboot.com/test-definitions/2025.05.tar.zst
       lava-signal: kmsg
