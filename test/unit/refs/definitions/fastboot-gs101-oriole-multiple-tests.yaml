@@ -84,6 +84,8 @@ actions:
       username: root
     prompts:
     - 'root@(.*):[/~]#'
+    commands:
+      - erase dtbo
 
 - test:
     timeout:

@@ -193,6 +193,10 @@ actions:
 - command:
     name: pre_os_command
 {% endif %}
+{% if device.name == 'fastboot-gs101-oriole' %}
+    commands:
+      - erase dtbo
+{% endif %}
 
 {% if device.name == 'fastboot-x15' %}
 - test:
