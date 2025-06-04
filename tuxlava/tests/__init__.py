@@ -91,6 +91,7 @@ import tuxlava.tests.peripherals  # noqa: E402,F401
 import tuxlava.tests.rcutorture  # noqa: E402,F401
 import tuxlava.tests.rttests  # noqa: E402,F401
 import tuxlava.tests.systemdanalyze  # noqa: E402,F401
+import tuxlava.tests.tcpreplay  # noqa: E402,F401
 import tuxlava.tests.tfatests  # noqa: E402,F401
 import tuxlava.tests.v4l2  # noqa: E402,F401
 import tuxlava.tests.vdso  # noqa: E402,F401

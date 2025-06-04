@@ -1046,6 +1046,23 @@ def artefacts(tmp_path):
             "qemu-arm64-systemd-analyze.yaml",
         ),
         (
+            [
+                "--device",
+                "qemu-arm64",
+                "--boot-args",
+                "rw",
+                "--kernel",
+                "https://example.com/Image.gz",
+                "--modules",
+                "https://example.com/modules.tar.xz",
+                "--rootfs",
+                "https://storage.tuxboot.com/debian/trixie/arm64/rootfs.ext4.xz",
+                "--tests",
+                "tcpreplay",
+            ],
+            "qemu-arm64-tcpreplay.yaml",
+        ),
+        (
             ["--device", "qemu-arm64be"],
             "qemu-arm64be.yaml",
         ),
