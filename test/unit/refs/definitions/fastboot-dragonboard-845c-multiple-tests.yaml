@@ -100,7 +100,7 @@ actions:
     timeout:
       minutes: 5
     definitions:
-    - repository: https://storage.tuxboot.com/test-definitions/2025.05.tar.zst
+    - repository: https://storage.tuxboot.com/test-definitions/2025.06.tar.zst
       from: url
       compression: zstd
       path: automated/linux/ltp/ltp.yaml
@@ -121,7 +121,7 @@ actions:
     timeout:
       minutes: 5
     definitions:
-    - repository: https://storage.tuxboot.com/test-definitions/2025.05.tar.zst
+    - repository: https://storage.tuxboot.com/test-definitions/2025.06.tar.zst
       from: url
       compression: zstd
       path: automated/linux/ltp/ltp.yaml
@@ -142,7 +142,7 @@ actions:
     timeout:
       minutes: 5
     definitions:
-    - repository: https://storage.tuxboot.com/test-definitions/2025.05.tar.zst
+    - repository: https://storage.tuxboot.com/test-definitions/2025.06.tar.zst
       from: url
       compression: zstd
       path: automated/linux/ltp/ltp.yaml
@@ -163,7 +163,7 @@ actions:
     timeout:
       minutes: 30
     definitions:
-    - repository: https://storage.tuxboot.com/test-definitions/2025.05.tar.zst
+    - repository: https://storage.tuxboot.com/test-definitions/2025.06.tar.zst
       from: url
       compression: zstd
       path: automated/linux/perf/perf.yaml
@@ -174,7 +174,7 @@ actions:
     timeout:
       minutes: 45
     definitions:
-    - repository: https://storage.tuxboot.com/test-definitions/2025.05.tar.zst
+    - repository: https://storage.tuxboot.com/test-definitions/2025.06.tar.zst
       from: url
       compression: zstd
       path: automated/linux/kselftest/kselftest.yaml
@@ -191,7 +191,7 @@ actions:
     timeout:
       minutes: 20
     definitions:
-    - repository: https://storage.tuxboot.com/test-definitions/2025.05.tar.zst
+    - repository: https://storage.tuxboot.com/test-definitions/2025.06.tar.zst
       from: url
       compression: zstd
       path: automated/linux/kunit/kunit.yaml

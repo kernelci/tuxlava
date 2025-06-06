@@ -56,7 +56,7 @@ actions:
     timeout:
       minutes: 7
     definitions:
-    - repository: https://storage.tuxboot.com/test-definitions/2025.05.tar.zst
+    - repository: https://storage.tuxboot.com/test-definitions/2025.06.tar.zst
       lava-signal: kmsg
       from: url
       compression: zstd
