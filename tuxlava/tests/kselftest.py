@@ -88,7 +88,6 @@ class KSelftestBreakpoints(KSelfTest):
         "nfs-juno-r2",
         "nfs-bcm2711-rpi-4-b",
         "nfs-rk3399-rock-pi-4b",
-        "nfs-x86_64",
         "fastboot-dragonboard-410c",
         "fastboot-dragonboard-845c",
         "fastboot-e850-96",
