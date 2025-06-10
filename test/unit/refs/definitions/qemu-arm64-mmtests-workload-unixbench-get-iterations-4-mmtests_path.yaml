@@ -71,7 +71,6 @@ actions:
         SKIP_INSTALL: 'true'
         MMTESTS_CONFIG_FILE: 'configs/config-workload-unixbench'
         MMTEST_ITERATIONS: '4'
-        MMTESTS_OVERRIDE: ''
         TEST_DIR: '/opt/mmtests'
         FULL_ARCHIVE: 'false'
         SHARED_DIR: 'true'

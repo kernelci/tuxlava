@@ -13,7 +13,9 @@
         SKIP_INSTALL: 'true'
         MMTESTS_CONFIG_FILE: '{{ configfile }}'
         MMTEST_ITERATIONS: '{{ parameters.get("ITERATIONS", iterations) }}'
-        MMTESTS_OVERRIDE: '{{ parameters.get("OVERRIDE", "") }}'
+{% if parameters.get("OVERRIDE") %}
+        MMTESTS_OVERRIDE: '{{ parameters["OVERRIDE"] }}'
+{%endif%}
         TEST_DIR: '{{ parameters.get("MMTESTS_PATH", "/mmtests") }}'
         FULL_ARCHIVE: '{{ parameters.get("FULL_ARCHIVE", "False")|lower }}'
         SHARED_DIR: 'true'
