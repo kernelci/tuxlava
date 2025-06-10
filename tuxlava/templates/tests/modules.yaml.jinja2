@@ -11,10 +11,16 @@
       path: automated/linux/modules/modules.yaml
       name: modules
       parameters:
-        MODULES_LIST: '{{ parameters.get("MODULES_LIST", "") }}'
-        MODULES_SUBDIRS: '{{ parameters.get("MODULES_SUBDIRS", "") }}'
+{% if parameters.get("MODULES_LIST") %}
+        MODULES_LIST: '{{ parameters["MODULES_LIST"] }}'
+{% endif %}
+{% if parameters.get("MODULES_SUBDIRS") %}
+        MODULES_SUBDIRS: '{{ parameters["MODULES_SUBDIRS"] }}'
+{% endif %}
         MODULE_MODPROBE_NUMBER: '{{ parameters.get("MODULE_MODPROBE_NUMBER", "1") }}'
         SHARD_NUMBER: {{ parameters.get("SHARD_NUMBER", 1) }}
         SHARD_INDEX: {{ parameters.get("SHARD_INDEX", 1) }}
-        SKIPLIST: '{{ parameters.get("SKIPLIST", "") }}'
+{% if parameters.get("SKIPLIST") %}
+        SKIPLIST: '{{ parameters["SKIPLIST"] }}'
+{% endif %}
 
