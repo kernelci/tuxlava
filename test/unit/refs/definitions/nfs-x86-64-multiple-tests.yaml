@@ -97,7 +97,6 @@ actions:
         LTP_INSTALL_PATH: '/opt/ltp/'
         SHARD_NUMBER: 1
         SHARD_INDEX: 1
-        RUNNER: 
         KIRK_WORKERS: 1
         TIMEOUT_MULTIPLIER: 5
       name: ltp-smoke
@@ -119,7 +118,6 @@ actions:
         LTP_INSTALL_PATH: '/opt/ltp/'
         SHARD_NUMBER: 1
         SHARD_INDEX: 1
-        RUNNER: 
         KIRK_WORKERS: 1
         TIMEOUT_MULTIPLIER: 5
       name: ltp-io
@@ -141,7 +139,6 @@ actions:
         LTP_INSTALL_PATH: '/opt/ltp/'
         SHARD_NUMBER: 1
         SHARD_INDEX: 1
-        RUNNER: 
         KIRK_WORKERS: 1
         TIMEOUT_MULTIPLIER: 5
       name: ltp-math

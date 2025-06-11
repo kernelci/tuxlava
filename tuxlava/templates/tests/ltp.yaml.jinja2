@@ -18,7 +18,9 @@
         LTP_INSTALL_PATH: '/opt/ltp/'
         SHARD_NUMBER: {{ parameters.get("SHARD_NUMBER", 1) }}
         SHARD_INDEX: {{ parameters.get("SHARD_INDEX", 1) }}
-        RUNNER: {{ parameters.get("RUNNER", "") }}
+{% if parameters.get("RUNNER") %}
+        RUNNER: {{ parameters["RUNNER"] }}
+{% endif %}
         KIRK_WORKERS: {{ parameters.get("KIRK_WORKERS", 1) }}
         TIMEOUT_MULTIPLIER: {{ parameters.get("TIMEOUT_MULTIPLIER", 5) }}
       name: {{ name }}
