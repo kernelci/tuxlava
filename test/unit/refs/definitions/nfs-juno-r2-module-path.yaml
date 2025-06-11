@@ -9,7 +9,6 @@ context:
     booti_dtb_addr: '0x88000000'
     extra_nfsroot_args: ',wsize=65536'
     extra_kernel_args: 'default_hugepagesz=2M hugepages=256 earlycon'
-
 timeouts:
   job:
     minutes: 45
