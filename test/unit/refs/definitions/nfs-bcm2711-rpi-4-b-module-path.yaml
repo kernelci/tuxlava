@@ -10,6 +10,7 @@ context:
     console_device: ttyS0
     extra_nfsroot_args: ',vers=3'
     extra_kernel_args: '8250.nr_uarts=1 cma=64M rootwait earlycon systemd.log_level=warning '
+
 timeouts:
   job:
     minutes: 45

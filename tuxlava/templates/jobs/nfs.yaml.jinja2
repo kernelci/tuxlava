@@ -9,6 +9,7 @@ job_name: "tuxlava@{{ device.name }}: boot"
 priority: {{ LAVA_JOB_PRIORITY }}
 visibility: "public"
 
+{% set extra_kernel_args = '' %}
 context:
 {% if device.name == 'nfs-bcm2711-rpi-4-b' %}
     arch: arm64
@@ -30,7 +31,9 @@ context:
     test_character_delay: 10
 {% set extra_kernel_args = 'rootwait' %}
 {% endif %}
+{% if extra_kernel_args or tux_boot_args %}
     extra_kernel_args: '{{ extra_kernel_args}}{% if tux_boot_args %} {{ tux_boot_args }}{% endif %}'
+{% endif %}
 
 {%- set deploy_timeout = timeouts.deploy|default(30) %}
 {%- set boot_timeout = timeouts.boot|default(15) %}

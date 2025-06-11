@@ -9,6 +9,7 @@ context:
     booti_dtb_addr: '0x86000000'
     extra_nfsroot_args: ',vers=3'
     extra_kernel_args: 'rootwait earlycon systemd.log_level=warning '
+
 timeouts:
   job:
     minutes: 45
