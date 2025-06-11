@@ -67,11 +67,11 @@ actions:
         parameters:
           command:
 {# start arch command #}
-{% if arch == 'arm64' or arch == 'aarch64' %}
+{% if arch in ['arm64', 'aarch64'] %}
             qemu-system-aarch64
 {% elif arch == 'arm' %}
             qemu-system-arm
-{% elif arch == 'amd64' or arch == 'x86_64' %}
+{% elif arch in ['amd64', 'x86_64'] %}
             qemu-system-x86_64
 {% elif arch == 'hppa' %}
             qemu-system-hppa
@@ -109,7 +109,7 @@ actions:
           # used by installers to relate to the empty target device
           boot_options:
 {# start arch root #}
-{% if arch == 'arm64' or arch == 'aarch64' %}
+{% if arch in ['arm64', 'aarch64'] %}
             {root: '{{ boot_root|default("/dev/vda2") }} rw rootwait', console: {{ boot_console|default('ttyAMA0 115200') }}, ip: dhcp, mem: 1024M}
 {% elif arch == 'arm' %}
 {% elif arch == 'amd64' %}
@@ -123,7 +123,7 @@ actions:
           options:
 {% block qemu_options %}
 {# arch cpu #}
-{% if arch == 'arm64' or arch == 'aarch64' %}
+{% if arch in ['arm64', 'aarch64'] %}
 {# not arch cpu #}
 {% if not no_kvm %}
           - -enable-kvm
@@ -225,7 +225,7 @@ actions:
 {% endif %}
           - -machine {{ machine|default('sim') }}
 {% endif %}
-{% if arch == 'arm64' or arch == 'aarch64' or arch == 'arm' %}
+{% if arch in ['arm64', 'aarch64', 'arm'] %}
 {# arch cpu + vga #}
 {% if vga %}
           - {{ vga }}
