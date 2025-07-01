@@ -43,7 +43,7 @@ stages:
   needs: []
 
 stylecheck:
-  image: $CI_REGISTRY_IMAGE:ci-debian
+  image: registry.gitlab.com/linaro/tuxlava:ci-debian
   extends: .code-checks
   stage: test
   script:
@@ -54,7 +54,7 @@ stylecheck:
 
 codespell:
   extends: .code-checks
-  image: $CI_REGISTRY_IMAGE:ci-debian
+  image: registry.gitlab.com/linaro/tuxlava:ci-debian
   stage: test
   script:
     - make spellcheck
@@ -62,7 +62,7 @@ codespell:
     - schedules
 
 wheel:
-  image: $CI_REGISTRY_IMAGE:ci-debian
+  image: registry.gitlab.com/linaro/tuxlava:ci-debian
   stage: build
   script:
     - flit build
@@ -117,43 +117,43 @@ docker-arm64:
 
 unit-tests-python3.9:
   extends: .unit-tests
-  image: $CI_REGISTRY_IMAGE:ci-python-3.9
+  image: registry.gitlab.com/linaro/tuxlava:ci-python-3.9
 
 unit-tests-python3.10:
   extends: .unit-tests
-  image: $CI_REGISTRY_IMAGE:ci-python-3.10
+  image: registry.gitlab.com/linaro/tuxlava:ci-python-3.10
 
 unit-tests-python3.11:
   extends: .unit-tests
-  image: $CI_REGISTRY_IMAGE:ci-python-3.11
+  image: registry.gitlab.com/linaro/tuxlava:ci-python-3.11
 
 unit-tests-python3.12:
   extends: .unit-tests
-  image: $CI_REGISTRY_IMAGE:ci-python-3.12
+  image: registry.gitlab.com/linaro/tuxlava:ci-python-3.12
 
 unit-tests-python3.13:
   extends: .unit-tests
-  image: $CI_REGISTRY_IMAGE:ci-python-3.13
+  image: registry.gitlab.com/linaro/tuxlava:ci-python-3.13
 
 unit-tests-python3.9-arm64:
   extends: [.unit-tests, .arm64]
-  image: $CI_REGISTRY_IMAGE:ci-python-3.9
+  image: registry.gitlab.com/linaro/tuxlava:ci-python-3.9
 
 unit-tests-python3.10-arm64:
   extends: [.unit-tests, .arm64]
-  image: $CI_REGISTRY_IMAGE:ci-python-3.10
+  image: registry.gitlab.com/linaro/tuxlava:ci-python-3.10
 
 unit-tests-python3.11-arm64:
   extends: [.unit-tests, .arm64]
-  image: $CI_REGISTRY_IMAGE:ci-python-3.11
+  image: registry.gitlab.com/linaro/tuxlava:ci-python-3.11
 
 unit-tests-python3.12-arm64:
   extends: [.unit-tests, .arm64]
-  image: $CI_REGISTRY_IMAGE:ci-python-3.12
+  image: registry.gitlab.com/linaro/tuxlava:ci-python-3.12
 
 unit-tests-python3.13-arm64:
   extends: [.unit-tests, .arm64]
-  image: $CI_REGISTRY_IMAGE:ci-python-3.13
+  image: registry.gitlab.com/linaro/tuxlava:ci-python-3.13
 
 trigger_bot_pipeline:
   stage: trigger_bot_pipeline
