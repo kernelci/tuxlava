@@ -98,3 +98,4 @@ import tuxlava.tests.vdso  # noqa: E402,F401
 import tuxlava.tests.xfstests  # noqa: E402,F401
 import tuxlava.tests.androidcts  # noqa: E402,F401
 import tuxlava.tests.androidvts  # noqa: E402,F401
+import tuxlava.tests.smoke  # noqa: E402,F401

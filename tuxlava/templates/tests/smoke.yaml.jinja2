@@ -1,0 +1,16 @@
+- test:
+    timeout:
+      minutes: {{ timeout }}
+    definitions:
+    - repository: {{ test_definitions }}
+{%if device.redirect_to_kmsg %}
+      lava-signal: kmsg
+{% endif %}
+      from: url
+      compression: zstd
+      path: automated/linux/smoke/smoke.yaml
+      name: smoke
+      parameters:
+        SKIP_INSTALL: "true"
+        TESTS: {{ parameters.get("TESTS", "pwd, uname -a, ip a, dmesg") }}
+
