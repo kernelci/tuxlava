@@ -1,0 +1,76 @@
+
+device_type: "qcs6490-rb3gen2-core-kit"
+
+job_name: "tuxlava@flasher-debian-qcs6490-rb3gen2-core-kit: smoke"
+priority: low
+visibility: "public"
+
+
+context:
+    test_character_delay: 10
+timeouts:
+  job:
+    minutes: 85
+  connection:
+    minutes: 2
+  actions:
+    power-off:
+      seconds: 60
+    finalize:
+      seconds: 120
+
+actions:
+- deploy:
+    to: downloads
+    timeout:
+      minutes: 25
+    os: debian
+    images:
+      image:
+        url: "http://example.com/flasher.tar.gz"
+    postprocess:
+      docker:
+        image: "ghcr.io/foundriesio/lava-lmp-sign:main"
+        local: true
+        steps:
+        - export IMAGE_PATH=$PWD
+        - cp overlay*.tar.gz overlay.tar.gz
+        - echo "OVERLAY=overlay.tar.gz" >> $IMAGE_PATH/flash.settings
+        - echo "OVERLAY_PATH=/home/" >> $IMAGE_PATH/flash.settings
+        - echo "DEVICE_TYPE=debian-qcs6490-rb3gen2-core-kit" >> $IMAGE_PATH/flash.settings
+        - cat $IMAGE_PATH/flash.settings
+- deploy:
+    to: flasher
+    os: debian
+    timeout:
+      minutes: 30
+    images:
+      image:
+        url: downloads://flasher.tar.gz
+      settings:
+        url: downloads://flash.settings
+      overlay:
+        url: downloads://overlay.tar.gz
+
+- boot:
+    method: minimal
+    timeout:
+      minutes: 25
+    auto_login:
+      login_prompt: 'login:'
+      username: root
+    prompts:
+    - 'root@(.*):[/~]#'
+- test:
+    timeout:
+      minutes: 5
+    definitions:
+    - repository: https://storage.tuxboot.com/test-definitions/2025.06.tar.zst
+      lava-signal: kmsg
+      from: url
+      compression: zstd
+      path: automated/linux/smoke/smoke.yaml
+      name: smoke
+      parameters:
+        SKIP_INSTALL: "true"
+        TESTS: "foo bar"

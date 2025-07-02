@@ -2887,6 +2887,32 @@ def artefacts(tmp_path):
             ],
             "qemu-arm64-pheripherals.yaml",
         ),
+        (
+            [
+                "--device",
+                "flasher-debian-qcs6490-rb3gen2-core-kit",
+                "--tests",
+                "smoke",
+                "--parameters",
+                'TESTS="foo bar"',
+                "--rootfs",
+                "http://example.com/flasher.tar.gz",
+            ],
+            "flasher-debian-qcs6490-rb3gen2-core-kit-smoke.yaml",
+        ),
+        (
+            [
+                "--device",
+                "flasher-qcom-qcs6490-rb3gen2-core-kit",
+                "--tests",
+                "smoke",
+                "--parameters",
+                'TESTS="foo bar"',
+                "--rootfs",
+                "http://example.com/flasher.tar.gz",
+            ],
+            "flasher-qcom-qcs6490-rb3gen2-core-kit-smoke.yaml",
+        ),
     ],
 )
 def test_definition(monkeypatch, mocker, capsys, tmpdir, artefacts, args, filename):
@@ -3302,6 +3328,17 @@ def test_definition(monkeypatch, mocker, capsys, tmpdir, artefacts, args, filena
         (
             ["--device", "qemu-arm64", "--tests", "ltp-smoke", "ltp-smoke"],
             "each test should appear only once",
+        ),
+        (
+            [
+                "--device",
+                "flasher-debian-qcs6490-rb3gen2-core-kit",
+                "--tests",
+                "smoke",
+                "--parameters",
+                'TESTS="foo bar"',
+            ],
+            "Missing --rootfs argument. Can't render the template",
         ),
     ],
 )
