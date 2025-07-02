@@ -1,0 +1,92 @@
+{% set default_prefix_len = 'flasher-'|length %}
+{% set flasher_prefix = flasher_prefix|default('') %}
+{% set prefix_len = prefix_len|default(default_prefix_len) %}
+
+device_type: "{{ device.name[prefix_len:] }}"
+
+{% if tests %}
+job_name: "tuxlava@{{ device.name }}: {{ tests|map(attribute="name")|join(", ")}}"
+{% else %}
+job_name: "tuxlava@{{ device.name }}: boot"
+{% endif %}
+priority: {{ LAVA_JOB_PRIORITY }}
+visibility: "public"
+
+{% block tags %}
+{% if tags is defined and tags is sequence and tags is not string %}
+tags:
+{% for tag in tags %}
+{% if tag|length %}
+  - {{ tag }}
+{% endif %}
+{% endfor %}
+{% endif %}
+{% endblock tags %}
+
+context:
+    test_character_delay: 10
+
+{%- set deploy_download_timeout = timeouts.deploy|default(25) %}
+{%- set deploy_timeout = timeouts.deploy|default(30) %}
+{%- set boot_timeout = timeouts.boot|default(25) %}
+
+{% block timeouts %}
+timeouts:
+  job:
+    minutes: {{ deploy_download_timeout + deploy_timeout + boot_timeout + tests_timeout }}
+  connection:
+    minutes: 2
+  actions:
+    power-off:
+      seconds: 60
+    finalize:
+      seconds: 120
+{% if LAVA_QUEUE_TIMEOUT is defined %}
+  queue:
+    hours: {{ LAVA_QUEUE_TIMEOUT }}
+{% endif %}
+{% endblock %}
+
+actions:
+- deploy:
+    to: downloads
+    timeout:
+      minutes: {{ deploy_download_timeout }}
+    os: {{ deploy_os|default("debian") }}
+    images:
+      image:
+        url: "{{ rootfs }}"
+    postprocess:
+      docker:
+        image: "{{ deploy_docker_image|default('ghcr.io/foundriesio/lava-lmp-sign:main') }}"
+        local: true
+        steps:
+        - export IMAGE_PATH=$PWD
+        - cp overlay*.tar.gz overlay.tar.gz
+        - echo "OVERLAY=overlay.tar.gz" >> $IMAGE_PATH/flash.settings
+        - echo "OVERLAY_PATH=/home/" >> $IMAGE_PATH/flash.settings
+        - echo "DEVICE_TYPE={{ flasher_prefix }}{{ device.name[prefix_len:] }}" >> $IMAGE_PATH/flash.settings
+        - cat $IMAGE_PATH/flash.settings
+- deploy:
+    to: flasher
+    os: {{ deploy_os|default(debian) }}
+    timeout:
+      minutes: {{ deploy_timeout }}
+    images:
+      image:
+        url: downloads://{{ rootfs_filename }}
+      settings:
+        url: downloads://flash.settings
+      overlay:
+        url: downloads://overlay.tar.gz
+
+- boot:
+    method: minimal
+    timeout:
+      minutes: {{ boot_timeout }}
+    auto_login:
+      login_prompt: 'login:'
+      username: root
+    prompts:
+    - 'root@(.*):[/~]#'
+

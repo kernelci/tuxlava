@@ -3,6 +3,7 @@
 # vim: set ts=4
 #
 # Copyright 2024-present Linaro Limited
+# Copyright (c) 2025-present Qualcomm Technologies, Inc. and/or its subsidiaries.
 #
 # SPDX-License-Identifier: MIT
 
@@ -17,6 +18,7 @@ class V4L2(Test):
         "avh-rpi4b",
         "nfs-*",
         "fastboot-*",
+        "flasher-*",
     ]
     name = "v4l2"
     timeout = 25

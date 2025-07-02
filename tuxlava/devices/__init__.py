@@ -65,3 +65,4 @@ import tuxlava.devices.fvp  # noqa: E402
 import tuxlava.devices.nfs  # noqa: E402,F401
 import tuxlava.devices.qemu  # noqa: E402,F401
 import tuxlava.devices.ssh  # noqa: E402,F401
+import tuxlava.devices.flasher  # noqa: E402,F401
