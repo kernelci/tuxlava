@@ -4,6 +4,7 @@ include:
 
 variables:
   TUXPKG_PROJECT: tuxlava
+  CI_REGISTRY_IMAGE: registry.gitlab.com/linaro/tuxpkg
 
 stages:
   - .pre
@@ -30,6 +31,12 @@ stages:
 .tuxlava:
   except:
     - schedules
+
+.fork-skip:
+  rules:
+    - if: '$CI_PROJECT_NAMESPACE != "Linaro"'
+      when: never
+    - when: on_success
 
 .arm64:
   only:
@@ -63,6 +70,7 @@ codespell:
 
 wheel:
   image: registry.gitlab.com/linaro/tuxlava:ci-debian
+  extends: .fork-skip
   stage: build
   script:
     - flit build
@@ -166,6 +174,8 @@ trigger_bot_pipeline:
            -F ref=main \
            https://gitlab.com/api/v4/projects/$GITLABBOT_PROJECT_ID/trigger/pipeline
   rules:
+    - if: '$CI_PROJECT_NAMESPACE != "Linaro"'
+      when: never
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       when: always
 
@@ -175,6 +185,37 @@ doc:
   artifacts:
     paths:
       - public
+
+# Don't run in fork repos since CI_REGISTRY_IMAGE is not available
+rpm:
+  rules:
+    - if: '$CI_PROJECT_FORK_PATH'
+      when: never
+    - when: on_success
+
+rpm-sanity-check:
+  rules:
+    - if: '$CI_PROJECT_FORK_PATH'
+      when: never
+    - when: on_success
+
+deb:
+  rules:
+    - if: '$CI_PROJECT_FORK_PATH'
+      when: never
+    - when: on_success
+
+deb-sanity-check:
+  rules:
+    - if: '$CI_PROJECT_FORK_PATH'
+      when: never
+    - when: on_success
+
+check-repository-key:
+  rules:
+    - if: '$CI_PROJECT_FORK_PATH'
+      when: never
+    - when: on_success
 
 pages:
   extends: .job
