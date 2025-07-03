@@ -53,6 +53,9 @@ class Device:
         raise NotImplementedError  # pragma: no cover
 
     def device_dict(self, context: Dict) -> str:
+        """This will be used by tuxrun in order to supply the device dictionary
+        for all virtual devices that will be run via lava worker in tuxrun.
+        """
         raise NotImplementedError  # pragma: no cover
 
     def extra_assets(self, tmpdir, **kwargs) -> List[str]:
