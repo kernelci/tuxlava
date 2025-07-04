@@ -1,0 +1,30 @@
+- test:
+    definitions:
+    - repository: {{ test_definitions }}
+{%if device.redirect_to_kmsg %}
+      lava-signal: kmsg
+{% endif %}
+      from: url
+      compression: zstd
+      name: wlan-smoke
+      parameters:
+        DEVICE: {{ parameters.get('DEVICE', 'wlan0') }}
+      path: automated/linux/wlan-smoke/wlan-smoke.yaml
+    - repository: {{ test_definitions }}
+{%if device.redirect_to_kmsg %}
+      lava-signal: kmsg
+{% endif %}
+      from: url
+      compression: zstd
+      name: wlan-download
+      parameters:
+        DEVICE: {{ parameters.get('DEVICE', 'wlan0') }}
+        ETHERNET_DEVICE: {{ parameters.get('ETHERNET_DEVICE', 'eth0') }}
+        FILE_CHECKSUM: 8388f7232b400bdc80279668847f90da
+        FILE_URL: http://archive.ubuntu.com/ubuntu/dists/bionic/main/installer-amd64/current/images/netboot/mini.iso
+        TIME_DELAY: 120s
+        SSID_NAME: "{{ parameters.get('SSID_NAME', '') }}"
+        SSID_PASSWORD: "{{ parameters.get('SSID_PASSWORD', '') }}"
+      path: automated/linux/wlan-download/wlan-download.yaml
+    timeout:
+      minutes: {{ timeout }}
