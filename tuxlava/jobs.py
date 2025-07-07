@@ -85,6 +85,7 @@ class Job:
         job_definition: str = None,
         tmpdir: Path = None,
         cache_dir: Path = None,
+        visibility: str = None,
     ) -> None:
         self.device = device
         self.bios = bios
@@ -133,6 +134,7 @@ class Job:
         self.test_definitions = None
         self.extra_assets = []
         self.tux_boot_args = None
+        self.visibility = visibility
 
     def __str__(self) -> str:
         tests = "_".join(self.tests) if self.tests else "boot"
@@ -314,6 +316,7 @@ class Job:
             "deploy_os": self.deploy_os,
             "LAVA_JOB_PRIORITY": self.lava_job_priority,
             "tags": self.lava_job_tags,
+            "visibility": self.visibility,
         }
         definition = self.device.definition(**def_arguments)
         return definition

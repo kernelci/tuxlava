@@ -29,6 +29,7 @@ class SSHDevice(Device):
         ssh_prompt,
         ssh_user,
         ssh_identity_file,
+        visibility,
         **kwargs,
     ):
         invalid_args = ["--" + k.replace("_", "-") for k in kwargs if kwargs[k]]

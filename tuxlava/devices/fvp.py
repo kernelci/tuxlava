@@ -55,6 +55,7 @@ class AEMvAFVPDevice(FVPDevice):
         modules,
         enable_network,
         tests,
+        visibility,
         **kwargs,
     ):
         invalid_args = ["--" + k.replace("_", "-") for k in kwargs if kwargs[k]]
@@ -165,6 +166,7 @@ class MorelloFVPDevice(FVPDevice):
         parameters,
         tests,
         fip,
+        visibility,
         **kwargs,
     ):
         invalid_args = ["--" + k.replace("_", "-") for k in kwargs if kwargs[k]]

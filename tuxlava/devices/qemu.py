@@ -58,6 +58,7 @@ class QemuDevice(Device):
         enable_trustzone,
         enable_network,
         tests,
+        visibility,
         **kwargs,
     ):
         invalid_args = ["--" + k.replace("_", "-") for (k, v) in kwargs.items() if v]

@@ -81,6 +81,7 @@ def main() -> int:
             tuxmake=options.tuxmake,
             job_definition=options.job_definition,
             shared=options.shared,
+            visibility=options.visibility,
         )
         job.initialize()
         sys.stdout.write(job.render())

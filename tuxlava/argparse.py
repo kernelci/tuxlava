@@ -364,6 +364,15 @@ def setup_parser() -> argparse.ArgumentParser:
         help="Use qemu from the given path",
     )
 
+    group = parser.add_argument_group("test job")
+    group.add_argument(
+        "--visibility",
+        default="public",
+        choices=["public", "personal", "group"],
+        type=str,
+        help="Overall test job visibility."
+    )
+
     group = parser.add_argument_group("output")
     group.add_argument(
         "--lava-definition",

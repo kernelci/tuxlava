@@ -2,7 +2,7 @@ device_type: "fvp"
 
 job_name: "tuxlava@fvp-morello-android"
 priority: low
-visibility: public
+visibility: "public"
 
 
 timeouts:

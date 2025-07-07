@@ -47,6 +47,7 @@ class AvhDevice(Device):
         prompt,
         tests,
         commands,
+        visibility,
         **kwargs,
     ):
         invalid_args = ["--" + k.replace("_", "-") for (k, v) in kwargs.items() if v]

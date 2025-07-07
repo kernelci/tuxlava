@@ -55,6 +55,7 @@ class FastbootDevice(Device):
         enable_network,
         tests,
         boot,
+        visibility,
         **kwargs,
     ):
         invalid_args = ["--" + k.replace("_", "-") for (k, v) in kwargs.items() if v]
@@ -260,6 +261,7 @@ class FastbootAOSPDevice(Device):
         parameters,
         prompt,
         tests,
+        visibility,
         **kwargs,
     ):
         invalid_args = ["--" + k.replace("_", "-") for (k, v) in kwargs.items() if v]

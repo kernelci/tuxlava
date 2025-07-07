@@ -6,7 +6,7 @@ job_name: "tuxlava@{{ device.name }}: {{ tests|map(attribute="name")|join(", ")}
 job_name: "tuxlava@{{ device.name }}: boot"
 {% endif %}
 priority: {{ LAVA_JOB_PRIORITY }}
-visibility: "public"
+visibility: "{{ visibility }}"
 
 context:
     arch: "{{ lava_arch }}"

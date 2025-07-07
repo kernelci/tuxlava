@@ -43,6 +43,7 @@ class FlasherDevice(Device):
         rootfs,
         secrets,
         tests,
+        visibility,
         **kwargs,
     ):
         invalid_args = ["--" + k.replace("_", "-") for (k, v) in kwargs.items() if v]
