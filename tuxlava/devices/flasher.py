@@ -41,6 +41,7 @@ class FlasherDevice(Device):
         parameters,
         prompt,
         rootfs,
+        secrets,
         tests,
         **kwargs,
     ):
