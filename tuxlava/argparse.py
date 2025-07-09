@@ -370,7 +370,7 @@ def setup_parser() -> argparse.ArgumentParser:
         default="public",
         choices=["public", "personal", "group"],
         type=str,
-        help="Overall test job visibility."
+        help="Overall test job visibility.",
     )
 
     group = parser.add_argument_group("output")

@@ -9,7 +9,7 @@ from urllib.parse import urlparse
 from tuxlava import templates
 from tuxlava.devices import Device
 from tuxlava.exceptions import InvalidArgument, MissingArgument
-from tuxlava.utils import compression, notnone, slugify
+from tuxlava.utils import notnone
 
 
 class FlasherDevice(Device):
@@ -20,6 +20,7 @@ class FlasherDevice(Device):
     lava-dispatcher during deploymen. It also requires a flasher_deploy_commands
     variable in the decvice dictionary.
     """
+
     arch: str = ""
     lava_arch: str = ""
     machine: str = ""
@@ -65,7 +66,9 @@ class FlasherDevice(Device):
 
         kwargs["rootfs"] = notnone(kwargs.get("rootfs"), self.rootfs)
         if not kwargs["rootfs"]:
-            raise MissingArgument("Missing --rootfs argument. Can't render the template")
+            raise MissingArgument(
+                "Missing --rootfs argument. Can't render the template"
+            )
         # extract file name from URL
         kwargs["rootfs_filename"] = basename(urlparse(kwargs["rootfs"]).path)
         # render the template
