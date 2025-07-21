@@ -85,7 +85,7 @@ class Job:
         job_definition: str = None,
         tmpdir: Path = None,
         cache_dir: Path = None,
-        visibility: str = None,
+        visibility: str = "public",
     ) -> None:
         self.device = device
         self.bios = bios
@@ -269,6 +269,11 @@ class Job:
         self.overlays = overlays
         # Add extra assets from device
         self.extra_assets.extend(self.device.extra_assets(**vars(self)))
+
+        if self.visibility not in ("public", "personal", "group"):
+            raise InvalidArgument(
+                "'visibility' must be 'public', 'personal', or 'group'"
+            )
 
     def render(self):
         def_arguments = {
