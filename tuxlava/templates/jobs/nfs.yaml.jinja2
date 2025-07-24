@@ -20,11 +20,10 @@ context:
 {% set extra_kernel_args = '8250.nr_uarts=1 cma=64M rootwait earlycon systemd.log_level=warning ' %}
     extra_nfsroot_args: ',vers=3'
 {% elif device.name == 'nfs-juno-r2' %}
-    boot_args: 'rw pci=config_acs=000000@pci:0:0'
     bootloader_prompt: juno#
     booti_dtb_addr: '0x88000000'
     extra_nfsroot_args: ',wsize=65536'
-{% set extra_kernel_args = 'default_hugepagesz=2M hugepages=256 earlycon' %}
+{% set extra_kernel_args = 'default_hugepagesz=2M hugepages=256 earlycon rw pci=config_acs=000000@pci:0:0' %}
 {% elif device.name in ['nfs-rk3399-rock-pi-4b', 'nfs-s32g399a-rdb3'] %}
     arch: arm64
     booti_dtb_addr: '0x86000000'

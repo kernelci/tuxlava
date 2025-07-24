@@ -5,11 +5,10 @@ priority: low
 visibility: "public"
 
 context:
-    boot_args: 'rw pci=config_acs=000000@pci:0:0'
     bootloader_prompt: juno#
     booti_dtb_addr: '0x88000000'
     extra_nfsroot_args: ',wsize=65536'
-    extra_kernel_args: 'default_hugepagesz=2M hugepages=256 earlycon'
+    extra_kernel_args: 'default_hugepagesz=2M hugepages=256 earlycon rw pci=config_acs=000000@pci:0:0'
 
 timeouts:
   job:
