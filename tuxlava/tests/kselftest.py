@@ -86,6 +86,7 @@ class KSelftestBreakpoints(KSelfTest):
         "*-x86_64",
         "avh-imx93",
         "avh-rpi4b",
+        "nfs-ampereone",
         "nfs-juno-r2",
         "nfs-bcm2711-rpi-4-b",
         "nfs-rk3399-rock-pi-4b",
