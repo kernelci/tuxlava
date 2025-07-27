@@ -208,3 +208,13 @@ class NfsAmpereOne(NfsDevice):
 
     kernel = "https://storage.tuxboot.com/buildroot/arm64/Image"
     rootfs = "https://storage.tuxboot.com/debian/trixie/arm64/rootfs.tar.xz"
+
+
+class NfsOrionO6(NfsDevice):
+    name = "nfs-orion-o6"
+
+    arch = "arm64"
+    lava_arch = "arm64"
+
+    kernel = "https://storage.tuxboot.com/buildroot/arm64/Image"
+    rootfs = "https://storage.tuxboot.com/debian/trixie/arm64/rootfs.tar.xz"
