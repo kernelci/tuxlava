@@ -61,6 +61,23 @@ codespell:
   except:
     - schedules
 
+validate_job_definitions:
+  services:
+    - name: docker:20.10-dind
+  image: docker:20.10-dind
+  variables:
+    PYTHONUNBUFFERED: "1"
+  before_script:
+    - apk update && apk add make python3 py3-pip && pip3 install docker
+  script:
+    - make lava-validate
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+      when: never
+    - changes:
+        - test/unit/refs/definitions/*
+
+
 wheel:
   image: registry.gitlab.com/linaro/tuxlava:ci-debian
   stage: build
