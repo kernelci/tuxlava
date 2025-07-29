@@ -10,7 +10,8 @@ BASE = (Path(__file__) / "..").resolve()
 
 
 def main():
-    client = docker.from_env(version="1.38")
+    client = docker.from_env()
+    print(client.version()["Version"])
     print("Checking for LAVA validity")
     directory_path = BASE / "unit" / "refs" / "definitions"
     print(directory_path)
