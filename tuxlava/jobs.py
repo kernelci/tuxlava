@@ -20,7 +20,7 @@ from tuxlava.tests import Test
 from tuxlava.tuxmake import TuxBuildBuild, TuxMakeBuild
 from tuxlava.utils import pathurlnone
 
-TEST_DEFINITIONS = "https://storage.tuxboot.com/test-definitions/2025.06.tar.zst"
+TEST_DEFINITIONS = "https://github.com/Linaro/test-definitions/releases/download/2025.07.02/2025.07.tar.zst"
 
 
 def tuxbuild_url(s):
