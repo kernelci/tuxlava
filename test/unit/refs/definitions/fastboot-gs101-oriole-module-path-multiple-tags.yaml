@@ -53,7 +53,7 @@ actions:
             compression: xz
     postprocess:
       docker:
-        image: "linaro/kir:20250509"
+        image: "linaro/kir:20250728"
         local: true
         steps:
         - /kir/lava/board_setup.sh gs101-oriole rootfs "/usr/"
@@ -63,7 +63,7 @@ actions:
     timeout:
       minutes: 30
     docker:
-      image: "linaro/kir:20250509"
+      image: "linaro/kir:20250728"
       local: true
     images:
       boot:
@@ -76,7 +76,7 @@ actions:
 
 - boot:
     docker:
-      image: "linaro/kir:20250509"
+      image: "linaro/kir:20250728"
     method: fastboot
     timeout:
       minutes: 25

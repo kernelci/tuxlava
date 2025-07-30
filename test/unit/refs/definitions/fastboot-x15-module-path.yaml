@@ -50,7 +50,7 @@ actions:
             compression: xz
     postprocess:
       docker:
-        image: "linaro/kir:20250509"
+        image: "linaro/kir:20250728"
         local: true
         steps:
         - /kir/lava/board_setup.sh x15 rootfs "/usr/"
@@ -60,7 +60,7 @@ actions:
     timeout:
       minutes: 30
     docker:
-      image: "linaro/kir:20250509"
+      image: "linaro/kir:20250728"
       local: true
     images:
       super:

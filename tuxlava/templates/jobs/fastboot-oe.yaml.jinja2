@@ -50,7 +50,7 @@ actions:
 - deploy:
     to: fastboot
     docker:
-      image: "{{ deploy_fastboot_docker_image|default('linaro/kir:20250509') }}"
+      image: "{{ deploy_fastboot_docker_image|default('linaro/kir:20250728') }}"
       local: true
     timeout:
       minutes: {{ deploy_download_timeout }}
@@ -90,7 +90,7 @@ actions:
     name: pre_power_command
 - boot:
     docker:
-      image: "{{ boot_docker_image|default('linaro/kir:20250509') }}"
+      image: "{{ boot_docker_image|default('linaro/kir:20250728') }}"
       local: true
     method: fastboot
     timeout:

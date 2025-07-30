@@ -41,7 +41,7 @@ actions:
           lava: true
     postprocess:
       docker:
-        image: "linaro/kir:20250509"
+        image: "linaro/kir:20250728"
         local: true
         steps:
         - /kir/lava/board_setup.sh qrb5165-rb5 rootfs "/usr/"
@@ -51,7 +51,7 @@ actions:
     timeout:
       minutes: 30
     docker:
-      image: "linaro/kir:20250509"
+      image: "linaro/kir:20250728"
       local: true
     images:
       partition:0:
@@ -69,7 +69,7 @@ actions:
     name: pre_power_command
 - boot:
     docker:
-      image: "linaro/kir:20250509"
+      image: "linaro/kir:20250728"
     method: fastboot
     timeout:
       minutes: 25
