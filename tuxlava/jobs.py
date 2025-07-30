@@ -12,7 +12,7 @@ import shlex
 import tempfile
 
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict, List, Any
 from tuxlava.argparse import filter_options
 from tuxlava.exceptions import InvalidArgument, MissingArgument, TuxLavaError
 from tuxlava.devices import Device
@@ -75,11 +75,11 @@ class Job:
         tux_prompt: str = None,
         uefi: str = None,
         boot_args: str = None,
-        secrets: str = None,
+        secrets: Dict[str, Any] = {},
         modules: str = None,
         overlays: List[str] = [],
         parameters: Dict[str, str] = {},
-        deploy_os: str = None,
+        deploy_os: str = "debian",
         tuxbuild: str = None,
         tuxmake: str = None,
         job_definition: str = None,
