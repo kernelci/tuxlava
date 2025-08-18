@@ -10,7 +10,8 @@ Build-Depends: debhelper-compat (= 13),
                python3-pytest,
                python3-pytest-cov,
                python3-pytest-mock,
-               python3-flask
+               python3-flask,
+               pybuild-plugin-pyproject
 Standards-Version: 3.9.6
 Homepage: https://tuxsuite.com/
 
