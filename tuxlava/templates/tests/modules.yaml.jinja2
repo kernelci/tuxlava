@@ -20,6 +20,7 @@
         MODULE_MODPROBE_NUMBER: '{{ parameters.get("MODULE_MODPROBE_NUMBER", "1") }}'
         SHARD_NUMBER: {{ parameters.get("SHARD_NUMBER", 1) }}
         SHARD_INDEX: {{ parameters.get("SHARD_INDEX", 1) }}
+        MEMORY_TOLERANCE: {{ parameters.get("MEMORY_TOLERANCE", 2048) }}
 {% if parameters.get("SKIPLIST") %}
         SKIPLIST: '{{ parameters["SKIPLIST"] }}'
 {% endif %}
