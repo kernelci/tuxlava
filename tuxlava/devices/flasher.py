@@ -105,9 +105,9 @@ class FlasherDebianQCS6490(FlasherQCS6490):
 
 
 class FlasherQcomQCS6490(FlasherQCS6490):
-    name = "flasher-qcom-qcs6490-rb3gen2-core-kit"
+    name = "flasher-qcom-distro-qcs6490-rb3gen2-core-kit"
 
-    template = "flasher-qcom.yaml.jinja2"
+    template = "flasher-qcom-distro.yaml.jinja2"
 
 
 class FlasherPokyAltcfgQCS6490(FlasherQCS6490):
@@ -126,19 +126,19 @@ class FlasherQRB2210(FlasherDevice):
 
 
 class FlasherDebianQRB2210(FlasherQRB2210):
-    name = "flasher-debian-qrb2210-rb1"
+    name = "flasher-debian-qrb2210-rb1-core-kit"
 
     template = "flasher-debian.yaml.jinja2"
 
 
 class FlasherQcomQRB2210(FlasherQRB2210):
-    name = "flasher-qcom-qrb2210-rb1"
+    name = "flasher-qcom-distro-qrb2210-rb1-core-kit"
 
-    template = "flasher-qcom.yaml.jinja2"
+    template = "flasher-qcom-distro.yaml.jinja2"
 
 
 class FlasherPokyAltcfgQRB2210(FlasherQRB2210):
-    name = "flasher-poky-altcfg-qrb2210-rb1"
+    name = "flasher-poky-altcfg-qrb2210-rb1-core-kit"
 
     template = "flasher-poky-altcfg.yaml.jinja2"
 
@@ -159,9 +159,9 @@ class FlasherDebianQCS9075IqRvk(FlasherQCS9075IqRvk):
 
 
 class FlasherQcomQCS9075IqRvk(FlasherQCS9075IqRvk):
-    name = "flasher-qcom-qcs9075-iq-9075-evk"
+    name = "flasher-qcom-distro-qcs9075-iq-9075-evk"
 
-    template = "flasher-qcom.yaml.jinja2"
+    template = "flasher-qcom-distro.yaml.jinja2"
 
 
 class FlasherPokyAltcfgQCS9075IqRvk(FlasherQCS9075IqRvk):
@@ -186,9 +186,9 @@ class FlasherDebianQCS9100Ride(FlasherQCS9100Ride):
 
 
 class FlasherQcomQCS9100Ride(FlasherQCS9100Ride):
-    name = "flasher-qcom-qcs9100-ride-sx"
+    name = "flasher-qcom-distro-qcs9100-ride-sx"
 
-    template = "flasher-qcom.yaml.jinja2"
+    template = "flasher-qcom-distro.yaml.jinja2"
 
 
 class FlasherPokyAltcfgQCS9100Ride(FlasherQCS9100Ride):

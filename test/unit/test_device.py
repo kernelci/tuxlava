@@ -2945,7 +2945,7 @@ def artefacts(tmp_path):
         (
             [
                 "--device",
-                "flasher-qcom-qcs6490-rb3gen2-core-kit",
+                "flasher-qcom-distro-qcs6490-rb3gen2-core-kit",
                 "--tests",
                 "smoke",
                 "--parameters",
@@ -2953,7 +2953,7 @@ def artefacts(tmp_path):
                 "--rootfs",
                 "http://example.com/flasher.tar.gz",
             ],
-            "flasher-qcom-qcs6490-rb3gen2-core-kit-smoke.yaml",
+            "flasher-qcom-distro-qcs6490-rb3gen2-core-kit-smoke.yaml",
         ),
     ],
 )

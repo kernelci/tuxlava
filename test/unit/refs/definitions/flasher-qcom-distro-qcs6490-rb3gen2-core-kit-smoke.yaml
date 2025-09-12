@@ -1,7 +1,7 @@
 
 device_type: "qcs6490-rb3gen2-core-kit"
 
-job_name: "tuxlava@flasher-qcom-qcs6490-rb3gen2-core-kit: smoke"
+job_name: "tuxlava@flasher-qcom-distro-qcs6490-rb3gen2-core-kit: smoke"
 priority: low
 visibility: "public"
 
