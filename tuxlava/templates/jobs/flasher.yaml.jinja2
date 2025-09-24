@@ -23,8 +23,11 @@ tags:
 {% endif %}
 {% endblock tags %}
 
+{% block context %}
 context:
     test_character_delay: 10
+    lava_test_results_dir: {{ lava_test_results_dir|default("/home/lava-%s") }}
+{% endblock %}
 
 {%- set deploy_download_timeout = timeouts.deploy|default(25) %}
 {%- set deploy_timeout = timeouts.deploy|default(30) %}

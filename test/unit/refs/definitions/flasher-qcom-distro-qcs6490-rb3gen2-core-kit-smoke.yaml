@@ -8,6 +8,8 @@ visibility: "public"
 
 context:
     test_character_delay: 10
+    lava_test_results_dir: /home/lava-%s
+
 timeouts:
   job:
     minutes: 85
