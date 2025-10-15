@@ -9,4 +9,4 @@
 """
 Python library and command line tool for generating LAVA jobs
 """
-__version__ = "0.10.1"
+__version__ = "0.10.2"
