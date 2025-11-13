@@ -41,10 +41,10 @@ actions:
 - boot:
     method: fvp
     docker:
-      name: "fvp:aemva-11.28.23"
-      local: true
+      name: "docker.io/shrinkwraptool/base-slim:latest"
+      local: false
       container_name: "tuxlava-ci"
-    image: "/opt/model/FVP_AEMvA/models/Linux64_GCC-9.3/FVP_Base_RevC-2xAEMvA"
+    image: "/tools/Base_RevC_AEMvA_pkg/models/Linux64_GCC-9.3/FVP_Base_RevC-2xAEMvA"
     version_string: "Fast Models [^\\n]+"
     timeout:
       minutes: 10
@@ -61,7 +61,6 @@ actions:
     - "-C bp.hostbridge.userNetPorts=8022=22"
     - "-C bp.hostbridge.userNetworking=1"
     - "-C bp.refcounter.non_arch_start_at_default=1"
-    - "-C bp.refcounter.use_real_time=0"
     - "-C bp.secure_memory=1"
     - "-C bp.secureflashloader.fname='{BL1}'"
     - "-C bp.smsc_91c111.enabled=1"
