@@ -33,6 +33,9 @@ timeouts:
       seconds: 30
 {% endblock %}
 
+{%- set rootfs_format = compression(rootfs)[0] %}
+{%- set is_cpio = (rootfs_format == "cpio" or "ramdisk" in rootfs|lower) %}
+
 actions:
 - deploy:
     to: tmpfs
@@ -41,7 +44,7 @@ actions:
     os: oe
     images:
       kernel:
-        image_arg: '-kernel {kernel} -append "console={{ console }},115200 rootwait root={{ rootfs_dev }}{{ rootfs_partition|default("", true) }} debug verbose console_msg_format=syslog systemd.log_level=warning{% if tux_boot_args %} {{ tux_boot_args }}{% endif %} earlycon"{% if shared %} -virtfs local,path={{ shared.0 }},mount_tag=tuxlava,security_model=mapped{% endif %}'
+        image_arg: '-kernel {kernel} -append "console={{ console }},115200 rootwait {% if not is_cpio %}root={{ rootfs_dev }}{{ rootfs_partition|default("", true) }} {% endif %}debug verbose console_msg_format=syslog systemd.log_level=warning{% if tux_boot_args %} {{ tux_boot_args }}{% endif %} earlycon"{% if shared %} -virtfs local,path={{ shared.0 }},mount_tag=tuxlava,security_model=mapped{% endif %}'
         url: "{{ kernel }}"
 {% if compression(kernel)[1] is not none %}
         compression: {{ compression(kernel)[1] }}
@@ -65,12 +68,16 @@ actions:
 {% endif %}
 {% endif %}
       rootfs:
+{% if is_cpio %}
+        image_arg: "-initrd {rootfs}"
+{% else %}
         image_arg: "{{ rootfs_arg }}"
+{% endif %}
         url: "{{ rootfs }}"
 {% if compression(rootfs)[1] is not none %}
         compression: {{ compression(rootfs)[1] }}
 {% endif %}
-{% if overlays %}
+{% if overlays and not is_cpio %}
         format: ext4
         overlays:
 {% if tests %}
@@ -93,7 +100,7 @@ actions:
 {% endif %}
 {% endif %}
 {% endfor %}
-{% elif tests %}
+{% elif tests and not is_cpio %}
         format: ext4
         overlays:
           lava: true
@@ -116,6 +123,9 @@ actions:
       - mount -t 9p -o trans=virtio tuxlava {{ shared.1 }}
 {% endif %}
     prompts:
+{% if is_cpio %}
+    - '/ #'
+{% endif %}
     - 'root@(.*):[/~]#'
 {% for prompt in tux_prompt %}
     - "{{ prompt }}"{% endfor %}
