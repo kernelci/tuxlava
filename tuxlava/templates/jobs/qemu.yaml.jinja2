@@ -77,12 +77,13 @@ actions:
 {% if compression(rootfs)[1] is not none %}
         compression: {{ compression(rootfs)[1] }}
 {% endif %}
-{% if overlays and not is_cpio %}
+{% if not is_cpio %}
         format: ext4
+{% if skip_overlays %}
+        overlays: {}
+{% else %}
         overlays:
-{% if tests %}
           lava: true
-{% endif %}
 {% for name, overlay, dst in overlays %}
           {{ name }}:
             url: "{{ overlay }}"
@@ -100,10 +101,7 @@ actions:
 {% endif %}
 {% endif %}
 {% endfor %}
-{% elif tests and not is_cpio %}
-        format: ext4
-        overlays:
-          lava: true
+{% endif %}
 {% endif %}
 - boot:
     method: qemu
@@ -114,6 +112,7 @@ actions:
     timeout:
       minutes: {{ boot_timeout }}
 {% if not enable_trustzone or "tfa-tests" not in tests|map(attribute="name")|join(", ") %}
+{% if enable_auto_login and not is_cpio %}
     auto_login:
       login_prompt: 'login:'
       username: root
@@ -122,8 +121,9 @@ actions:
       - mkdir -p {{ shared.1 }}
       - mount -t 9p -o trans=virtio tuxlava {{ shared.1 }}
 {% endif %}
+{% endif %}
     prompts:
-{% if is_cpio %}
+{% if is_cpio or skip_overlays %}
     - '/ #'
 {% endif %}
     - 'root@(.*):[/~]#'

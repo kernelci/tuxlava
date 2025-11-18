@@ -7,8 +7,10 @@
 #
 # SPDX-License-Identifier: MIT
 
+import os
 import re
 import shlex
+import subprocess
 import tempfile
 
 from pathlib import Path
@@ -86,6 +88,7 @@ class Job:
         tmpdir: Path = None,
         cache_dir: Path = None,
         visibility: str = "public",
+        skip_overlays: bool = False,
     ) -> None:
         self.device = device
         self.bios = bios
@@ -135,10 +138,12 @@ class Job:
         self.extra_assets = []
         self.tux_boot_args = None
         self.visibility = visibility
+        self.skip_overlays = skip_overlays
 
     def __str__(self) -> str:
         tests = "_".join(self.tests) if self.tests else "boot"
         return f"Job {self.device}/{tests}"
+
 
     @property
     def lava_job_tags(self):
@@ -236,8 +241,9 @@ class Job:
             self.rootfs = pathurlnone(self.rootfs)
 
         if self.modules and not self.device.name.startswith("fastboot-"):
-            overlays.append(("modules", self.modules[0], self.modules[1]))
-            self.extra_assets.append(self.modules[0])
+            if not self.skip_overlays:
+                overlays.append(("modules", self.modules[0], self.modules[1]))
+                self.extra_assets.append(self.modules[0])
 
         # When using --shared without any arguments, point to cache_dir
         if self.shared is not None:
@@ -275,7 +281,20 @@ class Job:
                 "'visibility' must be 'public', 'personal', or 'group'"
             )
 
+        if self.rootfs and not self.skip_overlays and '/images/rootfs/' in str(self.rootfs) and 'rootfs.ext4.xz' in str(self.rootfs):
+            if not self.rootfs_partition:
+                self.rootfs_partition = 1
+            self.skip_overlays = True
+
     def render(self):
+        auto_login_param = self.parameters.get("auto_login", "auto") if self.parameters else "auto"
+        if auto_login_param.lower() in ("false", "disabled", "no", "off"):
+            enable_auto_login = False
+        elif auto_login_param.lower() in ("true", "enabled", "yes", "on"):
+            enable_auto_login = True
+        else:
+            enable_auto_login = not self.skip_overlays
+
         def_arguments = {
             "bios": self.bios,
             "bl1": self.bl1,
@@ -294,7 +313,7 @@ class Job:
             "enable_trustzone": self.enable_trustzone,
             "enable_network": self.enable_network,
             "modules": self.modules,
-            "overlays": self.overlays,
+            "overlays": self.overlays if self.overlays is not None else [],
             "prompt": self.prompt,
             "ramdisk": self.ramdisk,
             "rootfs": self.rootfs,
@@ -322,6 +341,8 @@ class Job:
             "LAVA_JOB_PRIORITY": self.lava_job_priority,
             "tags": self.lava_job_tags,
             "visibility": self.visibility,
+            "skip_overlays": self.skip_overlays,
+            "enable_auto_login": enable_auto_login,
         }
         definition = self.device.definition(**def_arguments)
         return definition
