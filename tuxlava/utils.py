@@ -15,7 +15,9 @@ from urllib.parse import urlparse
 COMPRESSIONS = {
     ".tar.xz": ("tar", "xz"),
     ".tar.gz": ("tar", "gz"),
+    ".tar": ("tar", None),
     ".tgz": ("tar", "gz"),
+    ".tar.zst": ("tar", "zstd"),
     ".gz": (None, "gz"),
     ".xz": (None, "xz"),
     ".zst": (None, "zstd"),
