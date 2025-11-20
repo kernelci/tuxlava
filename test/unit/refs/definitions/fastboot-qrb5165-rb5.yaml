@@ -36,7 +36,7 @@ actions:
       rootfs:
         url: "https://storage.tuxboot.com/debian/20250326/trixie/arm64/rootfs.tar.xz"
         compression: xz
-        format: ext4
+        format: tar
         overlays:
           lava: true
     postprocess:

@@ -40,7 +40,7 @@ actions:
       userdata:
         url: "https://example.com/rootfs.tar.xz"
         compression: xz
-        format: ext4
+        format: tar
         overlays:
           overlay-00:
             url: "https://example.com/ltp.tar.xz"

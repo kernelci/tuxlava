@@ -40,7 +40,7 @@ actions:
       rootfs:
         url: "https://example.com/rootfs.tar.xz"
         compression: xz
-        format: ext4
+        format: tar
         overlays:
           lava: true
           overlay-00:

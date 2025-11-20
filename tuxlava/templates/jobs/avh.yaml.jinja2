@@ -48,7 +48,9 @@ actions:
 {% if compression(rootfs)[1] is not none %}
         compression: {{ compression(rootfs)[1] }}
 {% endif %}
-        format: ext4
+{% if compression(rootfs)[0] is not none %}
+        format: {{ compression(rootfs)[0] }}
+{% endif %}
         root_partition: {{ rootfs_partition }}
         partition: {{ rootfs_partition }}
 {% if overlays %}
@@ -60,8 +62,12 @@ actions:
           {{ name }}:
             url: "{{ overlay }}"
             path: "{{ dst }}"
-            format: tar
+{% if compression(overlay)[0] is not none %}
+            format: {{ compression(overlay)[0] }}
+{% endif %}
+{% if compression(overlay)[1] is not none %}
             compression: {{ compression(overlay)[1] }}
+{% endif %}
 {% endfor %}
 {% elif tests %}
         overlays:

@@ -71,7 +71,9 @@ actions:
         compression: {{ compression(rootfs)[1] }}
 {% endif %}
 {% if overlays %}
-        format: ext4
+{% if compression(rootfs)[0] is not none %}
+        format: {{ compression(rootfs)[0] }}
+{% endif %}
         overlays:
 {% if tests %}
           lava: true
@@ -79,7 +81,9 @@ actions:
 {% for name, overlay, dst in overlays %}
           {{ name }}:
             url: "{{ overlay }}"
+{% if compression(overlay)[0] is not none %}
             format: {{ compression(overlay)[0] }}
+{% endif %}
 {% if compression(overlay)[1] is not none %}
             compression: {{ compression(overlay)[1] }}
             path: "{{ dst }}"
@@ -94,7 +98,9 @@ actions:
 {% endif %}
 {% endfor %}
 {% elif tests %}
-        format: ext4
+{% if compression(rootfs)[0] is not none %}
+        format: {{ compression(rootfs)[0] }}
+{% endif %}
         overlays:
           lava: true
 {% endif %}
