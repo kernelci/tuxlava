@@ -47,6 +47,7 @@ actions:
       username: root
     prompts:
     - 'root@(.*):[/~]#'
+    - '/ #'
 - test:
     timeout:
       minutes: 45

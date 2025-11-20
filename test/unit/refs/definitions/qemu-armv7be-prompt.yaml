@@ -44,4 +44,5 @@ actions:
       username: root
     prompts:
     - 'root@(.*):[/~]#'
+    - '/ #'
     - "root@tuxlava"

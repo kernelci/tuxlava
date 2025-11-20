@@ -123,6 +123,7 @@ actions:
 {% endif %}
     prompts:
     - 'root@(.*):[/~]#'
+    - '/ #'
 {% for prompt in tux_prompt %}
     - "{{ prompt }}"{% endfor %}
 {% endif %}
