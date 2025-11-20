@@ -1,0 +1,55 @@
+device_type: "qemu"
+
+job_name: "tuxlava@qemu-arm64: boot"
+priority: low
+visibility: "public"
+
+context:
+    arch: "arm64"
+    machine: "virt,virtualization=on,gic-version=3,mte=on"
+    cpu: "max,pauth-impdef=on"
+    memory: "4G"
+    extra_options: ["-no-reboot", "-smp 2"]
+    no_kvm: true
+    no_network: true
+timeouts:
+  job:
+    minutes: 30
+  action:
+   minutes: 5
+  actions:
+    power-off:
+      seconds: 30
+
+actions:
+- deploy:
+    to: tmpfs
+    timeout:
+      minutes: 15
+    os: oe
+    images:
+      kernel:
+        image_arg: '-kernel {kernel} -append "console=ttyAMA0,115200 rootwait debug verbose console_msg_format=syslog systemd.log_level=warning rw earlycon"'
+        url: "https://example.com/Image.gz"
+        compression: gz
+      rootfs:
+        image_arg: "-initrd {rootfs}"
+        url: "http://storage.kernelci.org/images/rootfs/buildroot/buildroot-baseline/20230703.0/arm64/rootfs.cpio.gz"
+        compression: gz
+        format: cpio.newc
+        overlays:
+          modules:
+            url: "https://example.com/modules.tar.xz"
+            format: tar
+            compression: xz
+            path: "/usr/lib/"
+- boot:
+    method: qemu
+    timeout:
+      minutes: 15
+    auto_login:
+      login_prompt: 'login:'
+      username: root
+    prompts:
+    - 'root@(.*):[/~]#'
+    - '/ #'

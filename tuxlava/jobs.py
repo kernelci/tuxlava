@@ -239,9 +239,9 @@ class Job:
             if rootfs_partition_param is not None:
                 try:
                     partition_num = int(rootfs_partition_param)
-                    if partition_num < 1:
+                    if partition_num < 1 or partition_num > 16:
                         raise InvalidArgument(
-                            f"ROOTFS_PARTITION must be >= 1, got: {partition_num}"
+                            f"ROOTFS_PARTITION must be between 1 and 16, got: {partition_num}"
                         )
                     # Convert from partition table numbering (1-based) to LAVA index (0-based)
                     self.rootfs_partition = partition_num - 1
