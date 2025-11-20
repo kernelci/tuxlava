@@ -232,6 +232,24 @@ class Job:
             if sorted(list(set(tests))) != sorted(tests):
                 raise InvalidArgument("each test should appear only once")
 
+        # Allow rootfs_partition to be set via parameters
+        # Note: LAVA uses partition number as an array index (0-based), not partition table number
+        if self.parameters and not self.rootfs_partition:
+            rootfs_partition_param = self.parameters.get("ROOTFS_PARTITION")
+            if rootfs_partition_param is not None:
+                try:
+                    partition_num = int(rootfs_partition_param)
+                    if partition_num < 1:
+                        raise InvalidArgument(
+                            f"ROOTFS_PARTITION must be >= 1, got: {partition_num}"
+                        )
+                    # Convert from partition table numbering (1-based) to LAVA index (0-based)
+                    self.rootfs_partition = partition_num - 1
+                except (ValueError, TypeError) as e:
+                    raise InvalidArgument(
+                        f"ROOTFS_PARTITION must be a valid integer, got: {rootfs_partition_param}"
+                    ) from e
+
         if self.device.flag_cache_rootfs:
             self.rootfs = pathurlnone(self.rootfs)
 

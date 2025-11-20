@@ -41,7 +41,7 @@ actions:
     os: oe
     images:
       kernel:
-        image_arg: '-kernel {kernel} -append "console={{ console }},115200 rootwait root={{ rootfs_dev }}{{ rootfs_partition|default("", true) }} debug verbose console_msg_format=syslog systemd.log_level=warning{% if tux_boot_args %} {{ tux_boot_args }}{% endif %} earlycon"{% if shared %} -virtfs local,path={{ shared.0 }},mount_tag=tuxlava,security_model=mapped{% endif %}'
+        image_arg: '-kernel {kernel} -append "console={{ console }},115200 rootwait root={{ rootfs_dev }}{% if rootfs_partition is not none %}{{ rootfs_partition + 1 }}{% endif %} debug verbose console_msg_format=syslog systemd.log_level=warning{% if tux_boot_args %} {{ tux_boot_args }}{% endif %} earlycon"{% if shared %} -virtfs local,path={{ shared.0 }},mount_tag=tuxlava,security_model=mapped{% endif %}'
         url: "{{ kernel }}"
 {% if compression(kernel)[1] is not none %}
         compression: {{ compression(kernel)[1] }}
@@ -74,6 +74,10 @@ actions:
 {% if compression(rootfs)[0] is not none %}
         format: {{ compression(rootfs)[0] }}
 {% endif %}
+{% if rootfs_partition is not none %}
+        root_partition: {{ rootfs_partition }}
+        partition: {{ rootfs_partition }}
+{% endif %}
         overlays:
 {% if tests %}
           lava: true
@@ -100,6 +104,10 @@ actions:
 {% elif tests %}
 {% if compression(rootfs)[0] is not none %}
         format: {{ compression(rootfs)[0] }}
+{% endif %}
+{% if rootfs_partition is not none %}
+        root_partition: {{ rootfs_partition }}
+        partition: {{ rootfs_partition }}
 {% endif %}
         overlays:
           lava: true
