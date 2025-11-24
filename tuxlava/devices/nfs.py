@@ -210,6 +210,10 @@ class NfsAmpereOne(NfsDevice):
     rootfs = "https://storage.tuxboot.com/debian/trixie/arm64/rootfs.tar.xz"
 
 
+class NfsAltraMaxAc02(NfsAmpereOne):
+    name = "nfs-altra-max-ac02"
+
+
 class NfsOrionO6(NfsDevice):
     name = "nfs-orion-o6"
 
