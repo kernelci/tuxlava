@@ -1,0 +1,76 @@
+device_type: "ampereone-ac04"
+
+job_name: "tuxlava@nfs-ampereone-ac04: ltp-smoke"
+priority: low
+visibility: "public"
+
+context:
+
+timeouts:
+  job:
+    minutes: 50
+  connection:
+    minutes: 2
+  actions:
+    power-off:
+      seconds: 60
+    finalize:
+      seconds: 60
+
+actions:
+- deploy:
+    to: tftp
+    timeout:
+      minutes: 30
+    os: debian
+    kernel:
+      url: "https://example.com/Image.gz"
+      compression: gz
+      type: image
+    nfsrootfs:
+      url: "https://example.com/rootfs.tar.xz"
+      compression: xz
+      format: tar
+      overlays:
+        modules:
+          url: "https://example.com/modules.tar.xz"
+          path: "/usr/"
+          format: tar
+          compression: xz
+        overlay-00:
+          url: "https://example.com/ltp.tar.xz"
+          path: "/"
+          format: tar
+          compression: xz
+- boot:
+    method:
+    commands: nfs
+    timeout:
+      minutes: 15
+    auto_login:
+      login_prompt: 'login:'
+      username: root
+    prompts:
+    - 'root@(.*):[/~]#'
+
+- test:
+    timeout:
+      minutes: 5
+    definitions:
+    - repository: https://github.com/Linaro/test-definitions/releases/download/2025.10.01/2025.10.tar.zst
+      lava-signal: kmsg
+      from: url
+      compression: zstd
+      path: automated/linux/ltp/ltp.yaml
+      parameters:
+        SKIP_INSTALL: 'true'
+        TST_CMDFILES: 'smoketest'
+        SKIPFILE: '/tuxtest/skipfiles/arm64/ltp-smoke'
+        ENVIRONMENT: 'production'
+        LTP_TMPDIR: '/scratch'
+        LTP_INSTALL_PATH: '/opt/ltp/'
+        SHARD_NUMBER: 1
+        SHARD_INDEX: 1
+        KIRK_WORKERS: 1
+        TIMEOUT_MULTIPLIER: 5
+      name: ltp-smoke

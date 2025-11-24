@@ -2239,6 +2239,25 @@ def artefacts(tmp_path):
         (
             [
                 "--device",
+                "nfs-ampereone-ac04",
+                "--kernel",
+                "https://example.com/Image.gz",
+                "--modules",
+                "https://example.com/modules.tar.xz",
+                "/usr/",
+                "--rootfs",
+                "https://example.com/rootfs.tar.xz",
+                "--overlay",
+                "https://example.com/ltp.tar.xz",
+                "--tests",
+                "ltp-smoke",
+                "--lava-definition",
+            ],
+            "nfs-ampereone-ac04-ltp-smoke.yaml",
+        ),
+        (
+            [
+                "--device",
                 "nfs-ampereone",
                 "--kernel",
                 "https://example.com/Image.gz",

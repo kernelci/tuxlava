@@ -214,6 +214,10 @@ class NfsAltraMaxAc02(NfsAmpereOne):
     name = "nfs-altra-max-ac02"
 
 
+class NfsAmpereOneOc04(NfsAmpereOne):
+    name = "nfs-ampereone-ac04"
+
+
 class NfsOrionO6(NfsDevice):
     name = "nfs-orion-o6"
 
