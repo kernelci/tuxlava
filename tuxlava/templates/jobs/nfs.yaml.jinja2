@@ -11,7 +11,7 @@ visibility: "{{ visibility }}"
 
 {% set extra_kernel_args = '' %}
 context:
-{% if device.name in ['nfs-ampereone', 'nfs-ampereone-ac04', 'nfs-altra-max-ac02'] %}
+{% if device.name in ['nfs-ampereone-ac04', 'nfs-altra-max-ac02'] %}
     arch: arm64
 {% elif device.name == 'nfs-bcm2711-rpi-4-b' %}
     arch: arm64
@@ -102,7 +102,7 @@ actions:
 {% endif %}
 - boot:
     method:
-{% if device.name in ['nfs-ampereone', 'nfs-ampereone-ac04', 'nfs-altra-max-ac02', 'nfs-orion-o6'] %}
+{% if device.name in ['nfs-ampereone-ac04', 'nfs-altra-max-ac02', 'nfs-orion-o6'] %}
       grub
 {% elif device.name in ['nfs-bcm2711-rpi-4-b', 'nfs-juno-r2', 'nfs-rk3399-rock-pi-4b', 'nfs-s32g399a-rdb3'] %}
       u-boot
@@ -128,7 +128,7 @@ actions:
 {% for prompt in tux_prompt %}
     - "{{ prompt }}"{% endfor %}
 
-{% if device.name in ['nfs-ampereone', 'nfs-ampereone-ac04', 'nfs-altra-max-ac02', 'nfs-orion-o6', 'nfs-juno-r2', 'nfs-i386', 'nfs-x86_64'] %}
+{% if device.name in ['nfs-ampereone-ac04', 'nfs-altra-max-ac02', 'nfs-orion-o6', 'nfs-juno-r2', 'nfs-i386', 'nfs-x86_64'] %}
 - test:
     timeout:
       minutes: 5
@@ -141,7 +141,7 @@ actions:
           description: "Device preparation"
         run:
           steps:
-{% if device.name in ['nfs-ampereone', 'nfs-ampereone-ac04', 'nfs-altra-max-ac02', 'nfs-orion-o6'] %}
+{% if device.name in ['nfs-ampereone-ac04', 'nfs-altra-max-ac02', 'nfs-orion-o6'] %}
           - export STORAGE_DEV=/dev/nvme0n1p2
 {% else %}
           - export STORAGE_DEV=$(lava-target-storage SATA || lava-target-storage USB)

@@ -200,8 +200,8 @@ class NfsX86_64(NfsDevice):
     rootfs = "https://storage.tuxboot.com/debian/20250326/trixie/amd64/rootfs.tar.xz"
 
 
-class NfsAmpereOne(NfsDevice):
-    name = "nfs-ampereone"
+class NfsAmpere(NfsDevice):
+    # Only used as a base class
 
     arch = "arm64"
     lava_arch = "arm64"
@@ -210,11 +210,11 @@ class NfsAmpereOne(NfsDevice):
     rootfs = "https://storage.tuxboot.com/debian/trixie/arm64/rootfs.tar.xz"
 
 
-class NfsAltraMaxAc02(NfsAmpereOne):
+class NfsAltraMaxAc02(NfsAmpere):
     name = "nfs-altra-max-ac02"
 
 
-class NfsAmpereOneOc04(NfsAmpereOne):
+class NfsAmpereOneOc04(NfsAmpere):
     name = "nfs-ampereone-ac04"
 
 
