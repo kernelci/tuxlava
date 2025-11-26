@@ -7,7 +7,7 @@ import sys
 from pathlib import Path
 
 BASE = (Path(__file__) / "..").resolve()
-IMAGE = "registry.gitlab.com/lava/lava/amd64/lava-dispatcher:2025.06.dev0075"
+IMAGE = "registry.gitlab.com/lava/lava/amd64/lava-dispatcher:2025.10.dev0104"
 
 
 def main():
