@@ -105,7 +105,9 @@ actions:
     - "-C bp.terminal_3.start_telnet=0"
     - "-C bp.ve_sysregs.exit_on_shutdown=1"
     - "-C bp.virtio_rng.enabled=1"
+{% if compression(rootfs)[0] != "cpio.newc" %}
     - "-C bp.virtioblockdevice.image_path='{ROOTFS}'"
+{% endif %}
     - "-C bp.virtiop9device.root_path="
     - "-C bp.vis.disable_visualisation=1"
     - "-C cache_state_modelled=0"

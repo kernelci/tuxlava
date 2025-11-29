@@ -8,6 +8,7 @@
 
 from typing import Dict, List, Optional
 
+import re
 import urllib
 import yaml
 from tuxlava import templates
@@ -123,16 +124,33 @@ class AEMvAFVPDevice(FVPDevice):
             **kwargs
         ) + "".join(tests)
 
-    def extra_assets(self, tmpdir, dtb, kernel, tux_boot_args, **kwargs):
+    def _url_to_filename(self, url):
+        """Convert URL to the filename format used by tuxrun cache."""
+        filename = re.sub(r"[:/]", "_", url)
+        if compression(filename)[1]:
+            filename = filename.removesuffix(f".{compression(filename)[1]}")
+        return filename
+
+    def extra_assets(self, tmpdir, dtb, kernel, rootfs, tux_boot_args, **kwargs):
         dtb = notnone(dtb, self.dtb).split("/")[-1]
         kernel = notnone(kernel, self.kernel).split("/")[-1]
-        # Drop the extension if the kernel is compressed. LAVA will decompress it for us.
+        rootfs_url = notnone(rootfs, self.rootfs)
+
         if compression(kernel)[1]:
             kernel = kernel[: -1 - len(compression(kernel)[1])]
-        (tmpdir / "startup.nsh").write_text(
-            f"{kernel} dtb={dtb} systemd.log_level=warning {tux_boot_args + ' ' if tux_boot_args else ''}console=ttyAMA0 earlycon=pl011,0x1c090000 root=/dev/vda ip=dhcp",
-            encoding="utf-8",
-        )
+
+        boot_args = tux_boot_args + " " if tux_boot_args else ""
+        base_cmdline = f"{kernel} dtb={dtb} {boot_args}systemd.log_level=warning console=ttyAMA0 earlycon=pl011,0x1c090000 ip=dhcp"
+
+        root_dev = "root=/dev/vda"
+        if compression(rootfs_url)[0] == "cpio.newc":
+            # cpio rootfs: use initrd parameter
+            rootfs_file = self._url_to_filename(rootfs_url)
+            root_dev = f"initrd={rootfs_file}"
+
+        cmdline = f"{base_cmdline} {root_dev}"
+
+        (tmpdir / "startup.nsh").write_text(cmdline, encoding="utf-8")
         return [f"file://{tmpdir / 'startup.nsh'}"]
 
 

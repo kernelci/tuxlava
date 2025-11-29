@@ -3468,18 +3468,21 @@ def test_failures(monkeypatch, mocker, capsys, tmpdir, args, error_str):
 def test_fvp_aemva_extra_assets(tmpdir):
     device = Device.select("fvp-aemva")()
 
-    # 1/ default case
-    asset = device.extra_assets(dtb=None, kernel=None, tmpdir=tmpdir, tux_boot_args="")
+    # 1/ default case (ext4 rootfs)
+    asset = device.extra_assets(
+        dtb=None, kernel=None, rootfs=None, tmpdir=tmpdir, tux_boot_args=""
+    )
     assert len(asset) == 1
     assert asset[0] == f"file://{tmpdir / 'startup.nsh'}"
     assert (tmpdir / "startup.nsh").read_text(
         encoding="utf-8"
-    ) == "Image dtb=fvp-base-revc.dtb systemd.log_level=warning console=ttyAMA0 earlycon=pl011,0x1c090000 root=/dev/vda ip=dhcp"
+    ) == "Image dtb=fvp-base-revc.dtb systemd.log_level=warning console=ttyAMA0 earlycon=pl011,0x1c090000 ip=dhcp root=/dev/vda"
 
-    # 2/ custom urls
+    # 2/ custom urls (ext4 rootfs)
     asset = device.extra_assets(
         dtb="file://hello/world/fdt.dtb",
         kernel="http://example.com/kernel",
+        rootfs="http://example.com/rootfs.ext4",
         tmpdir=tmpdir,
         tux_boot_args="",
     )
@@ -3487,24 +3490,42 @@ def test_fvp_aemva_extra_assets(tmpdir):
     assert asset[0] == f"file://{tmpdir / 'startup.nsh'}"
     assert (tmpdir / "startup.nsh").read_text(
         encoding="utf-8"
-    ) == "kernel dtb=fdt.dtb systemd.log_level=warning console=ttyAMA0 earlycon=pl011,0x1c090000 root=/dev/vda ip=dhcp"
+    ) == "kernel dtb=fdt.dtb systemd.log_level=warning console=ttyAMA0 earlycon=pl011,0x1c090000 ip=dhcp root=/dev/vda"
 
     # 3/ compression
     asset = device.extra_assets(
-        dtb="file://tmp/my-dtb", kernel="Image.gz", tmpdir=tmpdir, tux_boot_args=None
+        dtb="file://tmp/my-dtb",
+        kernel="Image.gz",
+        rootfs=None,
+        tmpdir=tmpdir,
+        tux_boot_args=None,
     )
     assert len(asset) == 1
     assert asset[0] == f"file://{tmpdir / 'startup.nsh'}"
     assert (tmpdir / "startup.nsh").read_text(
         encoding="utf-8"
-    ) == "Image dtb=my-dtb systemd.log_level=warning console=ttyAMA0 earlycon=pl011,0x1c090000 root=/dev/vda ip=dhcp"
+    ) == "Image dtb=my-dtb systemd.log_level=warning console=ttyAMA0 earlycon=pl011,0x1c090000 ip=dhcp root=/dev/vda"
 
     # 4/ custom boot-args
     asset = device.extra_assets(
-        dtb=None, kernel=None, tmpdir=tmpdir, tux_boot_args="debug"
+        dtb=None, kernel=None, rootfs=None, tmpdir=tmpdir, tux_boot_args="debug"
     )
     assert len(asset) == 1
     assert asset[0] == f"file://{tmpdir / 'startup.nsh'}"
     assert (tmpdir / "startup.nsh").read_text(
         encoding="utf-8"
-    ) == "Image dtb=fvp-base-revc.dtb systemd.log_level=warning debug console=ttyAMA0 earlycon=pl011,0x1c090000 root=/dev/vda ip=dhcp"
+    ) == "Image dtb=fvp-base-revc.dtb debug systemd.log_level=warning console=ttyAMA0 earlycon=pl011,0x1c090000 ip=dhcp root=/dev/vda"
+
+    # 5/ cpio rootfs (initrd)
+    asset = device.extra_assets(
+        dtb=None,
+        kernel=None,
+        rootfs="http://example.com/rootfs.cpio.gz",
+        tmpdir=tmpdir,
+        tux_boot_args="",
+    )
+    assert len(asset) == 1
+    assert asset[0] == f"file://{tmpdir / 'startup.nsh'}"
+    assert (tmpdir / "startup.nsh").read_text(
+        encoding="utf-8"
+    ) == "Image dtb=fvp-base-revc.dtb systemd.log_level=warning console=ttyAMA0 earlycon=pl011,0x1c090000 ip=dhcp initrd=http___example.com_rootfs.cpio"
