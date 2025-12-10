@@ -6,9 +6,10 @@
 #
 # SPDX-License-Identifier: MIT
 
-from typing import Dict, List
+from typing import Any, Dict, List, Optional
 
 from tuxlava.exceptions import InvalidArgument
+from tuxlava import templates
 
 
 def subclasses(cls):
@@ -52,11 +53,41 @@ class Device:
     def definition(self, **kwargs) -> str:
         raise NotImplementedError  # pragma: no cover
 
-    def device_dict(self, context: Dict) -> str:
+    def device_dict(
+        self, context: Dict, d_dict_config: Optional[Dict[str, Any]] = None
+    ) -> str:
         """This will be used by tuxrun in order to supply the device dictionary
         for all virtual devices that will be run via lava worker in tuxrun.
+
+        Args:
+            context: LAVA context variables
+            d_dict_config: Optional device dict config. When provided, generates
+                           device dictionary with power/serial commands.
         """
         raise NotImplementedError  # pragma: no cover
+
+    def _render_device_dict(
+        self,
+        template_name: str,
+        context: Dict[str, Any],
+        d_dict_config: Optional[Dict[str, Any]] = None,
+        d_dict_defaults: Optional[Dict[str, str]] = None
+    ) -> str:
+        if hasattr(self, 'test_character_delay') and self.test_character_delay:
+            context["test_character_delay"] = self.test_character_delay
+
+        if not d_dict_config:
+            return templates.devices().get_template(template_name).render(**context)
+
+        d_dict_context = context.copy()
+        d_dict_context["d_dict_mode"] = True
+        d_dict_context.update(d_dict_config)
+
+        if d_dict_defaults:
+            for key, default_value in d_dict_defaults.items():
+                d_dict_context.setdefault(key, default_value)
+
+        return templates.devices().get_template(template_name).render(**d_dict_context)
 
     def extra_assets(self, tmpdir, **kwargs) -> List[str]:
         return []
