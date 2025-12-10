@@ -26,6 +26,8 @@ def filter_options(options):
         "debug",
         "deploy_os",
         "device",
+        "device_dict",
+        "d_dict_config",
         "extra_assets",
         "lava_definition",
         "qemu_binary",
@@ -305,6 +307,13 @@ def setup_parser() -> argparse.ArgumentParser:
         metavar="NAME",
         help="Device type",
         choices=[d.name for d in Device.list()],
+    )
+    group.add_argument(
+        "--device-dict",
+        default=None,
+        type=Path,
+        metavar="PATH",
+        help="Path to device dictionary file for device-dict mode",
     )
     group.add_argument(
         "--boot-args", default=None, metavar="ARGS", help="extend boot arguments"

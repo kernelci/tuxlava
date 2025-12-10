@@ -11,8 +11,9 @@ import re
 import shlex
 import tempfile
 
+from jinja2 import Environment, FileSystemLoader
 from pathlib import Path
-from typing import Dict, List, Any
+from typing import Dict, List, Any, Optional
 from tuxlava.argparse import filter_options
 from tuxlava.exceptions import InvalidArgument, MissingArgument, TuxLavaError
 from tuxlava.devices import Device
@@ -21,6 +22,35 @@ from tuxlava.tuxmake import TuxBuildBuild, TuxMakeBuild
 from tuxlava.utils import pathurlnone
 
 TEST_DEFINITIONS = "https://github.com/Linaro/test-definitions/releases/download/2025.10.01/2025.10.tar.zst"
+
+# Supported device-dict config variables
+# Update this list when adding new variables to device-dict configs
+DEVICE_DICT_VARS = {
+    "boot_character_delay",
+    "boot_method",
+    "booti_dtb_addr",
+    "booti_kernel_addr",
+    "booti_ramdisk_addr",
+    "bootloader_prompt",
+    "connection_command",
+    "console_device",
+    "docker_shell_extra_arguments",
+    "environment",
+    "extra_kernel_args",
+    "fastboot_options",
+    "fastboot_serial_number",
+    "grub_needs_interrupt",
+    "hard_reset_command",
+    "interrupt_char",
+    "interrupt_prompt",
+    "power_off_command",
+    "power_on_command",
+    "pre_os_command",
+    "pre_power_command",
+    "test_character_delay",
+    "uboot_needs_interrupt",
+    "usbg_ms_commands",
+}
 
 
 def tuxbuild_url(s):
@@ -86,8 +116,10 @@ class Job:
         tmpdir: Path = None,
         cache_dir: Path = None,
         visibility: str = "public",
+        device_dict: Path = None,
     ) -> None:
         self.device = device
+        self.device_dict = device_dict
         self.bios = bios
         self.bl1 = bl1
         self.commands = commands
@@ -223,6 +255,31 @@ class Job:
         self.tests = [Test.select(t)(self.timeouts.get(t)) for t in self.tests]
         self.device.validate(**filter_options(self))
         self.device.default(self)
+
+        # Load device dict config if --device-dict provided
+        self.d_dict_config: Optional[Dict[str, Any]] = None
+        if self.device_dict:
+            if not self.device_dict.exists():
+                raise InvalidArgument(f"Device dict file not found: {self.device_dict}")
+            # Load from external Jinja2 file (provided by kci-runner/baklaweb)
+            env = Environment(loader=FileSystemLoader(self.device_dict.parent))
+            template = env.get_template(self.device_dict.name)
+            module = template.module
+
+            # Check for unknown variables in device-dict config
+            defined_vars = {name for name in dir(module) if not name.startswith("_")}
+            unknown_vars = defined_vars - DEVICE_DICT_VARS
+            if unknown_vars:
+                raise InvalidArgument(
+                    f"Unknown variable(s) in device dict '{self.device_dict.name}': "
+                    f"{', '.join(sorted(unknown_vars))}. "
+                    f"Supported variables: {', '.join(sorted(DEVICE_DICT_VARS))}"
+                )
+
+            self.d_dict_config = {}
+            for name in DEVICE_DICT_VARS:
+                if hasattr(module, name):
+                    self.d_dict_config[name] = getattr(module, name)
 
         if self.shared is not None and not self.device.name.startswith("qemu-"):
             raise InvalidArgument("--shared options is only available for qemu devices")
