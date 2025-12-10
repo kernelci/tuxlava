@@ -1,0 +1,28 @@
+{# device-dict config for Raspberry Pi 4B (NFS boot with U-Boot) #}
+
+{% set boot_method = 'u-boot' %}
+
+{% set connection_command = 'telnet localhost 2000' %}
+
+{% set hard_reset_command = [
+    'laacli power 3v3 off',
+    'laacli power 5v reset',
+    'laacli power 3v3 on'
+] %}
+
+{% set power_on_command = [
+    'laacli power 5v on',
+    'laacli power 3v3 on'
+] %}
+
+{% set power_off_command = [
+    'laacli power 3v3 off',
+    'laacli power 5v off'
+] %}
+
+{% set docker_shell_extra_arguments = [
+    '--add-host=lava-worker.internal:host-gateway',
+    '--volume=/usr/bin/laacli:/usr/bin/laacli:ro',
+    '--volume=/usr/bin/lsibcli:/usr/bin/lsibcli:ro',
+    '--volume=/run/dbus/system_bus_socket:/run/dbus/system_bus_socket:rw',
+] %}

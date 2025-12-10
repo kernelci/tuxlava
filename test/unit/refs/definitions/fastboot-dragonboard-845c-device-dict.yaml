@@ -1,0 +1,83 @@
+device_type: "dragonboard-845c"
+
+job_name: "tuxlava@fastboot-dragonboard-845c: boot"
+priority: low
+visibility: "public"
+
+reboot_to_fastboot: false
+
+
+context:
+    test_character_delay: 10
+timeouts:
+  job:
+    minutes: 80
+  connection:
+    minutes: 2
+  actions:
+    power-off:
+      seconds: 60
+    finalize:
+      seconds: 120
+
+actions:
+- deploy:
+    to: downloads
+    timeout:
+      minutes: 25
+    os: debian
+    images:
+      partition:0:
+        url: "https://images.validation.linaro.org/snapshots.linaro.org/96boards/dragonboard845c/linaro/rescue/28/dragonboard-845c-bootloader-ufs-linux-28/gpt_both0.bin"
+      ramdisk:
+        url: "https://snapshots.linaro.org/member-builds/qcomlt/boards/qcom-armv8a/openembedded/master/56008/rpb/initramfs-rootfs-image-qcom-armv8a.rootfs-20240118001247-92260.cpio.gz"
+      kernel:
+        url: "https://example.com/Image.gz"
+        compression: gz
+        type: image
+      rootfs:
+        url: "https://example.com/rootfs.tar.xz"
+        compression: xz
+        format: tar
+    postprocess:
+      docker:
+        image: "linaro/kir:20250728"
+        local: true
+        steps:
+        - /kir/lava/board_setup.sh dragonboard-845c rootfs "/usr/"
+- deploy:
+    to: fastboot
+    os: debian
+    timeout:
+      minutes: 30
+    docker:
+      image: "linaro/kir:20250728"
+      local: true
+    images:
+      partition:0:
+        url: downloads://gpt_both0.bin
+        reboot: hard-reset
+      boot:
+        url: downloads://boot.img
+        reboot: hard-reset
+      rootfs:
+        url: downloads://rootfs.img
+
+- command:
+    name: pre_os_command
+- command:
+    name: pre_power_command
+- boot:
+    docker:
+      image: "linaro/kir:20250728"
+      local: true
+    method: fastboot
+    timeout:
+      minutes: 25
+    auto_login:
+      login_prompt: 'login:'
+      username: root
+    prompts:
+    - 'root@(.*):[/~]#'
+    - 'dragonboard-845c:'
+

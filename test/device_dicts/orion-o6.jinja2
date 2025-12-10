@@ -1,0 +1,37 @@
+{# device-dict config for Orion O6 (NFS boot with GRUB) #}
+
+{% set boot_method = 'grub' %}
+{% set grub_needs_interrupt = false %}
+{% set boot_character_delay = 10 %}
+{% set test_character_delay = 10 %}
+{% set console_device = 'ttyAMA2' %}
+
+{% set connection_command = 'telnet localhost 2010' %}
+
+{% set hard_reset_command = [
+    'laacli button 1 off',
+    'laacli power 12v off',
+    'laacli usb 2 off',
+    'laacli usb 2 on',
+    'laacli power 12v on',
+    'laacli button 1 on',
+] %}
+
+{% set power_on_command = [
+    'laacli usb 2 on',
+    'laacli power 12v on',
+    'laacli button 1 on',
+] %}
+
+{% set power_off_command = [
+    'laacli button 1 off',
+    'laacli power 12v off',
+    'laacli usb 2 off',
+] %}
+
+{% set docker_shell_extra_arguments = [
+    '--add-host=lava-worker.internal:host-gateway',
+    '--volume=/usr/bin/laacli:/usr/bin/laacli:ro',
+    '--volume=/usr/bin/lsibcli:/usr/bin/lsibcli:ro',
+    '--volume=/run/dbus/system_bus_socket:/run/dbus/system_bus_socket:rw',
+] %}

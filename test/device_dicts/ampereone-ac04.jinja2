@@ -1,0 +1,26 @@
+{# device-dict config for AmpereOne AC04 (NFS boot with GRUB via IPMI SOL) #}
+
+{% set boot_method = 'grub' %}
+
+{% set connection_command = '/usr/bin/ipmitool -I lanplus -H 198.18.0.3 -U ADMIN -P ADMIN sol activate' %}
+
+{% set hard_reset_command = [
+    '/usr/bin/ipmitool -I lanplus -H 198.18.0.3 -U ADMIN -P ADMIN power off',
+    '/usr/bin/ipmitool -I lanplus -H 198.18.0.3 -U ADMIN -P ADMIN power on',
+] %}
+
+{% set power_on_command = [
+    '/usr/bin/ipmitool -I lanplus -H 198.18.0.3 -U ADMIN -P ADMIN power on'
+] %}
+
+{% set power_off_command = [
+    '/usr/bin/ipmitool -I lanplus -H 198.18.0.3 -U ADMIN -P ADMIN power off',
+    '/usr/bin/ipmitool -I lanplus -H 198.18.0.3 -U ADMIN -P ADMIN sol deactivate'
+] %}
+
+{% set docker_shell_extra_arguments = [
+    '--add-host=lava-worker.internal:host-gateway',
+    '--volume=/usr/bin/laacli:/usr/bin/laacli:ro',
+    '--volume=/usr/bin/lsibcli:/usr/bin/lsibcli:ro',
+    '--volume=/run/dbus/system_bus_socket:/run/dbus/system_bus_socket:rw',
+] %}

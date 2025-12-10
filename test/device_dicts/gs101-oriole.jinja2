@@ -1,0 +1,65 @@
+{# device-dict config for Google Pixel 6 gs101-oriole (fastboot) #}
+
+{% set boot_method = 'fastboot' %}
+
+{% set connection_command = 'telnet localhost 2010' %}
+
+{% set pre_power_command = [
+    'laacli usb 3 off',
+    'laacli usb 4 off',
+    'sleep 5',
+    'laacli usb 3 on',
+    'laacli usb 4 on',
+] %}
+
+{% set pre_os_command = [
+    'laacli power 5v on',
+    'laacli power 12v on',
+    'phone_mib_ctl --config_file /usr/local/share/lava/pixel6_mib_config.csv --action init',
+    'phone_mib_ctl --config_file /usr/local/share/lava/pixel6_mib_config.csv --action release',
+    'sleep 1',
+    'phone_mib_ctl --config_file /usr/local/share/lava/pixel6_mib_config.csv --servos power --action press',
+    'sleep 3',
+    'phone_mib_ctl --config_file /usr/local/share/lava/pixel6_mib_config.csv --servos power --action release',
+    'sleep 1',
+    'phone_mib_ctl --config_file /usr/local/share/lava/pixel6_mib_config.csv --action deinit',
+    'laacli power 5v off',
+    'laacli power 12v off',
+] %}
+
+{% set hard_reset_command = [
+    'laacli power 5v on',
+    'laacli power 12v on',
+    'phone_mib_ctl --config_file /usr/local/share/lava/pixel6_mib_config.csv --action init',
+    'phone_mib_ctl --config_file /usr/local/share/lava/pixel6_mib_config.csv --action release',
+    'sleep 1',
+    'phone_mib_ctl --config_file /usr/local/share/lava/pixel6_mib_config.csv --servos power,vol_dwn --action press',
+    'sleep 50',
+    'phone_mib_ctl --config_file /usr/local/share/lava/pixel6_mib_config.csv --servos power,vol_dwn --action release',
+    'sleep 1',
+    'phone_mib_ctl --config_file /usr/local/share/lava/pixel6_mib_config.csv --action deinit',
+    'laacli power 5v off',
+    'laacli power 12v off',
+] %}
+
+{% set power_off_command = [
+    'laacli power 5v on',
+    'laacli power 12v on',
+    'phone_mib_ctl --config_file /usr/local/share/lava/pixel6_mib_config.csv --action init',
+    'phone_mib_ctl --config_file /usr/local/share/lava/pixel6_mib_config.csv --action release',
+    'sleep 1',
+    'phone_mib_ctl --config_file /usr/local/share/lava/pixel6_mib_config.csv --servos power,vol_dwn --action press',
+    'sleep 50',
+    'phone_mib_ctl --config_file /usr/local/share/lava/pixel6_mib_config.csv --servos power,vol_dwn --action release',
+    'sleep 1',
+    'phone_mib_ctl --config_file /usr/local/share/lava/pixel6_mib_config.csv --action deinit',
+    'laacli power 5v off',
+    'laacli power 12v off',
+] %}
+
+{% set docker_shell_extra_arguments = [
+    '--add-host=lava-worker.internal:host-gateway',
+    '--volume=/usr/bin/laacli:/usr/bin/laacli:ro',
+    '--volume=/usr/bin/lsibcli:/usr/bin/lsibcli:ro',
+    '--volume=/run/dbus/system_bus_socket:/run/dbus/system_bus_socket:rw',
+] %}

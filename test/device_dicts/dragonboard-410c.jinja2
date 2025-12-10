@@ -1,0 +1,76 @@
+{# device-dict config for Dragonboard 410c (fastboot) #}
+
+{% set boot_method = 'fastboot' %}
+
+{% set connection_command = 'telnet localhost 2000' %}
+
+{% set pre_power_command = [
+    'laacli usb 2 off',
+    'sleep 5',
+    'laacli power 1v8 on',
+    'sleep 3',
+    'laacli power 12v on',
+    'sleep 5',
+    'laacli usb 2 on',
+    'sleep 1',
+    'laacli button power on',
+    'sleep 1',
+    'laacli button reset on'
+] %}
+
+{% set pre_os_command = 'laacli usb 2 off' %}
+
+{% set hard_reset_command = [
+    'laacli power 12v off',
+    'sleep 3',
+    'laacli power 1v8 off',
+    'sleep 3',
+    'laacli usb 2 off',
+    'sleep 1',
+    'laacli button power off',
+    'sleep 1',
+    'laacli button reset off',
+    'sleep 5',
+    'laacli power 12v on',
+    'sleep 3',
+    'laacli power 1v8 on',
+    'sleep 3',
+    'laacli usb 2 on',
+    'sleep 1',
+    'laacli button power on',
+    'sleep 1',
+    'laacli button reset on'
+] %}
+
+{% set power_on_command = [
+    'laacli usb 2 off',
+    'sleep 5',
+    'laacli power 1v8 on',
+    'sleep 3',
+    'laacli power 12v on',
+    'sleep 13',
+    'laacli usb 2 on',
+    'sleep 1',
+    'laacli button power on',
+    'sleep 1',
+    'laacli button reset on'
+] %}
+
+{% set power_off_command = [
+    'laacli usb 2 off',
+    'sleep 1',
+    'laacli power 12v off',
+    'sleep 1',
+    'laacli power 1v8 off',
+    'sleep 1',
+    'laacli button power off',
+    'sleep 1',
+    'laacli button reset off'
+] %}
+
+{% set docker_shell_extra_arguments = [
+    '--add-host=lava-worker.internal:host-gateway',
+    '--volume=/usr/bin/laacli:/usr/bin/laacli:ro',
+    '--volume=/usr/bin/lsibcli:/usr/bin/lsibcli:ro',
+    '--volume=/run/dbus/system_bus_socket:/run/dbus/system_bus_socket:rw',
+] %}

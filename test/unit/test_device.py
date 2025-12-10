@@ -14,6 +14,7 @@ from tuxlava.devices.qemu import QemuArmv5
 from tuxlava.exceptions import InvalidArgument
 
 BASE = (Path(__file__) / "..").resolve()
+DEVICE_DICTS = BASE / ".." / "device_dicts"
 
 
 def test_select():
@@ -3026,6 +3027,35 @@ def artefacts(tmp_path):
                 "http://example.com/flasher.tar.gz",
             ],
             "flasher-qcom-distro-qcs6490-rb3gen2-core-kit-smoke.yaml",
+        ),
+        (
+            [
+                "--device",
+                "nfs-cd8180-orion-o6",
+                "--kernel",
+                "https://example.com/Image.gz",
+                "--modules",
+                "https://example.com/modules.tar.xz",
+                "/usr/",
+                "--rootfs",
+                "https://example.com/rootfs.tar.xz",
+                "--device-dict",
+                str(DEVICE_DICTS / "cd8180-orion-o6.jinja2"),
+            ],
+            "nfs-cd8180-orion-o6-device-dict.yaml",
+        ),
+        (
+            [
+                "--device",
+                "fastboot-dragonboard-845c",
+                "--kernel",
+                "https://example.com/Image.gz",
+                "--rootfs",
+                "https://example.com/rootfs.tar.xz",
+                "--device-dict",
+                str(DEVICE_DICTS / "dragonboard-845c.jinja2"),
+            ],
+            "fastboot-dragonboard-845c-device-dict.yaml",
         ),
     ],
 )
