@@ -1,0 +1,12 @@
+{# Standard Fastboot device (non-device-dict, for LAVA) #}
+{% extends 'fastboot-base.yaml.jinja2' %}
+
+{% block available_architectures %}
+available_architectures:
+- dragonboard-410c
+- dragonboard-845c
+- e850-96
+- hi6220-hikey
+- x15
+- qrb5165-rb5
+{% endblock available_architectures %}

@@ -163,15 +163,17 @@ class FastbootDevice(Device):
         Returns:
             Rendered device dictionary YAML string
         """
-        template_name = "fastboot-device-dict.yaml.jinja2" if d_dict_config else "fastboot-standard.yaml.jinja2"
+        template_name = (
+            "fastboot-device-dict.yaml.jinja2"
+            if d_dict_config
+            else "fastboot-standard.yaml.jinja2"
+        )
 
         return self._render_device_dict(
             template_name,
             context,
             d_dict_config,
-            d_dict_defaults={
-                "connection_command": "telnet localhost 2000"
-            }
+            d_dict_defaults={"connection_command": "telnet localhost 2000"},
         )
 
 

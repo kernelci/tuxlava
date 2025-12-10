@@ -1,0 +1,61 @@
+{# Fastboot device with device-dict config #}
+{% extends 'fastboot-base.yaml.jinja2' %}
+
+{% block available_architectures %}
+available_architectures:
+- arm64
+- arm
+{% endblock available_architectures %}
+
+{% block deploy_connections_extra %}
+{# device-dict mode doesn't use LXC for deploy #}
+{% endblock deploy_connections_extra %}
+
+{% block deploy_methods %}
+      fastboot:
+      lxc:
+{% endblock deploy_methods %}
+
+{% block boot_connections_extra %}
+{# device-dict mode only uses serial, not SSH #}
+{% endblock boot_connections_extra %}
+
+{% block boot_methods %}
+    methods:
+      fastboot:
+      minimal:
+{% endblock boot_methods %}
+
+{% block device_dict_config %}
+
+{% if environment %}
+environment: {{ environment }}
+{% endif %}
+
+{% if fastboot_serial_number %}
+adb_serial_number: "{{ adb_serial_number|default(fastboot_serial_number) }}"
+fastboot_serial_number: "{{ fastboot_serial_number }}"
+fastboot_options: {{ fastboot_options|default([]) }}
+{% endif %}
+
+{% if docker_shell_extra_arguments %}
+docker_shell_extra_arguments: {{ docker_shell_extra_arguments }}
+{% endif %}
+{% endblock device_dict_config %}
+
+{% block commands %}
+
+commands:
+{% if connection_command %}
+    connect: {{ connection_command }}
+{% endif %}
+{% if hard_reset_command %}
+    hard_reset: {{ hard_reset_command }}
+{% endif %}
+{% if power_off_command %}
+    power_off: {{ power_off_command }}
+{% endif %}
+{% if power_on_command %}
+    power_on: {{ power_on_command }}
+{% endif %}
+{% endblock commands %}
