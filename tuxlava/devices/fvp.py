@@ -6,7 +6,7 @@
 #
 # SPDX-License-Identifier: MIT
 
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
 import re
 import urllib
@@ -22,7 +22,10 @@ class FVPDevice(Device):
     real_device = False
     deploy_timeout = 5
 
-    def device_dict(self, context):
+    def device_dict(
+        self, context: Dict[str, Any], d_dict_config: Optional[Dict[str, Any]] = None
+    ) -> str:
+        # FVP devices don't use device-dict mode, but accept the parameter for interface consistency
         return templates.devices().get_template("fvp.yaml.jinja2").render(**context)
 
 

@@ -6,7 +6,7 @@
 #
 # SPDX-License-Identifier: MIT
 
-from typing import List
+from typing import Any, Dict, List, Optional
 
 from tuxlava import templates
 from tuxlava.devices import Device
@@ -150,11 +150,28 @@ class FastbootDevice(Device):
             tests
         )
 
-    def device_dict(self, context):
-        if self.test_character_delay:
-            context["test_character_delay"] = self.test_character_delay
-        return (
-            templates.devices().get_template("fastboot.yaml.jinja2").render(**context)
+    def device_dict(
+        self, context: Dict[str, Any], d_dict_config: Optional[Dict[str, Any]] = None
+    ) -> str:
+        """Generate device dictionary.
+
+        Args:
+            context: LAVA context variables
+            d_dict_config: Optional device dict config. When provided, generates
+                           device dictionary with power/serial commands.
+
+        Returns:
+            Rendered device dictionary YAML string
+        """
+        template_name = "fastboot-device-dict.yaml.jinja2" if d_dict_config else "fastboot-standard.yaml.jinja2"
+
+        return self._render_device_dict(
+            template_name,
+            context,
+            d_dict_config,
+            d_dict_defaults={
+                "connection_command": "telnet localhost 2000"
+            }
         )
 
 

@@ -71,9 +71,9 @@ class Device:
         template_name: str,
         context: Dict[str, Any],
         d_dict_config: Optional[Dict[str, Any]] = None,
-        d_dict_defaults: Optional[Dict[str, str]] = None
+        d_dict_defaults: Optional[Dict[str, str]] = None,
     ) -> str:
-        if hasattr(self, 'test_character_delay') and self.test_character_delay:
+        if hasattr(self, "test_character_delay") and self.test_character_delay:
             context["test_character_delay"] = self.test_character_delay
 
         if not d_dict_config:

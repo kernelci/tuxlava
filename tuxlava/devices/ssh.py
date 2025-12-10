@@ -6,6 +6,8 @@
 #
 # SPDX-License-Identifier: MIT
 
+from typing import Any, Dict, Optional
+
 from tuxlava import templates
 from tuxlava.devices import Device
 from tuxlava.exceptions import InvalidArgument
@@ -79,7 +81,10 @@ class SSHDevice(Device):
             **kwargs
         ) + "".join(tests)
 
-    def device_dict(self, context):
+    def device_dict(
+        self, context: Dict[str, Any], d_dict_config: Optional[Dict[str, Any]] = None
+    ) -> str:
+        # SSH devices don't use device-dict mode, but accept the parameter for interface consistency
         context["ssh_host"] = self.ssh_host
         context["ssh_user"] = self.ssh_user
         context["ssh_port"] = self.ssh_port

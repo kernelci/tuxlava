@@ -6,7 +6,7 @@
 #
 # SPDX-License-Identifier: MIT
 
-from typing import Optional
+from typing import Any, Dict, Optional
 
 from tuxlava import templates
 from tuxlava.devices import Device
@@ -125,7 +125,10 @@ class AvhDevice(Device):
             **kwargs
         ) + "".join(tests)
 
-    def device_dict(self, context):
+    def device_dict(
+        self, context: Dict[str, Any], d_dict_config: Optional[Dict[str, Any]] = None
+    ) -> str:
+        # AVH devices don't use device-dict mode, but accept the parameter for interface consistency
         if self.test_character_delay:
             context["test_character_delay"] = self.test_character_delay
         return templates.devices().get_template("avh.yaml.jinja2").render(**context)

@@ -7,7 +7,7 @@
 # SPDX-License-Identifier: MIT
 
 import platform
-from typing import List, Optional
+from typing import Any, Dict, List, Optional
 
 from tuxlava import templates
 from tuxlava.devices import Device
@@ -149,7 +149,10 @@ class QemuDevice(Device):
             **kwargs
         ) + "".join(tests)
 
-    def device_dict(self, context):
+    def device_dict(
+        self, context: Dict[str, Any], d_dict_config: Optional[Dict[str, Any]] = None
+    ) -> str:
+        # QEMU devices don't use device-dict mode, but accept the parameter for interface consistency
         if self.test_character_delay:
             context["test_character_delay"] = self.test_character_delay
         return templates.devices().get_template("qemu.yaml.jinja2").render(**context)

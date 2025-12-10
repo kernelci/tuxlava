@@ -20,11 +20,16 @@ def subclasses(cls):
     )
 
 
+def device_matches_pattern(device, pattern: str) -> bool:
+    """Check if device matches pattern."""
+    return fnmatch.fnmatch(device.name, pattern)
+
+
 def is_test_supported(test, devices):
     # checks if the given test is available/supported for any device in devices list
     for d in devices:
         for pat in test.devices:
-            if fnmatch.fnmatch(d.name, pat):
+            if device_matches_pattern(d, pat):
                 return True
 
     return False
@@ -58,14 +63,16 @@ class Test:
             )
         if device is None:
             return sorted(s.name for s in subclasses(cls) if s.name)
+        device_obj = Device.select(device)()
         return sorted(
             t.name
             for t in subclasses(cls)
-            if t.name and any([fnmatch.fnmatch(device, pat) for pat in t.devices])
+            if t.name
+            and any([device_matches_pattern(device_obj, pat) for pat in t.devices])
         )
 
     def validate(self, device, **kwargs):
-        if not any([fnmatch.fnmatch(device.name, pat) for pat in self.devices]):
+        if not any([device_matches_pattern(device, pat) for pat in self.devices]):
             raise InvalidArgument(
                 f"Test '{self.name}' not supported on device '{device.name}'"
             )
