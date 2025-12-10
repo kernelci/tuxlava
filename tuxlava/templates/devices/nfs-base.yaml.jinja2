@@ -1,0 +1,57 @@
+{# Base template for NFS devices - shared blocks #}
+{% extends 'base.yaml.jinja2' %}
+
+{% block vland %}
+{# disabled #}
+{% endblock vland %}
+
+{% block body %}
+
+{% block available_architectures %}
+{# Override in child templates #}
+{% endblock available_architectures %}
+
+{% block actions_deploy %}
+actions:
+  deploy:
+    connections:
+      serial:
+{% block deploy_connections_extra %}
+      lxc:
+{% endblock deploy_connections_extra %}
+    methods:
+{% block deploy_methods %}
+      nfs:
+      lxc:
+{% endblock deploy_methods %}
+{% endblock actions_deploy %}
+
+{% block actions_boot %}
+  boot:
+    connections:
+      serial:
+{% block boot_connections_extra %}
+      ssh:
+      lxc:
+{% endblock boot_connections_extra %}
+{% block boot_methods %}
+    method: ipxe
+    commands: nfs
+
+          options:
+{% endblock boot_methods %}
+{% endblock actions_boot %}
+
+{% block device_dict_docker_config %}
+{# device-dict Docker config - empty for standard #}
+{% endblock device_dict_docker_config %}
+
+{% block device_dict_parameters %}
+{# device-dict parameters - empty for standard #}
+{% endblock device_dict_parameters %}
+
+{% endblock body %}
+
+{% block commands %}
+{# Device commands - override in device-dict template #}
+{% endblock commands %}

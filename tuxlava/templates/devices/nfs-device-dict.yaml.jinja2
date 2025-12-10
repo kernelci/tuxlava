@@ -1,0 +1,152 @@
+{# NFS device with device-dict config #}
+{% extends 'nfs-base.yaml.jinja2' %}
+
+{% block available_architectures %}
+available_architectures:
+- arm64
+- arm
+{% endblock available_architectures %}
+
+{% block deploy_connections_extra %}
+{# device-dict mode doesn't use LXC #}
+{% endblock deploy_connections_extra %}
+
+{% block deploy_methods %}
+{% if deploy_method|default('tftp') == 'tftp' %}
+      tftp:
+      nfs:
+{% elif deploy_method == 'usbg-ms' %}
+      usbg-ms:
+        enable: {{ usbg_ms_commands.enable }}
+        disable: {{ usbg_ms_commands.disable }}
+{% elif deploy_method == 'flasher' %}
+      flasher:
+        commands:
+{% for cmd in flasher_deploy_commands|default([]) %}
+          - {{ cmd }}
+{% endfor %}
+{% endif %}
+{% endblock deploy_methods %}
+
+{% block boot_connections_extra %}
+{# device-dict mode only uses serial #}
+{% endblock boot_connections_extra %}
+
+{% block boot_methods %}
+    methods:
+{% if boot_method == 'grub' %}
+      grub:
+        parameters:
+          bootloader_prompt: {{ bootloader_prompt|default('grub>') }}
+          needs_interrupt: {{ grub_needs_interrupt|default(true) }}
+        nfs:
+          commands:
+{% if efinet|default(true) %}
+          - insmod efinet
+{% endif %}
+{% if pxe_net_configured|default(false) %}
+          - net_ls_addr
+{% else %}
+          - net_bootp
+{% endif %}
+          - 'linux (tftp,{SERVER_IP})/{KERNEL} console={{ console_device|default('ttyAMA0') }},115200 root=/dev/nfs rw nfsroot={NFS_SERVER_IP}:{NFSROOTFS},tcp,hard,nfsvers=3 ip=dhcp {{ extra_kernel_args|default('') }}'
+          - initrd (tftp,{SERVER_IP})/{RAMDISK}
+          - boot
+        ramdisk:
+          commands:
+{% if efinet|default(true) %}
+          - insmod efinet
+{% endif %}
+{% if pxe_net_configured|default(false) %}
+          - net_ls_addr
+{% else %}
+          - net_bootp
+{% endif %}
+          - 'linux (tftp,{SERVER_IP})/{KERNEL} console={{ console_device|default('ttyAMA0') }},115200 root=/dev/ram0 ip=dhcp {{ extra_kernel_args|default('') }}'
+          - initrd (tftp,{SERVER_IP})/{RAMDISK}
+          - boot
+      grub-efi:
+        parameters:
+          bootloader_prompt: {{ bootloader_prompt|default('grub>') }}
+          needs_interrupt: {{ grub_needs_interrupt|default(true) }}
+      minimal:
+{% else %}
+      u-boot:
+        parameters:
+          bootloader_prompt: {{ bootloader_prompt|default('=> ') }}
+          interrupt_prompt: {{ interrupt_prompt|default('Hit any key to stop autoboot') }}
+          interrupt_char: "{{ interrupt_char|default(' ') }}"
+          needs_interrupt: {{ uboot_needs_interrupt|default(true) }}
+        nfs:
+          commands:
+          - setenv autoload no
+          - dhcp
+          - "setenv serverip {SERVER_IP}"
+          - tftp {KERNEL_ADDR} {KERNEL}
+          - tftp {RAMDISK_ADDR} {RAMDISK}
+          - "setenv initrd_size ${filesize}"
+          - tftp {DTB_ADDR} {DTB}
+          - "setenv bootargs 'console={{ console_device|default('ttyS0') }},115200 root=/dev/nfs rw nfsroot={NFS_SERVER_IP}:{NFSROOTFS},tcp,hard ip=dhcp {{ extra_kernel_args|default('') }}'"
+          - '{BOOTX}'
+        ramdisk:
+          commands:
+          - setenv autoload no
+          - dhcp
+          - "setenv serverip {SERVER_IP}"
+          - tftp {KERNEL_ADDR} {KERNEL}
+          - tftp {RAMDISK_ADDR} {RAMDISK}
+          - "setenv initrd_size ${filesize}"
+          - tftp {DTB_ADDR} {DTB}
+          - "setenv bootargs 'console={{ console_device|default('ttyS0') }},115200 root=/dev/ram0 ip=dhcp {{ extra_kernel_args|default('') }}'"
+          - '{BOOTX}'
+      minimal:
+{% endif %}
+{% endblock boot_methods %}
+
+{% block device_dict_docker_config %}
+
+{% if environment %}
+environment: {{ environment }}
+{% endif %}
+
+{% if docker_shell_extra_arguments %}
+docker_shell_extra_arguments: {{ docker_shell_extra_arguments }}
+{% endif %}
+{% endblock device_dict_docker_config %}
+
+{% block device_dict_parameters %}
+
+{% if booti_kernel_addr %}
+parameters:
+  image:
+    kernel: '{{ booti_kernel_addr }}'
+    ramdisk: '{{ booti_ramdisk_addr }}'
+    dtb: '{{ booti_dtb_addr }}'
+  booti:
+    kernel: '{{ booti_kernel_addr }}'
+    ramdisk: '{{ booti_ramdisk_addr }}'
+    dtb: '{{ booti_dtb_addr }}'
+{% endif %}
+{% endblock device_dict_parameters %}
+
+{% block commands %}
+
+commands:
+{% if connection_command %}
+    connect: {{ connection_command }}
+{% endif %}
+{% if hard_reset_command %}
+    hard_reset: {{ hard_reset_command }}
+{% endif %}
+{% if power_off_command %}
+    power_off: {{ power_off_command }}
+{% endif %}
+{% if power_on_command %}
+    power_on: {{ power_on_command }}
+{% endif %}
+{% if usbg_ms_commands and deploy_method == 'usbg-ms' %}
+    usbg_ms:
+        disable: {{ usbg_ms_commands.disable }}
+        enable: {{ usbg_ms_commands.enable }}
+{% endif %}
+{% endblock commands %}

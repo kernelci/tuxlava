@@ -147,7 +147,11 @@ class NfsDevice(Device):
         Returns:
             Rendered device dictionary YAML string
         """
-        template_name = "nfs-device-dict.yaml.jinja2" if d_dict_config else "nfs-standard.yaml.jinja2"
+        template_name = (
+            "nfs-device-dict.yaml.jinja2"
+            if d_dict_config
+            else "nfs-standard.yaml.jinja2"
+        )
 
         return self._render_device_dict(
             template_name,
@@ -155,8 +159,8 @@ class NfsDevice(Device):
             d_dict_config,
             d_dict_defaults={
                 "connection_command": "telnet localhost 2000",
-                "boot_method": "u-boot"
-            }
+                "boot_method": "u-boot",
+            },
         )
 
 

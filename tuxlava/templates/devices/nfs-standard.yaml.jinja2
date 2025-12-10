@@ -1,0 +1,10 @@
+{# Standard NFS device (non-device-dict, for LAVA) #}
+{% extends 'nfs-base.yaml.jinja2' %}
+
+{% block available_architectures %}
+available_architectures:
+- bcm2711-rpi-4-b
+- juno-r2
+- x86_64
+- i386
+{% endblock available_architectures %}
