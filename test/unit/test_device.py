@@ -2479,6 +2479,17 @@ def artefacts(tmp_path):
                 "nfs-juno-r2",
                 "--kernel",
                 "https://example.com/Image.gz",
+                "--rootfs",
+                "https://example.com/rootfs.cpio.gz",
+            ],
+            "nfs-juno-r2-cpio-rootfs.yaml",
+        ),
+        (
+            [
+                "--device",
+                "nfs-juno-r2",
+                "--kernel",
+                "https://example.com/Image.gz",
                 "--modules",
                 "https://example.com/modules.tar.xz",
                 "/usr/",

@@ -1,4 +1,10 @@
-{% set prefix_len = 'nfs-'|length %}
+{% set prefix_len = 'nfs-'|length -%}
+{%- set rootfs_format = compression(rootfs)[0] -%}
+{%- set is_tarball = (rootfs_format == "tar") -%}
+{%- set is_cpio = (rootfs_format == "cpio.newc" or "ramdisk" in rootfs|lower) -%}
+{%- if is_cpio -%}
+{%-   set ramdisk = rootfs -%}
+{%- endif -%}
 device_type: "{{ device.name[prefix_len:] }}"
 
 {% if tests %}
@@ -76,6 +82,7 @@ actions:
     dtb:
       url: "{{ dtb }}"
 {% endif %}
+{% if not is_cpio %}
     nfsrootfs:
       url: "{{ rootfs }}"
 {% if compression(rootfs)[1] is not none %}
@@ -86,8 +93,6 @@ actions:
 {% endif %}
 {% if overlays %}
       overlays:
-{% if tests %}
-{% endif %}
 {% for name, overlay, dst in overlays %}
         {{ name }}:
           url: "{{ overlay }}"
@@ -100,6 +105,14 @@ actions:
 {% endif %}
 {% endfor %}
 {% endif %}
+{% endif %}
+{% if ramdisk %}
+    ramdisk:
+      url: "{{ ramdisk }}"
+{% if compression(ramdisk)[1] is not none %}
+      compression: {{ compression(ramdisk)[1] }}
+{% endif %}
+{% endif %}
 - boot:
     method:
 {% if device.name in ['nfs-ampereone', 'nfs-ampereone-ac04', 'nfs-altra-max-ac02', 'nfs-cd8180-orion-o6'] %}
@@ -109,7 +122,7 @@ actions:
 {% elif device.name in ['nfs-i386', 'nfs-x86_64'] %}
       ipxe
 {% endif %}
-    commands: nfs
+    commands: {{ "ramdisk" if is_cpio else "nfs" }}
 {% if device.name in ['nfs-i386', 'nfs-x86_64'] %}
     parameters:
       shutdown-message: 'reboot: Restarting system'
@@ -129,7 +142,7 @@ actions:
 {% for prompt in tux_prompt %}
     - "{{ prompt }}"{% endfor %}
 
-{% if device.name in ['nfs-ampereone', 'nfs-ampereone-ac04', 'nfs-altra-max-ac02', 'nfs-cd8180-orion-o6', 'nfs-juno-r2', 'nfs-i386', 'nfs-x86_64'] %}
+{% if not is_cpio and device.name in ['nfs-ampereone', 'nfs-ampereone-ac04', 'nfs-altra-max-ac02', 'nfs-cd8180-orion-o6', 'nfs-juno-r2', 'nfs-i386', 'nfs-x86_64'] %}
 - test:
     timeout:
       minutes: 5

@@ -1,0 +1,49 @@
+device_type: "juno-r2"
+
+job_name: "tuxlava@nfs-juno-r2: boot"
+priority: low
+visibility: "public"
+
+context:
+    bootloader_prompt: juno#
+    booti_dtb_addr: '0x88000000'
+    extra_nfsroot_args: ',wsize=65536'
+    extra_kernel_args: 'default_hugepagesz=2M hugepages=256 earlycon rw pci=config_acs=000000@pci:0:0'
+
+timeouts:
+  job:
+    minutes: 45
+  connection:
+    minutes: 2
+  actions:
+    power-off:
+      seconds: 60
+    finalize:
+      seconds: 60
+
+actions:
+- deploy:
+    to: tftp
+    timeout:
+      minutes: 30
+    os: debian
+    kernel:
+      url: "https://example.com/Image.gz"
+      compression: gz
+      type: image
+    ramdisk:
+      url: "https://example.com/rootfs.cpio.gz"
+      compression: gz
+- boot:
+    method:
+      u-boot
+    commands: ramdisk
+    timeout:
+      minutes: 15
+    auto_login:
+      login_prompt: 'login:'
+      username: root
+    prompts:
+    - 'root@(.*):[/~]#'
+    - '/ #'
+
