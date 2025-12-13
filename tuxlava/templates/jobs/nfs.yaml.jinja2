@@ -24,7 +24,7 @@ context:
     booti_dtb_addr: '0x88000000'
     extra_nfsroot_args: ',wsize=65536'
 {% set extra_kernel_args = 'default_hugepagesz=2M hugepages=256 earlycon rw pci=config_acs=000000@pci:0:0' %}
-{% elif device.name == 'nfs-orion-o6' %}
+{% elif device.name == 'nfs-cd8180-orion-o6' %}
     arch: arm64
 {% set extra_kernel_args = 'rw console=ttyAMA2,115200 efi=noruntime earlycon=pl011,0x040d0000 arm-smmu-v3.disable_bypass=0 cma=640M acpi=force' %}
 {% elif device.name in ['nfs-rk3399-rock-pi-4b', 'nfs-s32g399a-rdb3'] %}
@@ -102,7 +102,7 @@ actions:
 {% endif %}
 - boot:
     method:
-{% if device.name in ['nfs-ampereone', 'nfs-ampereone-ac04', 'nfs-altra-max-ac02', 'nfs-orion-o6'] %}
+{% if device.name in ['nfs-ampereone', 'nfs-ampereone-ac04', 'nfs-altra-max-ac02', 'nfs-cd8180-orion-o6'] %}
       grub
 {% elif device.name in ['nfs-bcm2711-rpi-4-b', 'nfs-juno-r2', 'nfs-rk3399-rock-pi-4b', 'nfs-s32g399a-rdb3'] %}
       u-boot
@@ -129,7 +129,7 @@ actions:
 {% for prompt in tux_prompt %}
     - "{{ prompt }}"{% endfor %}
 
-{% if device.name in ['nfs-ampereone', 'nfs-ampereone-ac04', 'nfs-altra-max-ac02', 'nfs-orion-o6', 'nfs-juno-r2', 'nfs-i386', 'nfs-x86_64'] %}
+{% if device.name in ['nfs-ampereone', 'nfs-ampereone-ac04', 'nfs-altra-max-ac02', 'nfs-cd8180-orion-o6', 'nfs-juno-r2', 'nfs-i386', 'nfs-x86_64'] %}
 - test:
     timeout:
       minutes: 5
@@ -142,7 +142,7 @@ actions:
           description: "Device preparation"
         run:
           steps:
-{% if device.name in ['nfs-ampereone', 'nfs-ampereone-ac04', 'nfs-altra-max-ac02', 'nfs-orion-o6'] %}
+{% if device.name in ['nfs-ampereone', 'nfs-ampereone-ac04', 'nfs-altra-max-ac02', 'nfs-cd8180-orion-o6'] %}
           - export STORAGE_DEV=/dev/nvme0n1p2
 {% else %}
           - export STORAGE_DEV=$(lava-target-storage SATA || lava-target-storage USB)

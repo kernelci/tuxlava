@@ -1,6 +1,6 @@
-device_type: "orion-o6"
+device_type: "cd8180-orion-o6"
 
-job_name: "tuxlava@nfs-orion-o6: ltp-smoke, ltp-io, ltp-math, perf, kselftest-arm64, kunit"
+job_name: "tuxlava@nfs-cd8180-orion-o6: ltp-smoke, ltp-io, ltp-math, perf, kselftest-arm64, kunit"
 priority: low
 visibility: "public"
 

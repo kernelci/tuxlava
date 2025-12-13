@@ -2317,7 +2317,7 @@ def artefacts(tmp_path):
         (
             [
                 "--device",
-                "nfs-orion-o6",
+                "nfs-cd8180-orion-o6",
                 "--kernel",
                 "https://example.com/Image.gz",
                 "--modules",
@@ -2331,12 +2331,12 @@ def artefacts(tmp_path):
                 "ltp-smoke",
                 "--lava-definition",
             ],
-            "nfs-orion-o6-ltp-smoke.yaml",
+            "nfs-cd8180-orion-o6-ltp-smoke.yaml",
         ),
         (
             [
                 "--device",
-                "nfs-orion-o6",
+                "nfs-cd8180-orion-o6",
                 "--kernel",
                 "https://example.com/Image.gz",
                 "--modules",
@@ -2354,7 +2354,7 @@ def artefacts(tmp_path):
                 "kselftest-arm64",
                 "kunit",
             ],
-            "nfs-orion-o6-multiple-tests.yaml",
+            "nfs-cd8180-orion-o6-multiple-tests.yaml",
         ),
         (
             [

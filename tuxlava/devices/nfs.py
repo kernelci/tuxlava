@@ -242,8 +242,8 @@ class NfsAmpereOneOc04(NfsAmpereOne):
     name = "nfs-ampereone-ac04"
 
 
-class NfsOrionO6(NfsDevice):
-    name = "nfs-orion-o6"
+class NfsCd8180OrionO6(NfsDevice):
+    name = "nfs-cd8180-orion-o6"
 
     arch = "arm64"
     lava_arch = "arm64"

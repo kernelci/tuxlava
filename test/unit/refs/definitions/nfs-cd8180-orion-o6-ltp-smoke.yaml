@@ -1,6 +1,6 @@
-device_type: "orion-o6"
+device_type: "cd8180-orion-o6"
 
-job_name: "tuxlava@nfs-orion-o6: ltp-smoke"
+job_name: "tuxlava@nfs-cd8180-orion-o6: ltp-smoke"
 priority: low
 visibility: "public"
 
