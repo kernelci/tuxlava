@@ -125,6 +125,7 @@ actions:
       username: root
     prompts:
     - 'root@(.*):[/~]#'
+    - '/ #'
 {% for prompt in tux_prompt %}
     - "{{ prompt }}"{% endfor %}
 
