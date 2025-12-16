@@ -36,6 +36,14 @@ class NfsDevice(Device):
 
     enable_network: bool = True
 
+    boot_method: str = "u-boot"
+    # Whether device needs storage preparation (mkfs/mount scratch)
+    needs_storage_prep: bool = False
+    # Storage device path for prep-tests (only used if needs_storage_prep=True)
+    storage_device: str = "$(lava-target-storage SATA || lava-target-storage USB)"
+    device_kernel_args: str = ""
+    context_overrides: Dict[str, Any] = {}
+
     def validate(
         self,
         bios,
@@ -173,6 +181,17 @@ class NfsJunoR2(NfsDevice):
     kernel = "https://storage.tuxboot.com/buildroot/arm64/Image"
     rootfs = "https://storage.tuxboot.com/debian/20250326/trixie/arm64/rootfs.tar.xz"
 
+    boot_method = "u-boot"
+    needs_storage_prep = True
+    device_kernel_args = (
+        "default_hugepagesz=2M hugepages=256 earlycon rw pci=config_acs=000000@pci:0:0"
+    )
+    context_overrides = {
+        "bootloader_prompt": "juno#",
+        "booti_dtb_addr": "0x88000000",
+        "extra_nfsroot_args": ",wsize=65536",
+    }
+
 
 class NfsRpi4(NfsDevice):
     name = "nfs-bcm2711-rpi-4-b"
@@ -182,6 +201,17 @@ class NfsRpi4(NfsDevice):
 
     kernel = "https://storage.tuxboot.com/buildroot/arm64/Image"
     rootfs = "https://storage.tuxboot.com/debian/20250326/trixie/arm64/rootfs.tar.xz"
+
+    boot_method = "u-boot"
+    device_kernel_args = (
+        "8250.nr_uarts=1 cma=64M rootwait earlycon systemd.log_level=warning "
+    )
+    context_overrides = {
+        "arch": "arm64",
+        "booti_dtb_addr": "0x86000000",
+        "console_device": "ttyS0",
+        "extra_nfsroot_args": ",vers=3",
+    }
 
 
 class NfsNxpRdb3(NfsDevice):
@@ -193,6 +223,14 @@ class NfsNxpRdb3(NfsDevice):
     kernel = "https://storage.tuxboot.com/buildroot/arm64/Image"
     rootfs = "https://storage.tuxboot.com/debian/20250326/trixie/arm64/rootfs.tar.xz"
 
+    boot_method = "u-boot"
+    device_kernel_args = "rootwait earlycon systemd.log_level=warning"
+    context_overrides = {
+        "arch": "arm64",
+        "booti_dtb_addr": "0x86000000",
+        "extra_nfsroot_args": ",vers=3",
+    }
+
 
 class NfsRockPi4(NfsDevice):
     name = "nfs-rk3399-rock-pi-4b"
@@ -202,6 +240,14 @@ class NfsRockPi4(NfsDevice):
 
     kernel = "https://storage.tuxboot.com/buildroot/arm64/Image"
     rootfs = "https://storage.tuxboot.com/debian/20250326/trixie/arm64/rootfs.tar.xz"
+
+    boot_method = "u-boot"
+    device_kernel_args = "rootwait earlycon systemd.log_level=warning"
+    context_overrides = {
+        "arch": "arm64",
+        "booti_dtb_addr": "0x86000000",
+        "extra_nfsroot_args": ",vers=3",
+    }
 
 
 class NfsI386(NfsDevice):
@@ -213,6 +259,13 @@ class NfsI386(NfsDevice):
     kernel = "https://storage.tuxboot.com/buildroot/x86_64/bzImage"
     rootfs = "https://storage.tuxboot.com/debian/20250326/trixie/i386/rootfs.tar.xz"
 
+    boot_method = "ipxe"
+    needs_storage_prep = True
+    device_kernel_args = "rootwait"
+    context_overrides = {
+        "test_character_delay": 10,
+    }
+
 
 class NfsX86_64(NfsDevice):
     name = "nfs-x86_64"
@@ -223,6 +276,13 @@ class NfsX86_64(NfsDevice):
     kernel = "https://storage.tuxboot.com/buildroot/x86_64/bzImage"
     rootfs = "https://storage.tuxboot.com/debian/20250326/trixie/amd64/rootfs.tar.xz"
 
+    boot_method = "ipxe"
+    needs_storage_prep = True
+    device_kernel_args = "rootwait"
+    context_overrides = {
+        "test_character_delay": 10,
+    }
+
 
 class NfsAmpereOne(NfsDevice):
     name = "nfs-ampereone"
@@ -232,6 +292,13 @@ class NfsAmpereOne(NfsDevice):
 
     kernel = "https://storage.tuxboot.com/buildroot/arm64/Image"
     rootfs = "https://storage.tuxboot.com/debian/trixie/arm64/rootfs.tar.xz"
+
+    boot_method = "grub"
+    needs_storage_prep = True
+    storage_device = "/dev/nvme0n1p2"
+    context_overrides = {
+        "arch": "arm64",
+    }
 
 
 class NfsAltraMaxAc02(NfsAmpereOne):
@@ -250,3 +317,11 @@ class NfsCd8180OrionO6(NfsDevice):
 
     kernel = "https://storage.tuxboot.com/buildroot/arm64/Image"
     rootfs = "https://storage.tuxboot.com/debian/trixie/arm64/rootfs.tar.xz"
+
+    boot_method = "grub"
+    needs_storage_prep = True
+    storage_device = "/dev/nvme0n1p2"
+    device_kernel_args = "rw console=ttyAMA2,115200 efi=noruntime earlycon=pl011,0x040d0000 arm-smmu-v3.disable_bypass=0 cma=640M acpi=force"
+    context_overrides = {
+        "arch": "arm64",
+    }
