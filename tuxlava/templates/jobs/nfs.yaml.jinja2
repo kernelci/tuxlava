@@ -15,33 +15,16 @@ job_name: "tuxlava@{{ device.name }}: boot"
 priority: {{ LAVA_JOB_PRIORITY }}
 visibility: "{{ visibility }}"
 
-{% set extra_kernel_args = '' %}
+{# Use device class attributes for kernel args and context #}
+{% set extra_kernel_args = device.device_kernel_args %}
 context:
-{% if device.name in ['nfs-ampereone', 'nfs-ampereone-ac04', 'nfs-altra-max-ac02'] %}
-    arch: arm64
-{% elif device.name == 'nfs-bcm2711-rpi-4-b' %}
-    arch: arm64
-    booti_dtb_addr: '0x86000000'
-    console_device: ttyS0
-{% set extra_kernel_args = '8250.nr_uarts=1 cma=64M rootwait earlycon systemd.log_level=warning ' %}
-    extra_nfsroot_args: ',vers=3'
-{% elif device.name == 'nfs-juno-r2' %}
-    bootloader_prompt: juno#
-    booti_dtb_addr: '0x88000000'
-    extra_nfsroot_args: ',wsize=65536'
-{% set extra_kernel_args = 'default_hugepagesz=2M hugepages=256 earlycon rw pci=config_acs=000000@pci:0:0' %}
-{% elif device.name == 'nfs-cd8180-orion-o6' %}
-    arch: arm64
-{% set extra_kernel_args = 'rw console=ttyAMA2,115200 efi=noruntime earlycon=pl011,0x040d0000 arm-smmu-v3.disable_bypass=0 cma=640M acpi=force' %}
-{% elif device.name in ['nfs-rk3399-rock-pi-4b', 'nfs-s32g399a-rdb3'] %}
-    arch: arm64
-    booti_dtb_addr: '0x86000000'
-{% set extra_kernel_args = 'rootwait earlycon systemd.log_level=warning' %}
-    extra_nfsroot_args: ',vers=3'
-{% elif device.name in ['nfs-i386' ,'nfs-x86_64'] %}
-    test_character_delay: 10
-{% set extra_kernel_args = 'rootwait' %}
+{% for key, value in device.context_overrides.items() %}
+{% if value is string and (value.startswith(',') or value.startswith("'") or ':' in value) %}
+    {{ key }}: '{{ value }}'
+{% else %}
+    {{ key }}: {{ value }}
 {% endif %}
+{% endfor %}
 {% if extra_kernel_args or tux_boot_args %}
     extra_kernel_args: '{{ extra_kernel_args}}{% if tux_boot_args %} {{ tux_boot_args }}{% endif %}'
 {% endif %}
@@ -115,15 +98,9 @@ actions:
 {% endif %}
 - boot:
     method:
-{% if device.name in ['nfs-ampereone', 'nfs-ampereone-ac04', 'nfs-altra-max-ac02', 'nfs-cd8180-orion-o6'] %}
-      grub
-{% elif device.name in ['nfs-bcm2711-rpi-4-b', 'nfs-juno-r2', 'nfs-rk3399-rock-pi-4b', 'nfs-s32g399a-rdb3'] %}
-      u-boot
-{% elif device.name in ['nfs-i386', 'nfs-x86_64'] %}
-      ipxe
-{% endif %}
+      {{ device.boot_method }}
     commands: {{ "ramdisk" if is_cpio else "nfs" }}
-{% if device.name in ['nfs-i386', 'nfs-x86_64'] %}
+{% if device.boot_method == 'ipxe' %}
     parameters:
       shutdown-message: 'reboot: Restarting system'
 {% endif %}
@@ -142,7 +119,7 @@ actions:
 {% for prompt in tux_prompt %}
     - "{{ prompt }}"{% endfor %}
 
-{% if not is_cpio and device.name in ['nfs-ampereone', 'nfs-ampereone-ac04', 'nfs-altra-max-ac02', 'nfs-cd8180-orion-o6', 'nfs-juno-r2', 'nfs-i386', 'nfs-x86_64'] %}
+{% if not is_cpio and device.needs_storage_prep %}
 - test:
     timeout:
       minutes: 5
@@ -155,11 +132,7 @@ actions:
           description: "Device preparation"
         run:
           steps:
-{% if device.name in ['nfs-ampereone', 'nfs-ampereone-ac04', 'nfs-altra-max-ac02', 'nfs-cd8180-orion-o6'] %}
-          - export STORAGE_DEV=/dev/nvme0n1p2
-{% else %}
-          - export STORAGE_DEV=$(lava-target-storage SATA || lava-target-storage USB)
-{% endif %}
+          - export STORAGE_DEV={{ device.storage_device }}
           - mkfs.ext4 -F "$STORAGE_DEV" || lava-test-raise "mkfs.ext4 $STORAGE_DEV failed; job exit"
           - mkdir -p /scratch && mount "$STORAGE_DEV" /scratch || lava-test-raise "mount $STORAGE_DEV failed; job exit"
           - df -h
