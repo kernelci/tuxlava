@@ -39,6 +39,30 @@ class FastbootDevice(Device):
 
     enable_network: bool = True
 
+    boot_method: str = "fastboot"
+    boot_docker_local: bool = False
+
+    # Image names for deploy sections: 'rootfs', 'userdata', or 'super'
+    downloads_image_name: str = "rootfs"
+    fastboot_image_name: str = "rootfs"
+
+    supports_bios: bool = False
+    supports_ramdisk: bool = False
+    needs_partition_flash: bool = False
+    needs_boot_img: bool = True
+    needs_boot_img_reboot: bool = False
+    needs_vendor_boot: bool = False
+
+    pre_boot_commands: List[str] = []
+    post_boot_commands: List[str] = []
+    boot_commands: List[str] = []
+    erase_commands: List[str] = []
+
+    extra_prompts: List[str] = []
+
+    needs_storage_prep: bool = False
+    storage_device: str = "$(lava-target-storage SATA || lava-target-storage USB)"
+
     def validate(
         self,
         bios,
@@ -65,17 +89,11 @@ class FastbootDevice(Device):
                 f"Invalid option(s) for fastboot devices: {', '.join(sorted(invalid_args))}"
             )
 
-        if bios and self.name not in [
-            "fastboot-dragonboard-845c",
-            "fastboot-qrb5165-rb5",
-        ]:
+        if bios and not self.supports_bios:
             raise InvalidArgument(
                 "argument --bios is only valid for 'fastboot-dragonboard-845c' and 'fastboot-qrb5165-rb5' device"
             )
-        if ramdisk and self.name not in [
-            "fastboot-dragonboard-845c",
-            "fastboot-qrb5165-rb5",
-        ]:
+        if ramdisk and not self.supports_ramdisk:
             raise InvalidArgument(
                 "argument --ramdisk is only valid for 'fastboot-dragonboard-845c' and 'fastboot-qrb5165-rb5' device"
             )
@@ -186,6 +204,11 @@ class FastbootE850_96(FastbootDevice):
     kernel = "https://storage.tuxboot.com/buildroot/arm64/Image"
     rootfs = "https://storage.tuxboot.com/debian/20250326/trixie/arm64/rootfs.tar.xz"
 
+    downloads_image_name = "userdata"
+    fastboot_image_name = "userdata"
+    pre_boot_commands = ["pre_power_command"]
+    post_boot_commands = ["pre_os_command"]
+
 
 class FastbootDragonboard_410c(FastbootDevice):
     name = "fastboot-dragonboard-410c"
@@ -195,6 +218,8 @@ class FastbootDragonboard_410c(FastbootDevice):
 
     kernel = "https://storage.tuxboot.com/buildroot/arm64/Image"
     rootfs = "https://storage.tuxboot.com/debian/20250326/trixie/arm64/rootfs.tar.xz"
+
+    pre_boot_commands = ["pre_os_command", "pre_power_command"]
 
 
 class FastbootDragonboard_845c(FastbootDevice):
@@ -207,6 +232,14 @@ class FastbootDragonboard_845c(FastbootDevice):
     rootfs = "https://storage.tuxboot.com/debian/20250326/trixie/arm64/rootfs.tar.xz"
     bios = "https://images.validation.linaro.org/snapshots.linaro.org/96boards/dragonboard845c/linaro/rescue/28/dragonboard-845c-bootloader-ufs-linux-28/gpt_both0.bin"
     ramdisk = "https://snapshots.linaro.org/member-builds/qcomlt/boards/qcom-armv8a/openembedded/master/56008/rpb/initramfs-rootfs-image-qcom-armv8a.rootfs-20240118001247-92260.cpio.gz"
+
+    supports_bios = True
+    supports_ramdisk = True
+    needs_partition_flash = True
+    needs_boot_img_reboot = True
+    pre_boot_commands = ["pre_os_command", "pre_power_command"]
+    boot_docker_local = True
+    extra_prompts = ["dragonboard-845c:"]
 
 
 class FastbootOEDragonboard_845c(FastbootDevice):
@@ -231,6 +264,20 @@ class FastbootX15(FastbootDevice):
     kernel = "https://storage.tuxboot.com/buildroot/arm64/Image"
     rootfs = "https://storage.tuxboot.com/debian/20250326/trixie/arm64/rootfs.tar.xz"
 
+    boot_method = "u-boot"
+    downloads_image_name = "super"
+    fastboot_image_name = "super"
+    needs_boot_img = False
+    needs_storage_prep = True
+    boot_commands = [
+        "setenv fdtfile am57xx-beagle-x15.dtb",
+        "setenv console ttyS2,115200n8",
+        "setenv mmcdev 1",
+        "part number mmc 1 super part_num",
+        "setenv bootpart 1:${part_num}",
+        "run mmcboot",
+    ]
+
 
 class FastbootGS101_Oriole(FastbootDevice):
     name = "fastboot-gs101-oriole"
@@ -241,6 +288,11 @@ class FastbootGS101_Oriole(FastbootDevice):
 
     kernel = "https://storage.tuxboot.com/buildroot/arm64/Image"
     rootfs = "https://storage.tuxboot.com/debian/20250326/trixie/arm64/rootfs.ext4.xz"
+
+    fastboot_image_name = "userdata"
+    needs_boot_img_reboot = True
+    needs_vendor_boot = True
+    erase_commands = ["dtbo"]
 
 
 class FastbootQRB5165rb5(FastbootDevice):
@@ -253,6 +305,12 @@ class FastbootQRB5165rb5(FastbootDevice):
     rootfs = "https://storage.tuxboot.com/debian/20250326/trixie/arm64/rootfs.tar.xz"
     bios = "https://images.validation.linaro.org/snapshots.linaro.org/96boards/qrb5165-rb5/linaro/rescue/27/rb5-bootloader-ufs-linux-27/gpt_both0.bin"
     ramdisk = "https://snapshots.linaro.org/member-builds/qcomlt/boards/qcom-armv8a/openembedded/master/56008/rpb/initramfs-rootfs-image-qcom-armv8a.rootfs-20240118001247-92260.cpio.gz"
+
+    supports_bios = True
+    supports_ramdisk = True
+    needs_partition_flash = True
+    needs_boot_img_reboot = True
+    pre_boot_commands = ["pre_os_command", "pre_power_command"]
 
 
 class FastbootAOSPDevice(Device):

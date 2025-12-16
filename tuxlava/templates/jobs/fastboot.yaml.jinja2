@@ -53,11 +53,11 @@ actions:
       minutes: {{ deploy_download_timeout }}
     os: {{ deploy_os|default(debian) }}
     images:
-{% if bios and device.name in ['fastboot-dragonboard-845c', 'fastboot-qrb5165-rb5'] %}
+{% if bios and device.supports_bios %}
       partition:0:
         url: "{{ bios }}"
 {% endif %}
-{% if ramdisk and device.name in ['fastboot-dragonboard-845c', 'fastboot-qrb5165-rb5'] %}
+{% if ramdisk and device.supports_ramdisk %}
       ramdisk:
         url: "{{ ramdisk }}"
 {% endif %}
@@ -79,13 +79,7 @@ actions:
         compression: {{ compression(modules[0])[1] }}
 {% endif %}
 {% endif %}
-{% if device.name == 'fastboot-e850-96' %}
-      userdata:
-{% elif device.name == 'fastboot-x15' %}
-      super:
-{% else %}
-      rootfs:
-{% endif %}
+      {{ device.downloads_image_name }}:
         url: "{{ rootfs }}"
 {% if compression(rootfs)[1] is not none %}
         compression: {{ compression(rootfs)[1] }}
@@ -95,7 +89,7 @@ actions:
 {% endif %}
 {% if overlays %}
         overlays:
-{% if tests or device.name == 'fastboot-x15' %}
+{% if tests or device.needs_storage_prep %}
           lava: true
 {% endif %}
 {% for name, overlay, dst in overlays %}
@@ -109,7 +103,7 @@ actions:
             compression: {{ compression(overlay)[1] }}
 {% endif %}
 {% endfor %}
-{% elif tests or device.name == 'fastboot-x15' %}
+{% elif tests or device.needs_storage_prep %}
         overlays:
           lava: true
 {% endif %}
@@ -128,57 +122,40 @@ actions:
       image: "{{ deploy_fastboot_docker_image|default('linaro/kir:20250728') }}"
       local: true
     images:
-{% if device.name in ['fastboot-dragonboard-845c', 'fastboot-qrb5165-rb5'] %}
+{% if device.needs_partition_flash %}
       partition:0:
         url: downloads://gpt_both0.bin
         reboot: hard-reset
-{% endif%}
-{% if device.name in ['fastboot-dragonboard-845c', 'fastboot-gs101-oriole', 'fastboot-qrb5165-rb5'] %}
-      boot:
-        url: downloads://boot.img
-        reboot: hard-reset
-{% endif%}
-{% if device.name in ['fastboot-e850-96', 'fastboot-dragonboard-410c'] %}
-      boot:
-        url: downloads://boot.img
 {% endif %}
-{% if device.name == 'fastboot-gs101-oriole' %}
+{% if device.needs_boot_img %}
+      boot:
+        url: downloads://boot.img
+{% if device.needs_boot_img_reboot %}
+        reboot: hard-reset
+{% endif %}
+{% endif %}
+{% if device.needs_vendor_boot %}
       vendor_boot:
         url: downloads://vendor_boot.img
 {% endif %}
-{% if device.name in ['fastboot-dragonboard-845c', 'fastboot-dragonboard-410c', 'fastboot-qrb5165-rb5'] %}
-      rootfs:
-{% elif device.name in ['fastboot-e850-96' , 'fastboot-gs101-oriole'] %}
-      userdata:
-{% else %}
-      super:
-{% endif %}
+      {{ device.fastboot_image_name }}:
         url: downloads://rootfs.img
 
-{% if device.name in ['fastboot-dragonboard-410c', 'fastboot-dragonboard-845c', 'fastboot-qrb5165-rb5'] %}
+{% for cmd in device.pre_boot_commands %}
 - command:
-    name: pre_os_command
-- command:
-    name: pre_power_command
-{% endif %}
-{% if device.name == 'fastboot-e850-96' %}
-- command:
-    name: pre_power_command
-{% endif %}
+    name: {{ cmd }}
+{% endfor %}
 - boot:
-{% if device.name == 'fastboot-x15' %}
+{% if device.boot_method == 'u-boot' %}
     commands:
-    - setenv fdtfile am57xx-beagle-x15.dtb
-    - setenv console ttyS2,115200n8
-    - setenv mmcdev 1
-    - part number mmc 1 super part_num
-    - setenv bootpart 1:${part_num}
-    - run mmcboot
+{% for cmd in device.boot_commands %}
+    - {{ cmd }}
+{% endfor %}
     method: u-boot
 {% else %}
     docker:
       image: "{{ boot_docker_image|default('linaro/kir:20250728') }}"
-{% if device.name == 'fastboot-dragonboard-845c' %}
+{% if device.boot_docker_local %}
       local: true
 {% endif %}
     method: fastboot
@@ -190,21 +167,23 @@ actions:
       username: root
     prompts:
     - 'root@(.*):[/~]#'
-{% if device.name == 'fastboot-dragonboard-845c' %}
-    - 'dragonboard-845c:'
-{% endif %}
+{% for prompt in device.extra_prompts %}
+    - '{{ prompt }}'
+{% endfor %}
 {% for prompt in tux_prompt %}
     - "{{ prompt }}"{% endfor %}
-{% if device.name == 'fastboot-e850-96' %}
-- command:
-    name: pre_os_command
-{% endif %}
-{% if device.name == 'fastboot-gs101-oriole' %}
+{% if device.erase_commands %}
     commands:
-      - erase dtbo
+{% for cmd in device.erase_commands %}
+      - erase {{ cmd }}
+{% endfor %}
 {% endif %}
+{% for cmd in device.post_boot_commands %}
+- command:
+    name: {{ cmd }}
+{% endfor %}
 
-{% if device.name == 'fastboot-x15' %}
+{% if device.needs_storage_prep %}
 - test:
     timeout:
       minutes: 5
@@ -217,7 +196,7 @@ actions:
           description: "Mount local disk for tmp space"
         run:
           steps:
-          - export STORAGE_DEV=$(lava-target-storage SATA || lava-target-storage USB)
+          - export STORAGE_DEV={{ device.storage_device }}
           - test -n "${STORAGE_DEV}" || lava-test-raise "STORAGE_DEV not found; job exit"
           - echo "y" | mkfs.ext4 ${STORAGE_DEV} || lava-test-raise "mkfs.ext4 ${STORAGE_DEV} failed; job exit"
           - mkdir -p /scratch
