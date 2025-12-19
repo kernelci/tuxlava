@@ -3,23 +3,23 @@
 ## Source code
 
 The TuxLAVA source code is available in the
-[tuxlava gitlab repository](https://gitlab.com/Linaro/tuxlava). To clone the
+[tuxlava GitHub repository](https://github.com/kernelci/tuxlava). To clone the
 repository, run:
 
 ```console
-git clone git@gitlab.com:Linaro/tuxlava.git
+git clone git@github.com:kernelci/tuxlava.git
 ```
 
-or if you don't (want to) have a gitlab account:
+or if you don't (want to) have a GitHub account:
 
 ```console
-git clone https://gitlab.com/Linaro/tuxlava.git
+git clone https://github.com/kernelci/tuxlava.git
 ```
 
 ## Issue tracker
 
-The TuxLAVA issue tracker is also on Gitlab:
-<https://gitlab.com/Linaro/tuxlava/-/issues>.
+The TuxLAVA issue tracker is also on GitHub:
+<https://github.com/kernelci/tuxlava/issues>.
 
 ## Development dependencies
 
@@ -91,12 +91,12 @@ primary authorship of a single author.
 
 ## Sending your contributions.
 
-Contributions should be sent as merge requests on the GitLab repository. When
-creating a merge request, please check that the pipeline ran and passed the
+Contributions should be sent as pull requests on the GitHub repository. When
+creating a pull request, please check that the pipeline ran and passed the
 Continuous Integration (CI). This ensures your changes are properly tested and
 helps maintain the quality of the codebase.
 
 If that's too high of a barrier for you to send your patches, you can also send
-them by email to `tuxsuite@linaro.org`. However, we really prefer merge requests
-because the GitLab Continuous Integration will run all the tests against your
+them by email to `tuxsuite@linaro.org`. However, we really prefer pull requests
+because the GitHub CI will run all the tests against your
 changes, and that makes it a lot easier for us to evaluate your contribution.
