@@ -7,7 +7,7 @@ site_description: |
   LAVA jobs for devices of type avh, fastboot, fvp, nfs, qemu, and ssh. TuxLAVA
   has a standard list of devices that are supported along with tests that
   could be run on these devices.
-repo_url: https://gitlab.com/Linaro/tuxlava/
+repo_url: https://github.com/kernelci/tuxlava/
 
 theme:
   name: material
