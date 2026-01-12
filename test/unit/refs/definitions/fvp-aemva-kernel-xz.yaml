@@ -40,7 +40,7 @@ actions:
 - boot:
     method: fvp
     docker:
-      name: "docker.io/shrinkwraptool/base-slim:latest"
+      name: "docker.io/shrinkwraptool/base-slim:2025.12.0"
       local: false
       container_name: "tuxlava-ci"
     image: "/tools/Base_RevC_AEMvA_pkg/models/Linux64_GCC-9.3/FVP_Base_RevC-2xAEMvA"
