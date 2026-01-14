@@ -23,7 +23,13 @@ automation.
 TuxLAVA is a part of [TuxSuite](https://tuxsuite.com), a suite of
 tools and services to help with Linux kernel development.
 
-[[_TOC_]]
+## Table of Contents
+
+- [Installing TuxLAVA](#installing-tuxlava)
+- [Examples](#examples)
+- [Using TuxLAVA as a command line](#using-tuxlava-as-a-command-line)
+- [Using TuxLAVA as a library](#using-tuxlava-as-a-library)
+- [Contributing](#contributing)
 
 # Installing TuxLAVA
 
