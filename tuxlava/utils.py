@@ -11,7 +11,6 @@ import re
 from pathlib import Path
 from urllib.parse import urlparse
 
-
 COMPRESSIONS = {
     ".tar.xz": ("tar", "xz"),
     ".tar.gz": ("tar", "gz"),

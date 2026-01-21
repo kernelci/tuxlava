@@ -76,13 +76,11 @@ class TestDeviceDictLoading:
 
     def test_device_dict_unknown_variable_raises_error(self, tmp_path):
         bad_config = tmp_path / "bad-config.jinja2"
-        bad_config.write_text(
-            """{# Bad config with unknown variable #}
+        bad_config.write_text("""{# Bad config with unknown variable #}
 {% set boot_method = 'grub' %}
 {% set unknown_variable = 'should fail' %}
 {% set connection_command = 'telnet localhost 2000' %}
-"""
-        )
+""")
 
         job = Job(
             device="nfs-cd8180-orion-o6",
