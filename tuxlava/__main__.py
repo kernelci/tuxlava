@@ -14,7 +14,6 @@ from tuxlava.jobs import Job
 from tuxlava.exceptions import TuxLavaException
 from tuxlava.argparse import setup_parser
 
-
 LOG = logging.getLogger("tuxlava")
 
 
