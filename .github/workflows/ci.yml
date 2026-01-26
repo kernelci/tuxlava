@@ -133,6 +133,16 @@ jobs:
           docker build -t ${{ env.REGISTRY }}/${{ github.repository }}:ci-archlinux -f Dockerfile.ci-archlinux .
           docker push ${{ env.REGISTRY }}/${{ github.repository }}:ci-archlinux
 
+  tuxpkg:
+    needs: [ci-image-debian, ci-image-fedora, ci-image-archlinux]
+    uses: Linaro/tuxpkg/.github/workflows/tuxpkg.yml@main
+    with:
+      tuxpkg_project: tuxlava
+      ci_image_debian: ghcr.io/${{ github.repository }}:ci-debian
+      ci_image_fedora: ghcr.io/${{ github.repository }}:ci-fedora
+      ci_image_archlinux: ghcr.io/${{ github.repository }}:ci-archlinux
+    secrets: inherit
+
   build-wheel:
     runs-on: ubuntu-latest
     steps:
