@@ -7,6 +7,9 @@ on:
   pull_request:
     branches: [main, master]
 
+env:
+  REGISTRY: ghcr.io
+
 jobs:
   stylecheck:
     runs-on: ubuntu-latest
@@ -75,6 +78,60 @@ jobs:
         run: pip install docker
       - name: Validate LAVA definitions
         run: make lava-validate
+
+  ci-image-debian:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Log in to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and push Debian image
+        run: |
+          docker build -t ${{ env.REGISTRY }}/${{ github.repository }}:ci-debian -f Dockerfile.ci-debian .
+          docker push ${{ env.REGISTRY }}/${{ github.repository }}:ci-debian
+
+  ci-image-fedora:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Log in to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and push Fedora image
+        run: |
+          docker build -t ${{ env.REGISTRY }}/${{ github.repository }}:ci-fedora -f Dockerfile.ci-fedora .
+          docker push ${{ env.REGISTRY }}/${{ github.repository }}:ci-fedora
+
+  ci-image-archlinux:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Log in to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and push Arch Linux image
+        run: |
+          docker build -t ${{ env.REGISTRY }}/${{ github.repository }}:ci-archlinux -f Dockerfile.ci-archlinux .
+          docker push ${{ env.REGISTRY }}/${{ github.repository }}:ci-archlinux
 
   build-wheel:
     runs-on: ubuntu-latest
