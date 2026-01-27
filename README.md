@@ -36,6 +36,7 @@ tools and services to help with Linux kernel development.
 - [From PyPI](docs/install-pypi.md)
 - [Debian packages](docs/install-deb.md)
 - [RPM packages](docs/install-rpm.md)
+- [ArchLinux packages](docs/install-arch.md)
 - [Run uninstalled](docs/run-uninstalled.md)
 
 # Examples
