@@ -175,7 +175,10 @@ jobs:
       ci_image_debian: ghcr.io/${{ github.repository }}:ci-debian
       ci_image_fedora: ghcr.io/${{ github.repository }}:ci-fedora
       ci_image_archlinux: ghcr.io/${{ github.repository }}:ci-archlinux
-    secrets: inherit
+    secrets:
+      TUXPKG_RELEASE_KEY: ${{ secrets.TUXPKG_RELEASE_KEY }}
+      TUXPKG_RELEASE_KEYID: ${{ secrets.TUXPKG_RELEASE_KEYID }}
+      FLIT_PASSWORD: ${{ secrets.FLIT_PASSWORD }}
 
   build-wheel:
     runs-on: ubuntu-latest
