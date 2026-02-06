@@ -73,6 +73,7 @@ class Device:
         d_dict_config: Optional[Dict[str, Any]] = None,
         d_dict_defaults: Optional[Dict[str, str]] = None,
     ) -> str:
+        context = context or {}
         if hasattr(self, "test_character_delay") and self.test_character_delay:
             context["test_character_delay"] = self.test_character_delay
 
@@ -97,6 +98,8 @@ import tuxlava.devices.avh  # noqa: E402
 import tuxlava.devices.fastboot  # noqa: E402
 import tuxlava.devices.fvp  # noqa: E402
 import tuxlava.devices.nfs  # noqa: E402,F401
+import tuxlava.devices.nfs_grub  # noqa: E402,F401
+import tuxlava.devices.nfs_uboot  # noqa: E402,F401
 import tuxlava.devices.qemu  # noqa: E402,F401
 import tuxlava.devices.ssh  # noqa: E402,F401
 import tuxlava.devices.flasher  # noqa: E402,F401
