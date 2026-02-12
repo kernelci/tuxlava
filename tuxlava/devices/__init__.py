@@ -73,6 +73,7 @@ class Device:
         d_dict_config: Optional[Dict[str, Any]] = None,
         d_dict_defaults: Optional[Dict[str, str]] = None,
     ) -> str:
+        context = context or {}
         if hasattr(self, "test_character_delay") and self.test_character_delay:
             context["test_character_delay"] = self.test_character_delay
 
