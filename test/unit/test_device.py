@@ -3183,7 +3183,7 @@ def test_definition(monkeypatch, mocker, capsys, tmpdir, artefacts, args, filena
                 "--rootfs",
                 "https://example.com/rootfs.tar.xz",
             ],
-            "argument --modules should be a .tar.gz, tar.xz or .tgz",
+            "argument --modules should be a .tar.gz, .tar.xz or .tgz",
         ),
         (
             [
@@ -3308,7 +3308,7 @@ def test_definition(monkeypatch, mocker, capsys, tmpdir, artefacts, args, filena
                 "--rootfs",
                 "https://example.com/rootfs.tar.xz",
             ],
-            "argument --modules should be a .tar.gz, tar.xz or .tgz",
+            "argument --modules should be a .tar.gz, .tar.xz or .tgz",
         ),
         (
             [
