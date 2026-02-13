@@ -167,7 +167,7 @@ class NfsDevice(Device):
             d_dict_config,
             d_dict_defaults={
                 "connection_command": "telnet localhost 2000",
-                "boot_method": "u-boot",
+                "boot_method": self.boot_method,
             },
         )
 
