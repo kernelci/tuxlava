@@ -1,0 +1,18 @@
+{# device-dict config for generic NFS grub x86_64 board #}
+
+{% set boot_method = 'grub' %}
+
+{% set connection_command = 'telnet localhost 2020' %}
+
+{% set hard_reset_command = 'pduclient --command reboot' %}
+
+{% set power_on_command = 'pduclient --command on' %}
+
+{% set power_off_command = 'pduclient --command off' %}
+
+{% set console_device = 'ttyS0' %}
+{% set extra_kernel_args = 'earlycon loglevel=6' %}
+
+{% set docker_shell_extra_arguments = [
+    '--add-host=lava-worker.internal:host-gateway',
+] %}
