@@ -5,7 +5,21 @@
 available_architectures:
 - arm64
 - arm
+- riscv64
+- ppc64le
+- i386
+- x86_64
 {% endblock available_architectures %}
+
+{% block deploy_parameters %}
+{% if boot_method != 'grub' %}
+    parameters:
+      add_header: u-boot
+      mkimage_arch: {{ arch|default('arm64') }}
+      append_dtb: False
+      use_xip: False
+{% endif %}
+{% endblock deploy_parameters %}
 
 {% block deploy_connections_extra %}
 {# device-dict mode doesn't use LXC #}

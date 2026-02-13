@@ -1,0 +1,35 @@
+{# device-dict config for generic NFS u-boot arm64 board #}
+
+{% set boot_method = 'u-boot' %}
+
+{% set connection_command = 'telnet localhost 2020' %}
+
+{% set hard_reset_command = [
+    'laacli usb 2 off',
+    'laacli usb 3 off',
+    'sleep 2',
+    'laacli usb 3 on',
+    'laacli usb 2 on'
+] %}
+
+{% set power_on_command = [
+    'laacli usb 3 on',
+    'laacli usb 2 on'
+] %}
+
+{% set power_off_command = [
+    'laacli usb 2 off',
+    'laacli usb 3 off'
+] %}
+
+{% set booti_kernel_addr = '0x80000000' %}
+{% set booti_ramdisk_addr = '0x85000000' %}
+{% set booti_dtb_addr = '0x86000000' %}
+{% set console_device = 'ttyLP0' %}
+{% set extra_kernel_args = 'earlycon loglevel=6' %}
+
+{% set docker_shell_extra_arguments = [
+    '--add-host=lava-worker.internal:host-gateway',
+    '--volume=/usr/bin/laacli:/usr/bin/laacli:ro',
+    '--volume=/run/dbus/system_bus_socket:/run/dbus/system_bus_socket:rw',
+] %}

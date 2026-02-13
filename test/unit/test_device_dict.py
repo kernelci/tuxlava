@@ -113,6 +113,8 @@ class TestDeviceDictConfigs:
             ("bcm2711-rpi-4-b.jinja2", "nfs-bcm2711-rpi-4-b", "u-boot"),
             ("juno-r2.jinja2", "nfs-juno-r2", "u-boot"),
             ("s32g399a-rdb3.jinja2", "nfs-s32g399a-rdb3", "u-boot"),
+            ("nfs-uboot-arm64.jinja2", "nfs-uboot-arm64", "u-boot"),
+            ("nfs-grub-x86-64.jinja2", "nfs-grub-x86-64", "grub"),
             ("dragonboard-410c.jinja2", "fastboot-dragonboard-410c", "fastboot"),
             ("dragonboard-845c.jinja2", "fastboot-dragonboard-845c", "fastboot"),
             ("gs101-oriole.jinja2", "fastboot-gs101-oriole", "fastboot"),
@@ -202,6 +204,114 @@ class TestDeviceDictRendering:
         result = device.device_dict(context, d_dict_config)
 
         assert "connect: telnet localhost 2000" in result
+
+    def test_nfs_uboot_generic_device_dict_deploy_parameters(self):
+        device = Device.select("nfs-uboot-arm64")()
+        context = {"arch": "arm64"}
+        d_dict_config = {
+            "boot_method": "u-boot",
+            "connection_command": "telnet localhost 2020",
+            "hard_reset_command": "pduclient --command reboot",
+            "power_off_command": "pduclient --command off",
+            "power_on_command": "pduclient --command on",
+            "booti_kernel_addr": "0x80000000",
+            "booti_ramdisk_addr": "0x85000000",
+            "booti_dtb_addr": "0x86000000",
+            "console_device": "ttyLP0",
+            "extra_kernel_args": "earlycon loglevel=6",
+            "docker_shell_extra_arguments": [],
+        }
+
+        result = device.device_dict(context, d_dict_config)
+        parsed = yaml.load(result, Loader=yaml.SafeLoader)
+
+        deploy_params = parsed["actions"]["deploy"]["parameters"]
+        assert deploy_params["add_header"] == "u-boot"
+        assert deploy_params["mkimage_arch"] == "arm64"
+
+        boot_params = parsed["parameters"]["booti"]
+        assert boot_params["kernel"] == "0x80000000"
+        assert boot_params["ramdisk"] == "0x85000000"
+        assert boot_params["dtb"] == "0x86000000"
+
+    def test_nfs_grub_generic_device_dict_no_deploy_parameters(self):
+        device = Device.select("nfs-grub-arm64")()
+        context = {"arch": "arm64"}
+        d_dict_config = {
+            "boot_method": "grub",
+            "connection_command": "telnet localhost 2020",
+            "hard_reset_command": "pduclient --command reboot",
+            "power_off_command": "pduclient --command off",
+            "power_on_command": "pduclient --command on",
+            "docker_shell_extra_arguments": [],
+        }
+
+        result = device.device_dict(context, d_dict_config)
+        parsed = yaml.load(result, Loader=yaml.SafeLoader)
+
+        deploy = parsed["actions"]["deploy"]
+        assert "parameters" not in deploy
+
+    def test_nfs_grub_x86_64_device_dict_rendering(self):
+        device = Device.select("nfs-grub-x86-64")()
+        context = {"arch": "x86_64"}
+        d_dict_config = {
+            "boot_method": "grub",
+            "connection_command": "telnet localhost 2020",
+            "hard_reset_command": "pduclient --command reboot",
+            "power_off_command": "pduclient --command off",
+            "power_on_command": "pduclient --command on",
+            "console_device": "ttyS0",
+            "extra_kernel_args": "earlycon loglevel=6",
+            "docker_shell_extra_arguments": [],
+        }
+
+        result = device.device_dict(context, d_dict_config)
+        parsed = yaml.load(result, Loader=yaml.SafeLoader)
+
+        deploy = parsed["actions"]["deploy"]
+        assert "parameters" not in deploy
+
+        grub = parsed["actions"]["boot"]["methods"]["grub"]
+        nfs_cmds = grub["nfs"]["commands"]
+        assert any("console=ttyS0" in cmd for cmd in nfs_cmds)
+        assert any("earlycon loglevel=6" in cmd for cmd in nfs_cmds)
+
+
+class TestNfsBootloaderDeviceSelection:
+
+    @pytest.mark.parametrize(
+        "name,boot_method,arch",
+        [
+            ("nfs-uboot-arm64", "u-boot", "arm64"),
+            ("nfs-uboot-riscv64", "u-boot", "riscv64"),
+            ("nfs-uboot-ppc64le", "u-boot", "ppc64le"),
+            ("nfs-uboot-i386", "u-boot", "i386"),
+            ("nfs-uboot-x86-64", "u-boot", "x86_64"),
+            ("nfs-grub-arm64", "grub", "arm64"),
+            ("nfs-grub-riscv64", "grub", "riscv64"),
+            ("nfs-grub-ppc64le", "grub", "ppc64le"),
+            ("nfs-grub-i386", "grub", "i386"),
+            ("nfs-grub-x86-64", "grub", "x86_64"),
+        ],
+    )
+    def test_select_nfs_bootloader_device(self, name, boot_method, arch):
+        cls = Device.select(name)
+        device = cls()
+        assert device.boot_method == boot_method
+        assert device.arch == arch
+
+    def test_abstract_nfs_bootloader_not_selectable(self):
+        with pytest.raises(InvalidArgument):
+            Device.select("nfs-bootloader")
+
+    def test_abstract_nfs_uboot_not_selectable(self):
+        with pytest.raises(InvalidArgument):
+            Device.select("nfs-uboot")
+
+    def test_abstract_nfs_grub_not_selectable(self):
+        with pytest.raises(InvalidArgument):
+            Device.select("nfs-grub")
 
 
 @pytest.mark.parametrize(
