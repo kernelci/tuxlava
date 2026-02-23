@@ -231,7 +231,7 @@ class FastbootDragonboard_845c(FastbootDevice):
     kernel = "https://storage.tuxboot.com/buildroot/arm64/Image"
     rootfs = "https://storage.tuxboot.com/debian/20250326/trixie/arm64/rootfs.tar.xz"
     bios = "https://images.validation.linaro.org/snapshots.linaro.org/96boards/dragonboard845c/linaro/rescue/28/dragonboard-845c-bootloader-ufs-linux-28/gpt_both0.bin"
-    ramdisk = "https://snapshots.linaro.org/member-builds/qcomlt/boards/qcom-armv8a/openembedded/master/56008/rpb/initramfs-rootfs-image-qcom-armv8a.rootfs-20240118001247-92260.cpio.gz"
+    ramdisk = "https://images.validation.linaro.org/snapshots.linaro.org/member-builds/qcomlt/boards/qcom-armv8a/openembedded/master/56008/rpb/initramfs-rootfs-image-qcom-armv8a.rootfs-20240118001247-92260.cpio.gz"
 
     supports_bios = True
     supports_ramdisk = True
@@ -304,7 +304,7 @@ class FastbootQRB5165rb5(FastbootDevice):
     kernel = "https://storage.tuxboot.com/buildroot/arm64/Image"
     rootfs = "https://storage.tuxboot.com/debian/20250326/trixie/arm64/rootfs.tar.xz"
     bios = "https://images.validation.linaro.org/snapshots.linaro.org/96boards/qrb5165-rb5/linaro/rescue/27/rb5-bootloader-ufs-linux-27/gpt_both0.bin"
-    ramdisk = "https://snapshots.linaro.org/member-builds/qcomlt/boards/qcom-armv8a/openembedded/master/56008/rpb/initramfs-rootfs-image-qcom-armv8a.rootfs-20240118001247-92260.cpio.gz"
+    ramdisk = "https://images.validation.linaro.org/snapshots.linaro.org/member-builds/qcomlt/boards/qcom-armv8a/openembedded/master/56008/rpb/initramfs-rootfs-image-qcom-armv8a.rootfs-20240118001247-92260.cpio.gz"
 
     supports_bios = True
     supports_ramdisk = True
@@ -435,4 +435,4 @@ class FastbootAOSPQRB5165rb5(FastbootAOSPDevice):
     device_type = "qrb5165-rb5"
 
     ptable = "https://images.validation.linaro.org/snapshots.linaro.org/96boards/qrb5165-rb5/linaro/rescue/27/rb5-bootloader-ufs-aosp-27/gpt_both0.bin"
-    ramdisk = "https://snapshots.linaro.org/member-builds/qcomlt/boards/qcom-armv8a/openembedded/master/56008/rpb/initramfs-rootfs-image-qcom-armv8a.rootfs-20240118001247-92260.cpio.gz"
+    ramdisk = "https://images.validation.linaro.org/snapshots.linaro.org/member-builds/qcomlt/boards/qcom-armv8a/openembedded/master/56008/rpb/initramfs-rootfs-image-qcom-armv8a.rootfs-20240118001247-92260.cpio.gz"
