@@ -86,6 +86,7 @@ class Job:
         fip: str = None,
         enable_kvm: bool = False,
         enable_trustzone: bool = False,
+        enable_cca: bool = False,
         enable_network: bool = False,
         prompt: str = None,
         ramdisk: str = None,
@@ -134,6 +135,7 @@ class Job:
         self.fip = fip
         self.enable_kvm = enable_kvm
         self.enable_trustzone = enable_trustzone
+        self.enable_cca = enable_cca
         self.enable_network = enable_network
         self.prompt = prompt
         self.ramdisk = ramdisk
@@ -367,6 +369,7 @@ class Job:
             "fip": self.fip,
             "enable_kvm": self.enable_kvm,
             "enable_trustzone": self.enable_trustzone,
+            "enable_cca": self.enable_cca,
             "enable_network": self.enable_network,
             "modules": self.modules,
             "overlays": self.overlays,

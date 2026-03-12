@@ -57,6 +57,7 @@ class AEMvAFVPDevice(FVPDevice):
         parameters,
         prompt,
         modules,
+        enable_cca,
         enable_network,
         tests,
         visibility,

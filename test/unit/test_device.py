@@ -1500,6 +1500,20 @@ def artefacts(tmp_path):
             [
                 "--device",
                 "fvp-aemva",
+                "--bl1",
+                "tf-bl1.bin",
+                "--fip",
+                "fip.bin",
+                "--rootfs",
+                "https://example.com/rootfs.ext4.zst",
+                "--enable-cca",
+            ],
+            "fvp-aemva-enable-cca.yaml",
+        ),
+        (
+            [
+                "--device",
+                "fvp-aemva",
                 "--prompt",
                 "root@tuxlava",
             ],
