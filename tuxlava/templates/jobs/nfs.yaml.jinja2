@@ -117,7 +117,8 @@ actions:
     - 'root@(.*):[/~]#'
     - '/ #'
 {% for prompt in tux_prompt %}
-    - "{{ prompt }}"{% endfor %}
+    - "{{ prompt }}"
+{%- endfor -%}
 
 {% if not is_cpio and device.needs_storage_prep %}
 - test:
