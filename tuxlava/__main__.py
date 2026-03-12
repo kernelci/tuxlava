@@ -75,6 +75,7 @@ def main() -> int:
             secrets=options.secrets,
             modules=options.modules,
             overlays=options.overlays,
+            pflash=options.pflash,
             parameters=options.parameters,
             deploy_os=options.deploy_os,
             tuxbuild=options.tuxbuild,

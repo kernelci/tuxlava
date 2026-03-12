@@ -43,6 +43,7 @@ actions:
       minutes: {{ deploy_timeout }}
     os: oe
     images:
+{% if not enable_cca %}
       kernel:
         image_arg: '-kernel {kernel} -append "console={{ console }},115200 rootwait {% if not is_cpio %}root={{ rootfs_dev }}{% if rootfs_partition is not none %}{{ rootfs_partition + 1 }}{% endif %} {% endif %}debug verbose console_msg_format=syslog systemd.log_level=warning{% if tux_boot_args %} {{ tux_boot_args }}{% endif %} earlycon"{% if shared %} -virtfs local,path={{ shared.0 }},mount_tag=tuxlava,security_model=mapped{% endif %}'
         url: "{{ kernel }}"
@@ -53,10 +54,23 @@ actions:
         headers:
            "Authorization": "{{ secrets.values()|list|first }}"
 {% endif %}
+{% endif %}
 {% if bios %}
       bios:
         image_arg: "-bios {bios}"
         url: "{{ bios }}"
+{% endif %}
+{% if pflash|length > 0 %}
+{% for pf in pflash %}
+      pflash{{ loop.index0 }}:
+        image_arg: "-drive file={pflash{{ loop.index0 }}},format=raw,if=pflash"
+        url: "{{ pf }}"
+{% endfor %}
+{% endif %}
+{% if enable_cca %}
+      bootdisk:
+        image_arg: "-drive file={bootdisk},format=raw"
+        url: "file://{{ tmpdir }}/boot.img"
 {% endif %}
 {% if dtb %}
       dtb:

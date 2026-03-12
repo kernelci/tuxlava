@@ -6,8 +6,13 @@
 #
 # SPDX-License-Identifier: MIT
 
+import gzip
 import platform
+import shutil
+import subprocess
+from pathlib import Path
 from typing import Any, Dict, List, Optional
+from urllib.parse import urlparse
 
 from tuxlava import templates
 from tuxlava.devices import Device
@@ -50,6 +55,7 @@ class QemuDevice(Device):
         kernel,
         modules,
         overlays,
+        pflash,
         parameters,
         rootfs_partition,
         prompt,
@@ -175,9 +181,12 @@ class QemuArm64(QemuDevice):
     kernel = "https://storage.tuxboot.com/buildroot/arm64/Image"
     rootfs = "https://storage.tuxboot.com/buildroot/arm64/rootfs.ext4.zst"
 
-    def validate(self, enable_kvm, enable_trustzone, **kwargs):
+    def validate(self, enable_kvm, enable_trustzone, enable_cca, kernel, **kwargs):
         super().validate(
-            enable_kvm=enable_kvm, enable_trustzone=enable_trustzone, **kwargs
+            enable_kvm=enable_kvm,
+            enable_trustzone=enable_trustzone,
+            kernel=kernel,
+            **kwargs,
         )
 
         if enable_kvm and platform.machine() == "aarch64":
@@ -186,6 +195,48 @@ class QemuArm64(QemuDevice):
 
         if enable_trustzone:
             self.machine = f"{self.machine},secure=on"
+
+        if enable_cca:
+            kernel_url = notnone(kernel, self.kernel)
+            if urlparse(kernel_url).scheme != "file":
+                raise InvalidArgument(
+                    "argument --enable-cca requires --kernel to be a local file"
+                )
+            self.machine = "sbsa-ref"
+            self.cpu = "max,x-rme=on,sme=off,pauth-impdef=on"
+
+    def extra_assets(self, tmpdir, kernel, enable_cca, tux_boot_args, **kwargs):
+        # sbsa-ref has no -kernel; EDK2 loads the kernel from a FAT
+        # disk via startup.nsh in the UEFI shell.
+        if not enable_cca:
+            return []
+
+        kernel_path = Path(urlparse(notnone(kernel, self.kernel)).path)
+        boot_dir = tmpdir / "boot"
+        boot_dir.mkdir(exist_ok=True)
+
+        image = boot_dir / "Image"
+        if compression(kernel_path.name)[1] == "gz":
+            with gzip.open(kernel_path, "rb") as f_in, open(image, "wb") as f_out:
+                shutil.copyfileobj(f_in, f_out)
+        else:
+            shutil.copy2(kernel_path, image)
+
+        boot_args = tux_boot_args + " " if tux_boot_args else ""
+        cmdline = f"Image root=/dev/vda {boot_args}rw console=ttyAMA0 earlycon"
+        startup = boot_dir / "startup.nsh"
+        startup.write_text(cmdline, encoding="utf-8")
+
+        fat_img = tmpdir / "boot.img"
+        with open(fat_img, "wb") as f:
+            f.truncate(image.stat().st_size + 4 * 1024 * 1024)
+        subprocess.run(["mformat", "-i", str(fat_img), "::"], check=True)
+        subprocess.run(
+            ["mcopy", "-i", str(fat_img), str(image), str(startup), "::"],
+            check=True,
+        )
+
+        return [f"file://{fat_img}"]
 
     def arch_customization(self, kwargs):
         """
