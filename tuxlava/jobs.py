@@ -110,6 +110,7 @@ class Job:
         secrets: Dict[str, Any] = {},
         modules: str = None,
         overlays: List[str] = [],
+        pflash: List[str] = [],
         parameters: Dict[str, str] = {},
         deploy_os: str = "debian",
         tuxbuild: str = None,
@@ -159,6 +160,7 @@ class Job:
         self.secrets = secrets
         self.modules = modules
         self.overlays = overlays
+        self.pflash = pflash
         self.parameters = parameters
         self.deploy_os = deploy_os
         self.tuxbuild = tuxbuild
@@ -374,6 +376,7 @@ class Job:
             "enable_network": self.enable_network,
             "modules": self.modules,
             "overlays": self.overlays,
+            "pflash": self.pflash,
             "prompt": self.prompt,
             "ramdisk": self.ramdisk,
             "rootfs": self.rootfs,
