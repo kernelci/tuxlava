@@ -110,4 +110,5 @@ actions:
     - 'root@qcom-armv8a:'
 {% endif %}
 {% for prompt in tux_prompt %}
-    - "{{ prompt }}"{% endfor %}
+    - "{{ prompt }}"
+{%- endfor -%}

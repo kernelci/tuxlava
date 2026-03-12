@@ -249,4 +249,5 @@ actions:
     - 'root@(.*):[/~]#'
     - '/ #'
 {% for prompt in tux_prompt %}
-    - "{{ prompt }}"{% endfor %}
+    - "{{ prompt }}"
+{%- endfor -%}
