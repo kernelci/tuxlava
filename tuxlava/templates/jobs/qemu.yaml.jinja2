@@ -58,6 +58,11 @@ actions:
         image_arg: "-bios {bios}"
         url: "{{ bios }}"
 {% endif %}
+{% if uboot %}
+      uboot:
+        image_arg: "-bios {uboot}"
+        url: "{{ uboot }}"
+{% endif %}
 {% if dtb %}
       dtb:
         image_arg: "-dtb {dtb}"

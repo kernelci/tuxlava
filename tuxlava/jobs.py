@@ -103,6 +103,7 @@ class Job:
         tests: List[str] = [],
         timeouts: Dict[str, int] = {},
         tux_prompt: str = None,
+        uboot: str = None,
         uefi: str = None,
         boot_args: str = None,
         secrets: Dict[str, Any] = {},
@@ -151,6 +152,7 @@ class Job:
         self.tests = tests
         self.timeouts = timeouts
         self.tux_prompt = tux_prompt
+        self.uboot = uboot
         self.uefi = uefi
         self.boot_args = boot_args
         self.secrets = secrets
@@ -390,6 +392,7 @@ class Job:
             "tux_boot_args": self.tux_boot_args,
             "tux_prompt": self.prompt,
             "parameters": self.parameters,
+            "uboot": self.uboot,
             "uefi": self.uefi,
             "boot_args": self.boot_args,
             "secrets": self.secrets,

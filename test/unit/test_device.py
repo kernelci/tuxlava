@@ -2221,6 +2221,17 @@ def artefacts(tmp_path):
         (
             [
                 "--device",
+                "qemu-arm64",
+                "--kernel",
+                "https://example.com/Image",
+                "--uboot",
+                "https://example.com/u-boot.bin",
+            ],
+            "qemu-arm64-uboot.yaml",
+        ),
+        (
+            [
+                "--device",
                 "nfs-altra-max-ac02",
                 "--kernel",
                 "https://example.com/Image.gz",
@@ -3247,6 +3258,30 @@ def test_definition(monkeypatch, mocker, capsys, tmpdir, artefacts, args, filena
                 "https://example.com/bios.img",
             ],
             "argument --bios is only valid for 'fastboot-dragonboard-845c' and 'fastboot-qrb5165-rb5' device",
+        ),
+        (
+            [
+                "--device",
+                "qemu-x86_64",
+                "--kernel",
+                "https://example.com/bzImage",
+                "--uboot",
+                "https://example.com/u-boot.bin",
+            ],
+            "argument --uboot is only valid for qemu-arm64, qemu-armv5 and qemu-armv7 device",
+        ),
+        (
+            [
+                "--device",
+                "qemu-arm64",
+                "--kernel",
+                "https://example.com/Image",
+                "--bios",
+                "https://example.com/bios",
+                "--uboot",
+                "https://example.com/u-boot.bin",
+            ],
+            "arguments --uboot and --bios are mutually exclusive",
         ),
         (
             [

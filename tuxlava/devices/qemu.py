@@ -34,6 +34,7 @@ class QemuDevice(Device):
 
     dtb: Optional[str] = None
     bios: Optional[str] = None
+    uboot: Optional[str] = None
     kernel: Optional[str] = None
     rootfs: Optional[str] = None
     enable_kvm: bool = False
@@ -58,6 +59,7 @@ class QemuDevice(Device):
         enable_trustzone,
         enable_network,
         tests,
+        uboot,
         visibility,
         **kwargs,
     ):
@@ -72,6 +74,16 @@ class QemuDevice(Device):
             raise InvalidArgument(
                 "argument --bios is only valid for qemu-riscv32, qemu-riscv64 and qemu-arm64 device"
             )
+        if uboot and self.name not in [
+            "qemu-arm64",
+            "qemu-armv5",
+            "qemu-armv7",
+        ]:
+            raise InvalidArgument(
+                "argument --uboot is only valid for qemu-arm64, qemu-armv5 and qemu-armv7 device"
+            )
+        if uboot and bios:
+            raise InvalidArgument("arguments --uboot and --bios are mutually exclusive")
         if boot_args and '"' in boot_args:
             raise InvalidArgument('argument --boot-args should not contains "')
         if prompt and '"' in prompt:
@@ -91,6 +103,7 @@ class QemuDevice(Device):
         options.dtb = notnone(options.dtb, self.dtb)
         options.kernel = notnone(options.kernel, self.kernel)
         options.rootfs = notnone(options.rootfs, self.rootfs)
+        options.uboot = notnone(options.uboot, self.uboot)
 
     def arch_customization(self, kwargs):
         pass
