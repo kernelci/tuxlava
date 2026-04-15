@@ -104,11 +104,10 @@ class QemuDevice(Device):
     def definition(self, **kwargs):
         kwargs = kwargs.copy()
 
-        # Options that can *not* be updated
         kwargs["arch"] = self.arch
         kwargs["lava_arch"] = self.lava_arch
-        kwargs["machine"] = self.machine
-        kwargs["cpu"] = self.cpu
+        kwargs["machine"] = kwargs.get("parameters", {}).get("machine", self.machine)
+        kwargs["cpu"] = kwargs.get("parameters", {}).get("cpu", self.cpu)
         kwargs["memory"] = self.memory
         kwargs["extra_options"] = self.extra_options.copy()
         kwargs["console"] = self.console
