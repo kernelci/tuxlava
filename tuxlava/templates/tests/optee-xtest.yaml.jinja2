@@ -1,0 +1,15 @@
+- test:
+    timeout:
+      minutes: {{ timeout }}
+    definitions:
+    - repository: {{ test_definitions }}
+{%if device.redirect_to_kmsg %}
+      lava-signal: kmsg
+{% endif %}
+      from: url
+      compression: zstd
+      path: automated/linux/optee/optee-xtest.yaml
+      parameters:
+        TEST_LEVEL: '{{ parameters.get("LEVEL", "0") }}'
+        TEST_SUITE: '{{ parameters.get("TEST_SUITE", "regression") }}'
+      name: {{ name }}

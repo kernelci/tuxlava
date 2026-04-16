@@ -1,0 +1,66 @@
+device_type: "qemu"
+
+job_name: "tuxlava@qemu-arm64: optee-xtest"
+priority: low
+visibility: "public"
+
+context:
+    arch: "arm64"
+    machine: "virt,secure=on"
+    cpu: "cortex-a57"
+    memory: "4G"
+    extra_options: ["-no-reboot", "-smp 2"]
+    no_kvm: true
+    no_network: true
+timeouts:
+  job:
+    minutes: 60
+  action:
+   minutes: 5
+  actions:
+    power-off:
+      seconds: 30
+
+actions:
+- deploy:
+    to: tmpfs
+    timeout:
+      minutes: 15
+    os: oe
+    images:
+      kernel:
+        image_arg: '-kernel {kernel} -append "console=ttyAMA0,115200 rootwait root=/dev/vda debug verbose console_msg_format=syslog systemd.log_level=warning earlycon"'
+        url: "https://example.com/Image"
+      bios:
+        image_arg: "-bios {bios}"
+        url: "https://example.com/Bios"
+      rootfs:
+        image_arg: "-drive file={rootfs},format=raw,id=hd0,if=virtio"
+        url: "https://storage.tuxboot.com/buildroot/arm64/rootfs.ext4.zst"
+        compression: zstd
+        format: ext4
+        overlays:
+          lava: true
+- boot:
+    method: qemu
+    timeout:
+      minutes: 15
+    auto_login:
+      login_prompt: 'login:'
+      username: root
+    prompts:
+    - 'root@(.*):[/~]#'
+    - '/ #'
+- test:
+    timeout:
+      minutes: 30
+    definitions:
+    - repository: https://github.com/Linaro/test-definitions/releases/download/2025.10.01/2025.10.tar.zst
+      lava-signal: kmsg
+      from: url
+      compression: zstd
+      path: automated/linux/optee/optee-xtest.yaml
+      parameters:
+        TEST_LEVEL: '0'
+        TEST_SUITE: 'regression'
+      name: optee-xtest

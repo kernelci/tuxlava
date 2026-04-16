@@ -102,6 +102,23 @@ def artefacts(tmp_path):
             [
                 "--device",
                 "qemu-arm64",
+                "--enable-trustzone",
+                "--parameters",
+                "machine=virt,secure=on",
+                "cpu=cortex-a57",
+                "--bios",
+                "https://example.com/Bios",
+                "--kernel",
+                "https://example.com/Image",
+                "--tests",
+                "optee-xtest",
+            ],
+            "qemu-arm64-optee-xtest.yaml",
+        ),
+        (
+            [
+                "--device",
+                "qemu-arm64",
                 "--tests",
                 "kselftest-arm64",
             ],
