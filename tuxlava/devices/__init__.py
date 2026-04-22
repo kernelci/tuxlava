@@ -96,6 +96,7 @@ class Device:
 
 import tuxlava.devices.avh  # noqa: E402
 import tuxlava.devices.fastboot  # noqa: E402
+import tuxlava.devices.fastboot_generic  # noqa: E402,F401
 import tuxlava.devices.fvp  # noqa: E402
 import tuxlava.devices.nfs  # noqa: E402,F401
 import tuxlava.devices.nfs_bootloader  # noqa: E402,F401
