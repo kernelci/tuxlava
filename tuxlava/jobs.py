@@ -86,6 +86,7 @@ class Job:
         fip: str = None,
         enable_kvm: bool = False,
         enable_trustzone: bool = False,
+        enable_cca: bool = False,
         enable_network: bool = False,
         prompt: str = None,
         ramdisk: str = None,
@@ -108,6 +109,7 @@ class Job:
         secrets: Dict[str, Any] = {},
         modules: str = None,
         overlays: List[str] = [],
+        pflash: List[str] = [],
         parameters: Dict[str, str] = {},
         deploy_os: str = "debian",
         tuxbuild: str = None,
@@ -134,6 +136,7 @@ class Job:
         self.fip = fip
         self.enable_kvm = enable_kvm
         self.enable_trustzone = enable_trustzone
+        self.enable_cca = enable_cca
         self.enable_network = enable_network
         self.prompt = prompt
         self.ramdisk = ramdisk
@@ -156,6 +159,7 @@ class Job:
         self.secrets = secrets
         self.modules = modules
         self.overlays = overlays
+        self.pflash = pflash
         self.parameters = parameters
         self.deploy_os = deploy_os
         self.tuxbuild = tuxbuild
@@ -367,9 +371,11 @@ class Job:
             "fip": self.fip,
             "enable_kvm": self.enable_kvm,
             "enable_trustzone": self.enable_trustzone,
+            "enable_cca": self.enable_cca,
             "enable_network": self.enable_network,
             "modules": self.modules,
             "overlays": self.overlays,
+            "pflash": self.pflash,
             "prompt": self.prompt,
             "ramdisk": self.ramdisk,
             "rootfs": self.rootfs,

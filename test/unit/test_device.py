@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import gzip
 import json
 import os
 import yaml
@@ -1495,6 +1496,20 @@ def artefacts(tmp_path):
                 "https://example.com/rootfs.ext4.zst",
             ],
             "fvp-aemva.yaml",
+        ),
+        (
+            [
+                "--device",
+                "fvp-aemva",
+                "--bl1",
+                "tf-bl1.bin",
+                "--fip",
+                "fip.bin",
+                "--rootfs",
+                "https://example.com/rootfs.ext4.zst",
+                "--enable-cca",
+            ],
+            "fvp-aemva-enable-cca.yaml",
         ),
         (
             [
@@ -3487,6 +3502,16 @@ def test_definition(monkeypatch, mocker, capsys, tmpdir, artefacts, args, filena
         (
             [
                 "--device",
+                "qemu-arm64",
+                "--enable-cca",
+                "--kernel",
+                "https://example.com/Image",
+            ],
+            "argument --enable-cca requires --kernel to be a local file",
+        ),
+        (
+            [
+                "--device",
                 "flasher-debian-qcs6490-rb3gen2-core-kit",
                 "--tests",
                 "smoke",
@@ -3504,6 +3529,57 @@ def test_failures(monkeypatch, mocker, capsys, tmpdir, args, error_str):
         main()
     _, error = capsys.readouterr()
     assert error_str in error
+
+
+def test_qemu_arm64_extra_assets(tmpdir, mocker):
+    device = Device.select("qemu-arm64")()
+    tmp = Path(tmpdir)
+
+    # 1/ enable_cca=False is a no-op
+    asset = device.extra_assets(
+        tmpdir=tmp, kernel=None, enable_cca=False, tux_boot_args=""
+    )
+    assert asset == []
+
+    # 2/ enable_cca=True builds a FAT boot image
+    kernel_file = tmp / "Image"
+    kernel_file.write_bytes(b"kernel")
+    mocker.patch("subprocess.run")
+
+    asset = device.extra_assets(
+        tmpdir=tmp,
+        kernel=f"file://{kernel_file}",
+        enable_cca=True,
+        tux_boot_args="",
+    )
+    assert asset == [f"file://{tmp / 'boot.img'}"]
+    assert (tmp / "boot" / "Image").read_bytes() == b"kernel"
+    assert (tmp / "boot" / "startup.nsh").read_text(encoding="utf-8") == (
+        "Image root=/dev/vda rw console=ttyAMA0 earlycon"
+    )
+
+    # 3/ tux_boot_args is appended to the kernel cmdline
+    asset = device.extra_assets(
+        tmpdir=tmp,
+        kernel=f"file://{kernel_file}",
+        enable_cca=True,
+        tux_boot_args="debug",
+    )
+    assert (tmp / "boot" / "startup.nsh").read_text(encoding="utf-8") == (
+        "Image root=/dev/vda debug rw console=ttyAMA0 earlycon"
+    )
+
+    # 4/ gzipped kernel is decompressed
+    gz_file = tmp / "Image.gz"
+    with gzip.open(gz_file, "wb") as f:
+        f.write(b"unzipped")
+    asset = device.extra_assets(
+        tmpdir=tmp,
+        kernel=f"file://{gz_file}",
+        enable_cca=True,
+        tux_boot_args="",
+    )
+    assert (tmp / "boot" / "Image").read_bytes() == b"unzipped"
 
 
 def test_fvp_aemva_extra_assets(tmpdir):

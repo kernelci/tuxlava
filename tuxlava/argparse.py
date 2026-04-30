@@ -353,6 +353,22 @@ def setup_parser() -> argparse.ArgumentParser:
     )
 
     group.add_argument(
+        "--enable-cca",
+        default=False,
+        action="store_true",
+        help="Enable Arm CCA (Confidential Computing Architecture) with RME support on FVP or QEMU",
+    )
+    group.add_argument(
+        "--pflash",
+        default=[],
+        metavar="URL",
+        type=pathurlnone,
+        help="pflash image URL. Can be specified multiple times",
+        action="append",
+        dest="pflash",
+    )
+
+    group.add_argument(
         "--enable-network",
         default=False,
         action="store_true",
