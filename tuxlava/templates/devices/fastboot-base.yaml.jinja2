@@ -41,6 +41,10 @@ actions:
 {% endblock boot_methods %}
 {% endblock actions_boot %}
 
+{% block actions_test %}
+{# overridden by device-dict template to render docker shell options #}
+{% endblock actions_test %}
+
 {% block device_dict_config %}
 {# device-dict config - empty for standard #}
 {% endblock device_dict_config %}
