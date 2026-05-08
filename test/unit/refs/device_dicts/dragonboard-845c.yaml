@@ -111,6 +111,7 @@ actions:
       serial:
     methods:
       fastboot:
+        - reboot
       minimal:
 
 
