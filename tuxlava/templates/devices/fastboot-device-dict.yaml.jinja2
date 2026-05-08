@@ -1,6 +1,10 @@
 {# Fastboot device with device-dict config #}
 {% extends 'fastboot-base.yaml.jinja2' %}
 
+{% set fastboot_auto_detection = fastboot_auto_detection|default(false) %}
+{% set adb_serial_number = adb_serial_number|default('0000000000') %}
+{% set fastboot_serial_number = fastboot_serial_number|default('0000000000') %}
+
 {% block available_architectures %}
 available_architectures:
 - arm64
@@ -45,11 +49,10 @@ available_architectures:
 environment: {{ environment }}
 {% endif %}
 
-{% if fastboot_serial_number %}
-adb_serial_number: "{{ adb_serial_number|default(fastboot_serial_number) }}"
+adb_serial_number: "{{ adb_serial_number }}"
 fastboot_serial_number: "{{ fastboot_serial_number }}"
 fastboot_options: {{ fastboot_options|default([]) }}
-{% endif %}
+fastboot_auto_detection: {{ fastboot_auto_detection }}
 {% endblock device_dict_config %}
 
 {% block commands %}
