@@ -101,6 +101,7 @@ actions:
   deploy:
     connections:
       serial:
+      fastboot:
     methods:
       fastboot:
       lxc:
