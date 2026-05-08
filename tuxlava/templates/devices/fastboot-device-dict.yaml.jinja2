@@ -27,6 +27,18 @@ available_architectures:
       minimal:
 {% endblock boot_methods %}
 
+{% block actions_test %}
+{% if docker_shell_extra_arguments %}
+  test:
+    methods:
+      docker:
+        options:
+{% for arg in docker_shell_extra_arguments %}
+          - {{ arg }}
+{% endfor %}
+{% endif %}
+{% endblock actions_test %}
+
 {% block device_dict_config %}
 
 {% if environment %}
@@ -37,10 +49,6 @@ environment: {{ environment }}
 adb_serial_number: "{{ adb_serial_number|default(fastboot_serial_number) }}"
 fastboot_serial_number: "{{ fastboot_serial_number }}"
 fastboot_options: {{ fastboot_options|default([]) }}
-{% endif %}
-
-{% if docker_shell_extra_arguments %}
-docker_shell_extra_arguments: {{ docker_shell_extra_arguments }}
 {% endif %}
 {% endblock device_dict_config %}
 
