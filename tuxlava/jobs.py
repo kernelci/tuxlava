@@ -37,6 +37,7 @@ DEVICE_DICT_VARS = {
     "docker_shell_extra_arguments",
     "environment",
     "extra_kernel_args",
+    "fastboot_auto_detection",
     "fastboot_options",
     "fastboot_serial_number",
     "grub_needs_interrupt",
