@@ -92,6 +92,8 @@ commands:
     hard_reset: ['laacli power 12v off', 'sleep 3', 'laacli power 1v8 off', 'sleep 3', 'laacli usb 1 off', 'sleep 1', 'laacli button power off', 'sleep 1', 'laacli button reset off', 'sleep 5', 'laacli power 12v on', 'sleep 3', 'laacli power 1v8 on', 'sleep 3', 'laacli usb 1 on', 'sleep 1', 'laacli button power on', 'sleep 1', 'laacli button reset on']
     power_off: ['laacli usb 1 off', 'sleep 1', 'laacli power 12v off', 'sleep 1', 'laacli power 1v8 off', 'sleep 1', 'laacli button power off', 'sleep 1', 'laacli button reset off']
     power_on: ['laacli usb 1 off', 'sleep 5', 'laacli power 1v8 on', 'sleep 3', 'laacli power 12v on', 'sleep 13', 'laacli usb 1 on', 'sleep 1', 'laacli button power on', 'sleep 1', 'laacli button reset on']
+    pre_power_command: ['laacli usb 1 off', 'sleep 5', 'laacli power 1v8 on', 'sleep 3', 'laacli power 12v on', 'sleep 5', 'laacli usb 1 on', 'sleep 1', 'laacli button power on', 'sleep 1', 'laacli button reset on']
+    pre_os_command: laacli usb 1 off
 
 available_architectures:
 - arm64
