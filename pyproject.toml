@@ -5,7 +5,7 @@ build-backend = "flit_core.buildapi"
 [project]
 name = "tuxlava"
 authors = [
-    {name = "Senthil Kumaran", email = "senthil.kumaran@linaro.org"},
+    {name = "Senthil Kumaran"},
 ]
 maintainers = [
     {name = "Anders Roxell", email = "anders.roxell@linaro.org"},
