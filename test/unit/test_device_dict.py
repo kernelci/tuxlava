@@ -314,6 +314,42 @@ class TestNfsBootloaderDeviceSelection:
             Device.select("nfs-grub")
 
 
+class TestFastbootGenericDeviceSelection:
+    @pytest.mark.parametrize(
+        "name,boot_method,arch",
+        [
+            ("fastboot-arm64", "fastboot", "arm64"),
+        ],
+    )
+    def test_select_fastboot_generic_device(self, name, boot_method, arch):
+        cls = Device.select(name)
+        device = cls()
+        assert device.boot_method == boot_method
+        assert device.arch == arch
+
+    def test_abstract_fastboot_generic_not_selectable(self):
+        with pytest.raises(InvalidArgument):
+            Device.select("fastboot-generic")
+
+    def test_fastboot_generic_device_dict_rendering(self):
+        device = Device.select("fastboot-arm64")()
+        context = {"arch": "arm64"}
+        d_dict_config = {
+            "boot_method": "fastboot",
+            "connection_command": "telnet localhost 2020",
+            "hard_reset_command": "pduclient --command reboot",
+            "power_off_command": "pduclient --command off",
+            "power_on_command": "pduclient --command on",
+            "docker_shell_extra_arguments": [],
+        }
+
+        result = device.device_dict(context, d_dict_config)
+        parsed = yaml.load(result, Loader=yaml.SafeLoader)
+
+        assert "fastboot" in parsed["actions"]["boot"]["methods"]
+        assert "fastboot" in parsed["actions"]["deploy"]["methods"]
+
+
 @pytest.mark.parametrize(
     "device,config_file,ref_file",
     [
