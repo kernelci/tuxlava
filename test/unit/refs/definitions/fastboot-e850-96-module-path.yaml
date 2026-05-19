@@ -80,6 +80,7 @@ actions:
       username: root
     prompts:
     - 'root@(.*):[/~]#'
+    - '/ #'
 - command:
     name: pre_os_command
 

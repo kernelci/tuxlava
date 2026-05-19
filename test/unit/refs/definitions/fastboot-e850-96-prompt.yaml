@@ -74,6 +74,7 @@ actions:
       username: root
     prompts:
     - 'root@(.*):[/~]#'
+    - '/ #'
     - "my-test-prompt #"
 - command:
     name: pre_os_command

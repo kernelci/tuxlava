@@ -167,6 +167,7 @@ actions:
       username: root
     prompts:
     - 'root@(.*):[/~]#'
+    - '/ #'
 {% for prompt in device.extra_prompts %}
     - '{{ prompt }}'
 {% endfor %}
