@@ -118,7 +118,7 @@ actions:
     - '/ #'
 {% for prompt in tux_prompt %}
     - "{{ prompt }}"
-{%- endfor -%}
+{% endfor %}
 
 {% if not is_cpio and device.needs_storage_prep %}
 - test:

@@ -46,3 +46,4 @@ actions:
     prompts:
     - 'root@(.*):[/~]#'
     - '/ #'
+

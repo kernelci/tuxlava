@@ -2604,6 +2604,24 @@ def artefacts(tmp_path):
         (
             [
                 "--device",
+                "fastboot-e850-96",
+                "--kernel",
+                "https://example.com/Image.gz",
+                "--modules",
+                "https://example.com/modules.tar.xz",
+                "/usr/",
+                "--rootfs",
+                "https://example.com/rootfs.tar.xz",
+                "--dtb",
+                "https://example.com/dtbs/exynos/exynos850-e850-96.dtb",
+                "--prompt",
+                "my-test-prompt #",
+            ],
+            "fastboot-e850-96-prompt.yaml",
+        ),
+        (
+            [
+                "--device",
                 "fastboot-dragonboard-410c",
                 "--kernel",
                 "https://example.com/Image.gz",

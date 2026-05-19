@@ -1,0 +1,80 @@
+device_type: "e850-96"
+
+job_name: "tuxlava@fastboot-e850-96: boot"
+priority: low
+visibility: "public"
+
+reboot_to_fastboot: false
+
+
+context:
+    test_character_delay: 10
+timeouts:
+  job:
+    minutes: 80
+  connection:
+    minutes: 2
+  actions:
+    power-off:
+      seconds: 60
+    finalize:
+      seconds: 120
+
+actions:
+- deploy:
+    to: downloads
+    timeout:
+      minutes: 25
+    os: debian
+    images:
+      kernel:
+        url: "https://example.com/Image.gz"
+        compression: gz
+        type: image
+      dtb:
+        url: "https://example.com/dtbs/exynos/exynos850-e850-96.dtb"
+      modules:
+        url: "https://example.com/modules.tar.xz"
+        path: /usr/
+        compression: xz
+      userdata:
+        url: "https://example.com/rootfs.tar.xz"
+        compression: xz
+        format: tar
+    postprocess:
+      docker:
+        image: "linaro/kir:20260511"
+        local: true
+        steps:
+        - /kir/lava/board_setup.sh e850-96 rootfs "/usr/"
+- deploy:
+    to: fastboot
+    os: debian
+    timeout:
+      minutes: 30
+    docker:
+      image: "linaro/kir:20260511"
+      local: true
+    images:
+      boot:
+        url: downloads://boot.img
+      userdata:
+        url: downloads://rootfs.img
+
+- command:
+    name: pre_power_command
+- boot:
+    docker:
+      image: "linaro/kir:20260511"
+    method: fastboot
+    timeout:
+      minutes: 25
+    auto_login:
+      login_prompt: 'login:'
+      username: root
+    prompts:
+    - 'root@(.*):[/~]#'
+    - "my-test-prompt #"
+- command:
+    name: pre_os_command
+

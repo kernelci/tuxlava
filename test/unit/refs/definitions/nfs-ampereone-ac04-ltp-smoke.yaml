@@ -55,6 +55,7 @@ actions:
     prompts:
     - 'root@(.*):[/~]#'
     - '/ #'
+
 - test:
     timeout:
       minutes: 5

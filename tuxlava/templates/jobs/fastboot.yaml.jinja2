@@ -172,7 +172,7 @@ actions:
 {% endfor %}
 {% for prompt in tux_prompt %}
     - "{{ prompt }}"
-{%- endfor -%}
+{% endfor %}
 {% if device.erase_commands %}
     commands:
 {% for cmd in device.erase_commands %}
