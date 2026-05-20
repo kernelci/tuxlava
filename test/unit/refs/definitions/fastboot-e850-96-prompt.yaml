@@ -43,7 +43,7 @@ actions:
         format: tar
     postprocess:
       docker:
-        image: "linaro/kir:20260511"
+        image: "linaro/kir:20260520"
         local: true
         steps:
         - /kir/lava/board_setup.sh e850-96 rootfs "/usr/"
@@ -53,7 +53,7 @@ actions:
     timeout:
       minutes: 30
     docker:
-      image: "linaro/kir:20260511"
+      image: "linaro/kir:20260520"
       local: true
     images:
       boot:
@@ -65,7 +65,7 @@ actions:
     name: pre_power_command
 - boot:
     docker:
-      image: "linaro/kir:20260511"
+      image: "linaro/kir:20260520"
     method: fastboot
     timeout:
       minutes: 25
