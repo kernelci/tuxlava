@@ -205,9 +205,7 @@ class QemuArm64(QemuDevice):
                     "argument --enable-cca requires --kernel to be a local file"
                 )
             if not pflash:
-                raise InvalidArgument(
-                    "argument --enable-cca requires --pflash"
-                )
+                raise InvalidArgument("argument --enable-cca requires --pflash")
             self.machine = "sbsa-ref"
             self.cpu = "max,x-rme=on,sme=off,pauth-impdef=on"
             return
