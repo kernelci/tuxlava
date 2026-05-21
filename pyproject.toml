@@ -26,3 +26,6 @@ Homepage = "https://tuxlava.org/"
 
 [project.scripts]
 tuxlava = "tuxlava.__main__:main"
+
+[tool.flit.sdist]
+include = ["test/"]
