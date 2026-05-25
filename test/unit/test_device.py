@@ -1158,6 +1158,18 @@ def artefacts(tmp_path):
                 "--device",
                 "qemu-armv7",
                 "--tests",
+                "kselftest-ipc",
+                "--parameters",
+                "KSELFTEST=https://example.com/kselftest.tar.xz",
+                "KSELFTEST_PATH=/custom/kselftests",
+            ],
+            "qemu-armv7-kselftest-ipc-install-path.yaml",
+        ),
+        (
+            [
+                "--device",
+                "qemu-armv7",
+                "--tests",
                 "ltp-fs_perms_simple",
                 "--tests",
                 "ltp-fsx",

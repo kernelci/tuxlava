@@ -20,6 +20,7 @@ class KSelfTest(Test):
     ]
     cmdfile: str = ""
     need_test_definition = True
+    install_path = "/opt/kselftests/default-in-kernel"
 
     def render(self, **kwargs):
         kwargs["name"] = self.name
@@ -27,6 +28,10 @@ class KSelfTest(Test):
         kwargs["cmdfile"] = (
             self.cmdfile if self.cmdfile else self.name.replace("kselftest-", "")
         )
+
+        kselftest_path = kwargs["parameters"].get("KSELFTEST_PATH", self.install_path)
+        kselftest_path = kselftest_path.rstrip("/")
+        kwargs["kselftest_path"] = kselftest_path
 
         if "CPUPOWER" in kwargs["parameters"]:
             kwargs["overlays"].insert(
@@ -38,7 +43,7 @@ class KSelfTest(Test):
                 (
                     "kselftest",
                     kwargs["parameters"]["KSELFTEST"],
-                    "/opt/kselftests/default-in-kernel/",
+                    kselftest_path + "/",
                 ),
             )
 

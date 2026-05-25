@@ -12,7 +12,7 @@
       parameters:
         SKIP_INSTALL: 'true'
         TST_CMDFILES: "{{ cmdfile }}"
-        KSELFTEST_PATH: "/opt/kselftests/default-in-kernel"
+        KSELFTEST_PATH: "{{ kselftest_path }}"
         SKIPFILE: "{{ parameters.get("SKIPFILE", "skipfile-lkft.yaml") }}"
         ENVIRONMENT: "production"
         SHARD_NUMBER: {{ parameters.get("SHARD_NUMBER", 1) }}
