@@ -13,5 +13,5 @@
       parameters:
         SKIP_INSTALL: True
         VDSOTESTALL: 'all'
-        VDSO_INSTALL_PATH: '/opt/vdsotest'
+        VDSO_INSTALL_PATH: '{{ parameters.get("VDSO_INSTALL_PATH", "/opt/vdsotest") }}'
 
