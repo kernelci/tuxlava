@@ -14,8 +14,8 @@
         TST_CMDFILES: '{{ cmdfile|default(name) }}'
         SKIPFILE: '{{ parameters.get("SKIPFILE", "/tuxtest/skipfiles/" + arch + "/" + name) }}'
         ENVIRONMENT: 'production'
-        LTP_TMPDIR: '/scratch'
-        LTP_INSTALL_PATH: '/opt/ltp/'
+        LTP_TMPDIR: '{{ parameters.get("LTP_TMPDIR", "/scratch") }}'
+        LTP_INSTALL_PATH: '{{ parameters.get("LTP_INSTALL_PATH", "/opt/ltp/") }}'
         SHARD_NUMBER: {{ parameters.get("SHARD_NUMBER", 1) }}
         SHARD_INDEX: {{ parameters.get("SHARD_INDEX", 1) }}
 {% if parameters.get("RUNNER") %}
