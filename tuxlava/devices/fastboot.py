@@ -13,6 +13,8 @@ from tuxlava.devices import Device
 from tuxlava.exceptions import InvalidArgument
 from tuxlava.utils import compression, notnone, slugify
 
+KIR_IMAGE = "linaro/kir:20260520"
+
 
 class FastbootDevice(Device):
     arch: str = ""
@@ -62,6 +64,10 @@ class FastbootDevice(Device):
 
     needs_storage_prep: bool = False
     storage_device: str = "$(lava-target-storage SATA || lava-target-storage USB)"
+
+    deploy_docker_image: str = KIR_IMAGE
+    deploy_fastboot_docker_image: str = KIR_IMAGE
+    boot_docker_image: str = KIR_IMAGE
 
     def validate(
         self,
@@ -121,6 +127,9 @@ class FastbootDevice(Device):
         kwargs["arch"] = self.arch
         kwargs["lava_arch"] = self.lava_arch
         kwargs["extra_options"] = self.extra_options.copy()
+        kwargs["deploy_docker_image"] = self.deploy_docker_image
+        kwargs["deploy_fastboot_docker_image"] = self.deploy_fastboot_docker_image
+        kwargs["boot_docker_image"] = self.boot_docker_image
 
         # Options that can be updated
         kwargs["bios"] = notnone(kwargs.get("bios"), self.bios)
