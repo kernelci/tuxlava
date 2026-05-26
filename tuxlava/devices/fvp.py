@@ -219,6 +219,20 @@ class MorelloFVPDevice(FVPDevice):
         if self.rootfs:
             options.rootfs = notnone(options.rootfs, self.rootfs)
 
+    # The smc91x test needs the SMSC ethernet controller; everything
+    # else uses virtio-net.
+    _smc91x_network_args = [
+        "-C board.smsc_91c111.enabled=true",
+        "-C board.hostbridge.userNetworking=true",
+        '-C board.hostbridge.userNetPorts="5555=5555"',
+    ]
+    _virtio_network_args = [
+        "-C board.virtio_net.enabled=true",
+        "-C board.virtio_net.hostbridge.userNetworking=true",
+        '-C board.virtio_net.hostbridge.userNetPorts="5555=5555"',
+        "-C board.virtio_net.transport=legacy",
+    ]
+
     def definition(self, **kwargs):
         kwargs = kwargs.copy()
 
@@ -228,6 +242,10 @@ class MorelloFVPDevice(FVPDevice):
         kwargs["kernel_start_message"] = self.kernel_start_message
         kwargs["support_tests"] = self.support_tests
         kwargs["boot_timeout"] = kwargs["timeouts"].get("boot", self.boot_timeout)
+        if any(t.name == "smc91x" for t in kwargs["tests"]):
+            kwargs["network_args"] = self._smc91x_network_args
+        else:
+            kwargs["network_args"] = self._virtio_network_args
 
         if not kwargs["timeouts"].get("deploy"):
             kwargs["deploy_timeout"] = self.deploy_timeout + (

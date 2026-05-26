@@ -82,16 +82,9 @@ actions:
     - "-C board.rtc_clk_frequency=32768"
     - "-C num_clusters=2"
     - "-C num_cores=2"
-{% if tests|selectattr("name", "equalto", "smc91x")|list() %}
-    - "-C board.smsc_91c111.enabled=true"
-    - "-C board.hostbridge.userNetworking=true"
-    - "-C board.hostbridge.userNetPorts=\"5555=5555\""
-{% else %}
-    - "-C board.virtio_net.enabled=true"
-    - "-C board.virtio_net.hostbridge.userNetworking=true"
-    - "-C board.virtio_net.hostbridge.userNetPorts=\"5555=5555\""
-    - "-C board.virtio_net.transport=legacy"
-{% endif %}
+{% for arg in network_args %}
+    - {{ arg | tojson }}
+{% endfor %}
     - "-C disable_visualisation=true"
     - "-C board.virtio_p9.root_path=/etc"
     - "-C css.trustedBootROMloader.fname={AP_ROMFW}"
