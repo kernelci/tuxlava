@@ -106,9 +106,9 @@ actions:
       username: root
     prompts:
     - 'root@(.*):[/~]#'
-{% if device.name == 'fastboot-dragonboard-845c' %}
-    - 'root@qcom-armv8a:'
-{% endif %}
+{% for prompt in device.extra_prompts %}
+    - {{ prompt | tojson }}
+{% endfor %}
 {% for prompt in tux_prompt %}
     - "{{ prompt }}"
 {% endfor %}

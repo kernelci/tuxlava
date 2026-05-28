@@ -2819,6 +2819,13 @@ def artefacts(tmp_path):
         (
             [
                 "--device",
+                "fastboot-oe-dragonboard-845c",
+            ],
+            "fastboot-oe-dragonboard-845c.yaml",
+        ),
+        (
+            [
+                "--device",
                 "fastboot-gs101-oriole",
                 "--kernel",
                 "https://example.com/Image.gz",

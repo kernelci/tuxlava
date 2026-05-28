@@ -261,6 +261,7 @@ class FastbootOEDragonboard_845c(FastbootDevice):
     rootfs = "https://storage.tuxboot.com/debian/20250326/trixie/arm64/rootfs.tar.xz"
     bios = "https://images.validation.linaro.org/snapshots.linaro.org/96boards/dragonboard845c/linaro/rescue/28/dragonboard-845c-bootloader-ufs-linux-28/gpt_both0.bin"
     template = "fastboot-oe.yaml.jinja2"
+    extra_prompts = ["root@qcom-armv8a:"]
 
 
 class FastbootX15(FastbootDevice):
