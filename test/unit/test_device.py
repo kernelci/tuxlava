@@ -1303,6 +1303,17 @@ def artefacts(tmp_path):
                 "--device",
                 "qemu-i386",
                 "--tests",
+                "vdso",
+                "--parameters",
+                "VDSO_INSTALL_PATH=/custom/vdsotest",
+            ],
+            "qemu-i386-vdso-install-path.yaml",
+        ),
+        (
+            [
+                "--device",
+                "qemu-i386",
+                "--tests",
                 "kunit",
                 "--overlay",
                 "http://example.com/overlay1.tar.xz",
