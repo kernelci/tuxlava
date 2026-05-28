@@ -1268,6 +1268,17 @@ def artefacts(tmp_path):
             "qemu-i386-libhugetlbfs.yaml",
         ),
         (
+            [
+                "--device",
+                "qemu-i386",
+                "--tests",
+                "libhugetlbfs",
+                "--parameters",
+                "LIBHUGETLBFS_PATH=/custom/libhugetlbfs",
+            ],
+            "qemu-i386-libhugetlbfs-install-path.yaml",
+        ),
+        (
             ["--device", "qemu-i386", "--tests", "perf"],
             "qemu-i386-perf.yaml",
         ),
