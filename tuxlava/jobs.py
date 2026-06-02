@@ -40,6 +40,8 @@ DEVICE_DICT_VARS = {
     "fastboot_auto_detection",
     "fastboot_options",
     "fastboot_serial_number",
+    "fastboot_sequence",
+    "flash_cmds_order",
     "grub_needs_interrupt",
     "hard_reset_command",
     "interrupt_char",

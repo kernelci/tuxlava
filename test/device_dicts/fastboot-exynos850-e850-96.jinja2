@@ -1,4 +1,7 @@
-{# device-dict config for e850-96 (fastboot) #}
+{% extends 'base-fastboot.jinja2' %}
+
+{% set fastboot_sequence = ['no-flash-boot'] %}
+{% set flash_cmds_order = flash_cmds_order|default(['super']) %}
 
 {% set boot_method = 'fastboot' %}
 
