@@ -13,7 +13,7 @@ from tuxlava.devices import Device
 from tuxlava.exceptions import InvalidArgument
 from tuxlava.utils import compression, notnone, slugify
 
-KIR_IMAGE = "linaro/kir:20260520"
+KIR_IMAGE = "linaro/kir:20260611"
 
 
 class FastbootDevice(Device):
@@ -205,7 +205,7 @@ class FastbootDevice(Device):
 
 
 class FastbootE850_96(FastbootDevice):
-    name = "fastboot-e850-96"
+    name = "fastboot-exynos850-e850-96"
 
     arch = "arm64"
     lava_arch = "arm64"

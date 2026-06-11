@@ -30,7 +30,7 @@ fastboot-aosp-dragonboard-845c  |
 fastboot-aosp-qrb5165-rb5       |
 fastboot-dragonboard-410c       |
 fastboot-dragonboard-845c       |
-fastboot-e850-96                |
+fastboot-exynos850-e850-96      |
 fastboot-oe-dragonboard-845c    |
 fastboot-x15                    |
 

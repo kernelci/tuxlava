@@ -1,6 +1,6 @@
-device_type: "e850-96"
+device_type: "exynos850-e850-96"
 
-job_name: "tuxlava@fastboot-e850-96: boot"
+job_name: "tuxlava@fastboot-exynos850-e850-96: boot"
 priority: low
 visibility: "public"
 
@@ -43,17 +43,17 @@ actions:
         format: tar
     postprocess:
       docker:
-        image: "linaro/kir:20260520"
+        image: "linaro/kir:20260611"
         local: true
         steps:
-        - /kir/lava/board_setup.sh e850-96 rootfs "/usr/"
+        - /kir/lava/board_setup.sh exynos850-e850-96 rootfs "/usr/"
 - deploy:
     to: fastboot
     os: debian
     timeout:
       minutes: 30
     docker:
-      image: "linaro/kir:20260520"
+      image: "linaro/kir:20260611"
       local: true
     images:
       boot:
@@ -65,7 +65,7 @@ actions:
     name: pre_power_command
 - boot:
     docker:
-      image: "linaro/kir:20260520"
+      image: "linaro/kir:20260611"
     method: fastboot
     timeout:
       minutes: 25

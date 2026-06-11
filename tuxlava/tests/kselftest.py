@@ -81,7 +81,7 @@ class KSelftestArm64(KSelfTest):
         "fastboot-dragonboard-410c",
         "fastboot-dragonboard-845c",
         "fastboot-gs101-oriole",
-        "fastboot-e850-96",
+        "fastboot-exynos850-e850-96",
     ]
     name = "kselftest-arm64"
     timeout = 45
@@ -103,7 +103,7 @@ class KSelftestBreakpoints(KSelfTest):
         "nfs-rk3399-rock-pi-4b",
         "fastboot-dragonboard-410c",
         "fastboot-dragonboard-845c",
-        "fastboot-e850-96",
+        "fastboot-exynos850-e850-96",
         "fastboot-x15",
     ]
     name = "kselftest-breakpoints"

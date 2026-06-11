@@ -2629,7 +2629,7 @@ def artefacts(tmp_path):
         (
             [
                 "--device",
-                "fastboot-e850-96",
+                "fastboot-exynos850-e850-96",
                 "--kernel",
                 "https://example.com/Image.gz",
                 "--modules",
@@ -2649,7 +2649,7 @@ def artefacts(tmp_path):
         (
             [
                 "--device",
-                "fastboot-e850-96",
+                "fastboot-exynos850-e850-96",
                 "--kernel",
                 "https://example.com/Image.gz",
                 "--modules",
@@ -2676,7 +2676,7 @@ def artefacts(tmp_path):
         (
             [
                 "--device",
-                "fastboot-e850-96",
+                "fastboot-exynos850-e850-96",
                 "--kernel",
                 "https://example.com/Image.gz",
                 "--modules",
