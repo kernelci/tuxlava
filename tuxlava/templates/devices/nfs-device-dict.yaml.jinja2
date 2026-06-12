@@ -87,7 +87,7 @@ available_architectures:
 {% else %}
       u-boot:
         parameters:
-          bootloader_prompt: {{ bootloader_prompt|default('=> ') }}
+          bootloader_prompt: "{{ bootloader_prompt|default('(=>|U-Boot> )') }}"
           interrupt_prompt: {{ interrupt_prompt|default('Hit any key to stop autoboot') }}
           interrupt_char: "{{ interrupt_char|default(' ') }}"
           needs_interrupt: {{ uboot_needs_interrupt|default(true) }}

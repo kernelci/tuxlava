@@ -141,6 +141,28 @@ class TestDeviceDictConfigs:
 
 class TestDeviceDictRendering:
 
+    def test_uboot_bootloader_prompt_default(self):
+        # u-boot device with no override: the default matches => and U-Boot>
+        device = Device.select("nfs-s32g399a-rdb3")()
+        result = device.device_dict(
+            {"arch": "arm64"},
+            {"boot_method": "u-boot", "connection_command": "telnet localhost 2000"},
+        )
+        assert 'bootloader_prompt: "(=>|U-Boot> )"' in result
+
+    def test_uboot_bootloader_prompt_override(self):
+        # an explicit prompt still wins over the default
+        device = Device.select("nfs-s32g399a-rdb3")()
+        result = device.device_dict(
+            {"arch": "arm64"},
+            {
+                "boot_method": "u-boot",
+                "bootloader_prompt": "myprompt# ",
+                "connection_command": "telnet localhost 2000",
+            },
+        )
+        assert 'bootloader_prompt: "myprompt# "' in result
+
     def test_nfs_device_dict_rendering_with_config(self):
         device = Device.select("nfs-cd8180-orion-o6")()
         context = {"arch": "arm64"}
