@@ -163,6 +163,19 @@ class TestDeviceDictRendering:
         )
         assert 'bootloader_prompt: "myprompt# "' in result
 
+    def test_rpi4_booti_addrs_from_device_class(self):
+        # device-dict mode gets the rpi4 boot addresses from the device class
+        # (no per-board device-dict needed), via the context_overrides merge
+        device = Device.select("nfs-bcm2711-rpi-4-b")()
+        result = device.device_dict(
+            {"arch": "arm64"},
+            {"boot_method": "u-boot", "connection_command": "telnet localhost 2000"},
+        )
+        assert "parameters:" in result
+        assert "kernel: '0x00200000'" in result
+        assert "ramdisk: '0x09900000'" in result
+        assert "dtb: '0x86000000'" in result
+
     def test_nfs_device_dict_rendering_with_config(self):
         device = Device.select("nfs-cd8180-orion-o6")()
         context = {"arch": "arm64"}

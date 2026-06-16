@@ -82,6 +82,8 @@ class Device:
 
         d_dict_context = context.copy()
         d_dict_context["d_dict_mode"] = True
+        # class overrides first so the device-dict file below can override them
+        d_dict_context.update(getattr(self, "context_overrides", {}))
         d_dict_context.update(d_dict_config)
 
         if d_dict_defaults:
