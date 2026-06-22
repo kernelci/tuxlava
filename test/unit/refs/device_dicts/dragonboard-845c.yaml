@@ -123,7 +123,6 @@ actions:
         options:
           - --add-host=lava-worker.internal:host-gateway
           - --volume=/usr/bin/laacli:/usr/bin/laacli:ro
-          - --volume=/usr/bin/lsibcli:/usr/bin/lsibcli:ro
           - --volume=/run/dbus/system_bus_socket:/run/dbus/system_bus_socket:rw
 
 
