@@ -3,6 +3,11 @@
 {% set boot_method = 'u-boot' %}
 
 {% set connection_command = 'telnet localhost 2000' %}
+{% set bootloader_prompt = 'U-Boot> ' %}
+
+{% set booti_kernel_addr = '0x00200000' %}
+{% set booti_ramdisk_addr = '0x10000000' %}
+{% set booti_dtb_addr = '0x08000000' %}
 
 {% set hard_reset_command = [
     'laacli power 3v3 off',

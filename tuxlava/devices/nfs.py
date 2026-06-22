@@ -209,8 +209,8 @@ class NfsRpi4(NfsDevice):
     context_overrides = {
         "arch": "arm64",
         "booti_kernel_addr": "0x00200000",
-        "booti_ramdisk_addr": "0x09900000",
-        "booti_dtb_addr": "0x86000000",
+        "booti_ramdisk_addr": "0x10000000",
+        "booti_dtb_addr": "0x08000000",
         "console_device": "ttyS0",
         "extra_nfsroot_args": ",vers=3",
     }

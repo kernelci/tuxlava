@@ -173,8 +173,8 @@ class TestDeviceDictRendering:
         )
         assert "parameters:" in result
         assert "kernel: '0x00200000'" in result
-        assert "ramdisk: '0x09900000'" in result
-        assert "dtb: '0x86000000'" in result
+        assert "ramdisk: '0x10000000'" in result
+        assert "dtb: '0x08000000'" in result
 
     def test_nfs_device_dict_rendering_with_config(self):
         device = Device.select("nfs-cd8180-orion-o6")()
