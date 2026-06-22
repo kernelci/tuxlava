@@ -92,7 +92,7 @@ actions:
     timeout:
       minutes: 5
     definitions:
-    - repository: https://github.com/Linaro/test-definitions/releases/download/2025.10.01/2025.10.tar.zst
+    - repository: https://github.com/Linaro/test-definitions/releases/download/2026.06.02/2026.06.tar.zst
       lava-signal: kmsg
       from: url
       compression: zstd
@@ -113,7 +113,7 @@ actions:
     timeout:
       minutes: 5
     definitions:
-    - repository: https://github.com/Linaro/test-definitions/releases/download/2025.10.01/2025.10.tar.zst
+    - repository: https://github.com/Linaro/test-definitions/releases/download/2026.06.02/2026.06.tar.zst
       lava-signal: kmsg
       from: url
       compression: zstd
@@ -134,7 +134,7 @@ actions:
     timeout:
       minutes: 5
     definitions:
-    - repository: https://github.com/Linaro/test-definitions/releases/download/2025.10.01/2025.10.tar.zst
+    - repository: https://github.com/Linaro/test-definitions/releases/download/2026.06.02/2026.06.tar.zst
       lava-signal: kmsg
       from: url
       compression: zstd
@@ -155,7 +155,7 @@ actions:
     timeout:
       minutes: 30
     definitions:
-    - repository: https://github.com/Linaro/test-definitions/releases/download/2025.10.01/2025.10.tar.zst
+    - repository: https://github.com/Linaro/test-definitions/releases/download/2026.06.02/2026.06.tar.zst
       lava-signal: kmsg
       from: url
       compression: zstd
@@ -167,7 +167,7 @@ actions:
     timeout:
       minutes: 45
     definitions:
-    - repository: https://github.com/Linaro/test-definitions/releases/download/2025.10.01/2025.10.tar.zst
+    - repository: https://github.com/Linaro/test-definitions/releases/download/2026.06.02/2026.06.tar.zst
       lava-signal: kmsg
       from: url
       compression: zstd
@@ -185,7 +185,7 @@ actions:
     timeout:
       minutes: 20
     definitions:
-    - repository: https://github.com/Linaro/test-definitions/releases/download/2025.10.01/2025.10.tar.zst
+    - repository: https://github.com/Linaro/test-definitions/releases/download/2026.06.02/2026.06.tar.zst
       lava-signal: kmsg
       from: url
       compression: zstd

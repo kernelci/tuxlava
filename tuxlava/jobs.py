@@ -21,7 +21,7 @@ from tuxlava.tests import Test
 from tuxlava.tuxmake import TuxBuildBuild, TuxMakeBuild
 from tuxlava.utils import pathurlnone
 
-TEST_DEFINITIONS = "https://github.com/Linaro/test-definitions/releases/download/2025.10.01/2025.10.tar.zst"
+TEST_DEFINITIONS = "https://github.com/Linaro/test-definitions/releases/download/2026.06.02/2026.06.tar.zst"
 
 # Supported device-dict config variables
 # Update this list when adding new variables to device-dict configs
