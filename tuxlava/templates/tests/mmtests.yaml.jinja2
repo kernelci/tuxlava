@@ -2,12 +2,12 @@
     timeout:
       minutes: {{ timeout }}
     definitions:
-    - repository: https://github.com/roxell/test-definitions.git
+    - repository: {{ test_definitions }}
 {%if device.redirect_to_kmsg %}
       lava-signal: kmsg
 {%endif%}
-      from: git
-      branch: mmtests
+      from: url
+      compression: zstd
       path: automated/linux/mmtests/mmtests.yaml
       parameters:
         SKIP_INSTALL: 'true'
