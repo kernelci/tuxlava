@@ -35,7 +35,7 @@ context:
 {% block timeouts %}
 timeouts:
   job:
-    minutes: {{ deploy_timeout + boot_timeout + tests_timeout + (device.storage_prep_timeout if not is_cpio else 0) }}
+    minutes: {{ deploy_timeout + boot_timeout + tests_timeout + device.storage_reserved_minutes(rootfs) }}
   connection:
     minutes: 2
   actions:

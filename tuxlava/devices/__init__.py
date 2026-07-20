@@ -9,6 +9,7 @@
 from typing import Any, Dict, List, Optional
 
 from tuxlava.exceptions import InvalidArgument
+from tuxlava.utils import compression
 from tuxlava import templates
 
 
@@ -31,9 +32,17 @@ class StorageDevice:
     # split evenly between the two.
     storage_timeout: int = 10
 
-    @property
-    def storage_prep_timeout(self) -> int:
-        if self.needs_storage_prep:
+    def does_storage_prep(self, rootfs) -> bool:
+        # A cpio/ramdisk boot runs from RAM, so there is no scratch disk to
+        # prep for it.
+        if not self.needs_storage_prep:
+            return False
+        rootfs_format = compression(rootfs or "")[0]
+        is_cpio = rootfs_format == "cpio.newc" or "ramdisk" in (rootfs or "").lower()
+        return not is_cpio
+
+    def storage_reserved_minutes(self, rootfs) -> int:
+        if self.does_storage_prep(rootfs):
             return self.storage_timeout
         return 0
 

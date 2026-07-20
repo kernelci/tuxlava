@@ -1,6 +1,4 @@
-{%- set rootfs_format = compression(rootfs or "")[0] -%}
-{%- set is_cpio = (rootfs_format == "cpio.newc" or "ramdisk" in (rootfs or "")|lower) -%}
-{% if not is_cpio and device.needs_storage_prep %}
+{% if device.does_storage_prep(rootfs) %}
 
 - test:
     timeout:
