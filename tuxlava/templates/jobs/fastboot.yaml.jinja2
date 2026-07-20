@@ -89,7 +89,7 @@ actions:
 {% endif %}
 {% if overlays %}
         overlays:
-{% if tests or device.needs_storage_prep %}
+{% if tests or device.does_storage_prep(rootfs) %}
           lava: true
 {% endif %}
 {% for name, overlay, dst in overlays %}
@@ -103,7 +103,7 @@ actions:
             compression: {{ compression(overlay)[1] }}
 {% endif %}
 {% endfor %}
-{% elif tests or device.needs_storage_prep %}
+{% elif tests or device.does_storage_prep(rootfs) %}
         overlays:
           lava: true
 {% endif %}

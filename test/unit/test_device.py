@@ -2975,6 +2975,19 @@ def artefacts(tmp_path):
         (
             [
                 "--device",
+                "fastboot-x15",
+                "--kernel",
+                "https://example.com/Image.gz",
+                "--rootfs",
+                "https://example.com/rootfs.cpio.gz",
+                "--dtb",
+                "https://example.com/dtbs/am57xx-beagle-x15.dtb",
+            ],
+            "fastboot-x15-cpio-rootfs.yaml",
+        ),
+        (
+            [
+                "--device",
                 "fastboot-aosp-dragonboard-845c",
                 "--parameters",
                 "LAVA_QUEUE_TIMEOUT=100",

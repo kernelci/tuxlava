@@ -1,0 +1,74 @@
+device_type: "x15"
+
+job_name: "tuxlava@fastboot-x15: boot"
+priority: low
+visibility: "public"
+
+reboot_to_fastboot: true
+
+
+context:
+    test_character_delay: 10
+timeouts:
+  job:
+    minutes: 80
+  connection:
+    minutes: 2
+  actions:
+    power-off:
+      seconds: 60
+    finalize:
+      seconds: 120
+
+actions:
+- deploy:
+    to: downloads
+    timeout:
+      minutes: 25
+    os: debian
+    images:
+      kernel:
+        url: "https://example.com/Image.gz"
+        compression: gz
+        type: image
+      dtb:
+        url: "https://example.com/dtbs/am57xx-beagle-x15.dtb"
+      super:
+        url: "https://example.com/rootfs.cpio.gz"
+        compression: gz
+        format: cpio.newc
+    postprocess:
+      docker:
+        image: "linaro/kir:20260611"
+        local: true
+        steps:
+        - /kir/lava/board_setup.sh x15 rootfs "/usr/"
+- deploy:
+    to: fastboot
+    os: debian
+    timeout:
+      minutes: 30
+    docker:
+      image: "linaro/kir:20260611"
+      local: true
+    images:
+      super:
+        url: downloads://rootfs.img
+
+- boot:
+    commands:
+    - setenv fdtfile am57xx-beagle-x15.dtb
+    - setenv console ttyS2,115200n8
+    - setenv mmcdev 1
+    - part number mmc 1 super part_num
+    - setenv bootpart 1:${part_num}
+    - run mmcboot
+    method: u-boot
+    timeout:
+      minutes: 25
+    auto_login:
+      login_prompt: 'login:'
+      username: root
+    prompts:
+    - 'root@(.*):[/~]#'
+    - '/ #'
