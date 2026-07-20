@@ -5,7 +5,19 @@ from pathlib import Path
 
 import pytest
 
-from tuxlava.utils import notnone, pathurlnone
+from tuxlava.utils import is_cpio_rootfs, notnone, pathurlnone
+
+
+def test_is_cpio_rootfs():
+    assert is_cpio_rootfs(None) is False
+    assert is_cpio_rootfs("") is False
+
+    assert is_cpio_rootfs("https://example.com/rootfs.cpio.gz") is True
+    assert is_cpio_rootfs("https://example.com/rootfs.cpio") is True
+    assert is_cpio_rootfs("https://example.com/rootfs.ext4.zst") is False
+
+    assert is_cpio_rootfs("https://example.com/ramdisk.img") is True
+    assert is_cpio_rootfs("https://example.com/ramdisk/rootfs.ext4.zst") is False
 
 
 def test_notnone():
