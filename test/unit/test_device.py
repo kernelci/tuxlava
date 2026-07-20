@@ -1582,6 +1582,19 @@ def artefacts(tmp_path):
                 "--fip",
                 "fip.bin",
                 "--rootfs",
+                "https://example.com/rootfs.cpio.gz",
+            ],
+            "fvp-aemva-cpio-rootfs.yaml",
+        ),
+        (
+            [
+                "--device",
+                "fvp-aemva",
+                "--bl1",
+                "tf-bl1.bin",
+                "--fip",
+                "fip.bin",
+                "--rootfs",
                 "https://example.com/rootfs.ext4.zst",
                 "--enable-cca",
             ],
@@ -3840,3 +3853,17 @@ def test_fvp_aemva_extra_assets(tmpdir):
     assert (tmpdir / "startup.nsh").read_text(
         encoding="utf-8"
     ) == "Image dtb=fvp-base-revc.dtb systemd.log_level=warning console=ttyAMA0 earlycon=pl011,0x1c090000 ip=dhcp initrd=http___example.com_rootfs.cpio"
+
+    # 6/ the name does not make it an initrd, only the extension does
+    asset = device.extra_assets(
+        dtb=None,
+        kernel=None,
+        rootfs="http://example.com/ramdisk.ext4.zst",
+        tmpdir=tmpdir,
+        tux_boot_args="",
+    )
+    assert len(asset) == 1
+    assert asset[0] == f"file://{tmpdir / 'startup.nsh'}"
+    assert (tmpdir / "startup.nsh").read_text(
+        encoding="utf-8"
+    ) == "Image dtb=fvp-base-revc.dtb systemd.log_level=warning console=ttyAMA0 earlycon=pl011,0x1c090000 ip=dhcp root=/dev/vda"

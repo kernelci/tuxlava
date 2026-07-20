@@ -20,6 +20,11 @@ class FVPDevice(Device):
     real_device = False
     deploy_timeout = 5
 
+    def boots_from_initrd(self, rootfs) -> bool:
+        # The deploy block sets "format" from the extension, so look at the
+        # extension here too and not at the file name.
+        return compression(rootfs or "")[0] == "cpio.newc"
+
     def device_dict(
         self, context: Dict[str, Any], d_dict_config: Optional[Dict[str, Any]] = None
     ) -> str:
@@ -145,8 +150,7 @@ class AEMvAFVPDevice(FVPDevice):
         base_cmdline = f"{kernel} dtb={dtb} {boot_args}systemd.log_level=warning console=ttyAMA0 earlycon=pl011,0x1c090000 ip=dhcp"
 
         root_dev = "root=/dev/vda"
-        if compression(rootfs_url)[0] == "cpio.newc":
-            # cpio rootfs: use initrd parameter
+        if self.boots_from_initrd(rootfs_url):
             rootfs_file = self._url_to_filename(rootfs_url)
             root_dev = f"initrd={rootfs_file}"
 
