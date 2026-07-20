@@ -11,7 +11,7 @@ from pathlib import Path
 
 import jinja2
 
-from tuxlava.utils import compression
+from tuxlava.utils import compression, is_cpio_rootfs
 
 BASE = (Path(__file__) / "..").resolve()
 
@@ -25,6 +25,7 @@ def jobs():
         undefined=jinja2.StrictUndefined,
     )
     env.globals["compression"] = compression
+    env.globals["is_cpio_rootfs"] = is_cpio_rootfs
     return env
 
 

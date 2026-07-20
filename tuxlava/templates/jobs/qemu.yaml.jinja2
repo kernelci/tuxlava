@@ -33,8 +33,7 @@ timeouts:
       seconds: 30
 {% endblock %}
 
-{%- set rootfs_format = compression(rootfs)[0] %}
-{%- set is_cpio = (rootfs_format == "cpio.newc" or "ramdisk" in rootfs|lower) %}
+{%- set is_cpio = is_cpio_rootfs(rootfs) %}
 
 actions:
 - deploy:

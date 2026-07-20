@@ -1,7 +1,7 @@
 {% set prefix_len = 'nfs-'|length -%}
 {%- set rootfs_format = compression(rootfs)[0] -%}
 {%- set is_tarball = (rootfs_format == "tar") -%}
-{%- set is_cpio = (rootfs_format == "cpio.newc" or "ramdisk" in rootfs|lower) -%}
+{%- set is_cpio = is_cpio_rootfs(rootfs) -%}
 {%- if is_cpio -%}
 {%-   set ramdisk = rootfs -%}
 {%- endif -%}

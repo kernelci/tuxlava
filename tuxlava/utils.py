@@ -40,6 +40,13 @@ def compression(path):
     return (None, None)
 
 
+def is_cpio_rootfs(rootfs):
+    # Some images do not have the cpio extension, so match "ramdisk" in
+    # the name too.
+    rootfs = rootfs or ""
+    return compression(rootfs)[0] == "cpio.newc" or "ramdisk" in rootfs.lower()
+
+
 def pathurlnone(string):
     if string is None:
         return None
