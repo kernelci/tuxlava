@@ -118,6 +118,7 @@ class Job:
         ssh_user: str = None,
         ssh_identity_file: str = None,
         tests: List[str] = [],
+        test_definitions: str = None,
         timeouts: Dict[str, int] = {},
         tux_prompt: str = None,
         uefi: str = None,
@@ -183,7 +184,7 @@ class Job:
         self.job_definition = job_definition
         self.tmpdir = tmpdir
         self.cache_dir = cache_dir
-        self.test_definitions = None
+        self.test_definitions = test_definitions
         self.extra_assets = []
         self.tux_boot_args = None
         self.visibility = visibility
@@ -347,7 +348,9 @@ class Job:
 
         # get test definitions url, when required
         if any(t.need_test_definition for t in self.tests):
-            self.test_definitions = pathurlnone(TEST_DEFINITIONS)
+            self.test_definitions = pathurlnone(
+                self.test_definitions or TEST_DEFINITIONS
+            )
 
         for _, v in self.parameters.items():
             if isinstance(v, str) and v.startswith("file://"):

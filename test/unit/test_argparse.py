@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from argparse import Namespace
+from pathlib import Path
 
 import pytest
 
@@ -24,3 +25,25 @@ def test_timeouts_parser():
 
     with pytest.raises(SystemExit):
         setup_parser().parse_args(["--timeouts", "booting=1"])
+
+
+def test_test_definitions_parser():
+    assert setup_parser().parse_args([]).test_definitions is None
+
+    url = "https://example.com/2025.01.tar.zst"
+    assert (
+        setup_parser().parse_args(["--test-definitions", url]).test_definitions == url
+    )
+
+    options = setup_parser().parse_args(["--test-definitions", __file__])
+    assert options.test_definitions == f"file://{Path(__file__).resolve()}"
+
+
+def test_test_definitions_parser_invalid(capsys):
+    with pytest.raises(SystemExit):
+        setup_parser().parse_args(["--test-definitions", "ftp://example.com/x.tar.zst"])
+    assert "Invalid scheme 'ftp'" in capsys.readouterr().err
+
+    with pytest.raises(SystemExit):
+        setup_parser().parse_args(["--test-definitions", "/nope/2025.01.tar.zst"])
+    assert "/nope/2025.01.tar.zst no such file or directory" in capsys.readouterr().err
