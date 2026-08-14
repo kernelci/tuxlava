@@ -166,6 +166,21 @@ def artefacts(tmp_path):
             [
                 "--device",
                 "qemu-arm64",
+                "--secrets",
+                "Authorization=Bearer token",
+                "--kernel",
+                "https://example.com/Image.gz",
+                "--modules",
+                "https://example.com/modules.tar.xz",
+                "--rootfs",
+                "https://storage.tuxboot.com/debian/bookworm/arm64/rootfs.ext4.xz",
+            ],
+            "qemu-arm64-secrets.yaml",
+        ),
+        (
+            [
+                "--device",
+                "qemu-arm64",
                 "--boot-args",
                 "rw",
                 "--kernel",
