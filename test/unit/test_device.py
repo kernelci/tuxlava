@@ -3313,6 +3313,17 @@ def artefacts(tmp_path):
         (
             [
                 "--device",
+                "flasher-qrb2210-rb1",
+                "--secrets",
+                "PRIVATE-TOKEN=glpat",
+                "--rootfs",
+                "http://example.com/flasher.tar.gz",
+            ],
+            "flasher-qrb2210-rb1-secrets.yaml",
+        ),
+        (
+            [
+                "--device",
                 "nfs-cd8180-orion-o6",
                 "--kernel",
                 "https://example.com/Image.gz",
