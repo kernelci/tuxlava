@@ -25,6 +25,7 @@ class NfsBootloader(NfsDevice):
         parameters,
         prompt,
         rootfs,
+        secrets,
         enable_network,
         tests,
         visibility,

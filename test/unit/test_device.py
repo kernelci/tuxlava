@@ -2454,6 +2454,35 @@ def artefacts(tmp_path):
         (
             [
                 "--device",
+                "nfs-x86_64",
+                "--secrets",
+                "Authorization=Bearer all",
+                "rootfs:Authorization=Bearer rootfs",
+                "--kernel",
+                "https://example.com/Image.gz",
+                "--rootfs",
+                "https://example.com/rootfs.tar.xz",
+                "--overlay",
+                "https://example.com/ltp.tar.xz",
+            ],
+            "nfs-x86-64-secrets.yaml",
+        ),
+        (
+            [
+                "--device",
+                "nfs-x86_64",
+                "--secrets",
+                "Authorization=Bearer all",
+                "--kernel",
+                "https://example.com/Image.gz",
+                "--rootfs",
+                "https://example.com/rootfs.cpio.gz",
+            ],
+            "nfs-x86-64-secrets-cpio.yaml",
+        ),
+        (
+            [
+                "--device",
                 "nfs-ampereone",
                 "--kernel",
                 "https://example.com/Image.gz",
