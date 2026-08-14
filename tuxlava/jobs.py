@@ -25,14 +25,22 @@ TEST_DEFINITIONS = "https://github.com/Linaro/test-definitions/releases/download
 
 # Artefacts that can carry a secret header
 SECRET_ARTEFACTS = {
+    "ap_romfw",
     "bios",
+    "bl1",
     "boot",
     "dtb",
+    "fip",
     "kernel",
+    "mcp_fw",
+    "mcp_romfw",
     "modules",
     "pflash",
     "ramdisk",
     "rootfs",
+    "scp_fw",
+    "scp_romfw",
+    "uefi",
 }
 
 # Supported device-dict config variables

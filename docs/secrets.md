@@ -41,6 +41,17 @@ The form is `<artefact>:<header>=<value>`. These artefacts are supported:
 * `rootfs`
 * the name of an overlay
 
+The fvp devices add the firmware artefacts:
+
+* `ap_romfw`
+* `bl1`
+* `fip`
+* `mcp_fw`
+* `mcp_romfw`
+* `scp_fw`
+* `scp_romfw`
+* `uefi`
+
 A key without an artefact is the fallback. When both match, the artefact
 wins:
 
@@ -71,10 +82,11 @@ Device    | Notes                                 |
 avh       | Needs `avh_api_token`, see below      |
 fastboot  | All the download urls                 |
 flasher   | The image url                         |
+fvp       | All the download urls, firmware too   |
 nfs       | All the download urls                 |
 qemu      | All the download urls                 |
 
-The `fastboot-aosp-*`, fvp and ssh devices do not take `--secrets`.
+The `fastboot-aosp-*` and ssh devices do not take `--secrets`.
 
 ## AVH
 
