@@ -2880,6 +2880,22 @@ def artefacts(tmp_path):
             [
                 "--device",
                 "fastboot-dragonboard-845c",
+                "--secrets",
+                "Authorization=Bearer all",
+                "dtb:Authorization=Bearer dtb",
+                "--kernel",
+                "https://example.com/Image.gz",
+                "--rootfs",
+                "https://example.com/rootfs.tar.xz",
+                "--dtb",
+                "https://example.com/dtbs/qcom/sdm845-db845c.dtb",
+            ],
+            "fastboot-dragonboard-845c-secrets.yaml",
+        ),
+        (
+            [
+                "--device",
+                "fastboot-dragonboard-845c",
                 "--kernel",
                 "https://example.com/Image.gz",
                 "--modules",
@@ -2955,6 +2971,18 @@ def artefacts(tmp_path):
                 "fastboot-oe-dragonboard-845c",
             ],
             "fastboot-oe-dragonboard-845c.yaml",
+        ),
+        (
+            [
+                "--device",
+                "fastboot-oe-dragonboard-845c",
+                "--secrets",
+                "Authorization=Bearer all",
+                "rootfs:Authorization=Bearer rootfs",
+                "--rootfs",
+                "https://example.com/rootfs.tar.xz",
+            ],
+            "fastboot-oe-dragonboard-845c-secrets.yaml",
         ),
         (
             [
