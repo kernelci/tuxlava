@@ -57,6 +57,7 @@ actions:
     os: {{ deploy_os|default(debian) }}
     kernel:
       url: "{{ kernel }}"
+{% if secret_headers %}{{ headers_yaml(secret_headers, "kernel", 6) }}{% endif %}
 {% if compression(kernel)[1] is not none %}
       compression: {{ compression(kernel)[1] }}
 {% endif %}
@@ -64,10 +65,12 @@ actions:
 {% if dtb %}
     dtb:
       url: "{{ dtb }}"
+{% if secret_headers %}{{ headers_yaml(secret_headers, "dtb", 6) }}{% endif %}
 {% endif %}
 {% if not is_cpio %}
     nfsrootfs:
       url: "{{ rootfs }}"
+{% if secret_headers %}{{ headers_yaml(secret_headers, "rootfs", 6) }}{% endif %}
 {% if compression(rootfs)[1] is not none %}
       compression: {{ compression(rootfs)[1] }}
 {% endif %}
@@ -80,6 +83,7 @@ actions:
         {{ name }}:
           url: "{{ overlay }}"
           path: "{{ dst }}"
+{% if secret_headers %}{{ headers_yaml(secret_headers, name, 10) }}{% endif %}
 {% if compression(overlay)[0] is not none %}
           format: {{ compression(overlay)[0] }}
 {% endif %}
@@ -92,6 +96,7 @@ actions:
 {% if ramdisk %}
     ramdisk:
       url: "{{ ramdisk }}"
+{% if secret_headers %}{{ headers_yaml(secret_headers, "rootfs" if is_cpio else "ramdisk", 6) }}{% endif %}
 {% if compression(ramdisk)[1] is not none %}
       compression: {{ compression(ramdisk)[1] }}
 {% endif %}
