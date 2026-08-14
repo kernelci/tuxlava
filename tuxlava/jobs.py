@@ -26,6 +26,7 @@ TEST_DEFINITIONS = "https://github.com/Linaro/test-definitions/releases/download
 # Artefacts that can carry a secret header
 SECRET_ARTEFACTS = {
     "bios",
+    "boot",
     "dtb",
     "kernel",
     "modules",
