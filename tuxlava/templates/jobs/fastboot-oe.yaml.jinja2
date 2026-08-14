@@ -58,10 +58,13 @@ actions:
     images:
       partition:0:
         url: "{{ bios }}"
+{% if secret_headers %}{{ headers_yaml(secret_headers, "bios", 8) }}{% endif %}
       boot:
         url: "{{ boot }}"
+{% if secret_headers %}{{ headers_yaml(secret_headers, "boot", 8) }}{% endif %}
       rootfs:
         url: "{{ rootfs }}"
+{% if secret_headers %}{{ headers_yaml(secret_headers, "rootfs", 8) }}{% endif %}
 {% if compression(rootfs)[1] is not none %}
         compression: {{ compression(rootfs)[1] }}
 {% endif %}
@@ -78,6 +81,7 @@ actions:
           {{ name }}:
             url: "{{ overlay }}"
             path: "{{ dst }}"
+{% if secret_headers %}{{ headers_yaml(secret_headers, name, 12) }}{% endif %}
 {% if compression(overlay)[0] is not none %}
             format: {{ compression(overlay)[0] }}
 {% endif %}
