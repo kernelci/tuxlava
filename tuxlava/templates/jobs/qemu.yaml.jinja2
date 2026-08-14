@@ -49,21 +49,20 @@ actions:
 {% if compression(kernel)[1] is not none %}
         compression: {{ compression(kernel)[1] }}
 {% endif %}
-{% if secrets|length > 0 and secrets.keys()|list|first is not none %}
-        headers:
-           "Authorization": "{{ secrets.values()|list|first }}"
-{% endif %}
+{% if secret_headers %}{{ headers_yaml(secret_headers, "kernel", 8) }}{% endif %}
 {% endif %}
 {% if bios %}
       bios:
         image_arg: "-bios {bios}"
         url: "{{ bios }}"
+{% if secret_headers %}{{ headers_yaml(secret_headers, "bios", 8) }}{% endif %}
 {% endif %}
 {% if pflash|length > 0 %}
 {% for pf in pflash %}
       pflash{{ loop.index0 }}:
         image_arg: "-drive file={pflash{{ loop.index0 }}},format=raw,if=pflash"
         url: "{{ pf }}"
+{% if secret_headers %}{{ headers_yaml(secret_headers, "pflash", 8) }}{% endif %}
 {% endfor %}
 {% endif %}
 {% if enable_cca %}
@@ -75,10 +74,7 @@ actions:
       dtb:
         image_arg: "-dtb {dtb}"
         url: "{{ dtb }}"
-{% if secrets|length > 0 and secrets.keys()|list|first is not none %}
-        headers:
-           "Authorization": "{{ secrets.values()|list|first }}"
-{% endif %}
+{% if secret_headers %}{{ headers_yaml(secret_headers, "dtb", 8) }}{% endif %}
 {% endif %}
       rootfs:
 {% if is_cpio %}
@@ -87,6 +83,7 @@ actions:
         image_arg: "{{ rootfs_arg }}"
 {% endif %}
         url: "{{ rootfs }}"
+{% if secret_headers %}{{ headers_yaml(secret_headers, "rootfs", 8) }}{% endif %}
 {% if compression(rootfs)[1] is not none %}
         compression: {{ compression(rootfs)[1] }}
 {% endif %}
@@ -114,12 +111,7 @@ actions:
 {% else %}
             path: "{{ dst }}{{ overlay.split('/')[-1] }}"
 {% endif %}
-{% if name == "modules" %}
-{% if secrets|length > 0 and secrets.keys()|list|first is not none %}
-            headers:
-               "Authorization": "{{ secrets.values()|list|first }}"
-{% endif %}
-{% endif %}
+{% if secret_headers %}{{ headers_yaml(secret_headers, name, 12) }}{% endif %}
 {% endfor %}
 {% elif tests %}
 {% if compression(rootfs)[0] is not none %}
