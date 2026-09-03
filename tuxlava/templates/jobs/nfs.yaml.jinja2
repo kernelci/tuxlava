@@ -59,8 +59,8 @@ actions:
       url: "{{ kernel }}"
 {% if compression(kernel)[1] is not none %}
       compression: {{ compression(kernel)[1] }}
-      type: image
 {% endif %}
+      type: {{ kernel_type(kernel) }}
 {% if dtb %}
     dtb:
       url: "{{ dtb }}"

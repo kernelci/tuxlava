@@ -40,6 +40,17 @@ def compression(path):
     return (None, None)
 
 
+def kernel_type(kernel):
+    # LAVA picks the u-boot boot command from the type: bootz for a
+    # zImage, bootm for a uImage and booti for an Image.
+    name = (kernel or "").rsplit("/", 1)[-1].lower()
+    if name.startswith("zimage"):
+        return "zimage"
+    if name.startswith("uimage"):
+        return "uimage"
+    return "image"
+
+
 def is_cpio_rootfs(rootfs):
     # Some images do not have the cpio extension, so match "ramdisk" in
     # the name too.
