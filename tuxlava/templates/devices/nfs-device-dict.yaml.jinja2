@@ -100,7 +100,7 @@ available_architectures:
           - tftp {RAMDISK_ADDR} {RAMDISK}
           - "setenv initrd_size ${filesize}"
           - tftp {DTB_ADDR} {DTB}
-          - "setenv bootargs 'console={{ console_device|default('ttyS0') }},115200 root=/dev/nfs rw nfsroot={NFS_SERVER_IP}:{NFSROOTFS},tcp,hard ip=dhcp {{ extra_kernel_args|default('') }}'"
+          - "setenv bootargs 'console={{ console_device|default('ttyS0') }},115200 root=/dev/nfs rw nfsroot={NFS_SERVER_IP}:{NFSROOTFS},tcp,hard{{ extra_nfsroot_args|default('') }} ip=dhcp {{ extra_kernel_args|default('') }}'"
           - '{BOOTX}'
         ramdisk:
           commands:

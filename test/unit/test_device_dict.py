@@ -196,6 +196,15 @@ class TestDeviceDictRendering:
         assert "ramdisk: '0x88080000'" in result
         assert "dtb: '0x88000000'" in result
 
+    def test_uboot_extra_nfsroot_args(self):
+        # grub already appended this, u-boot dropped it
+        device = Device.select("nfs-bcm2711-rpi-4-b")()
+        result = device.device_dict(
+            {"arch": "arm64"},
+            {"boot_method": "u-boot", "connection_command": "telnet localhost 2000"},
+        )
+        assert "nfsroot={NFS_SERVER_IP}:{NFSROOTFS},tcp,hard,vers=3 ip=dhcp" in result
+
     def test_nfs_device_dict_rendering_with_config(self):
         device = Device.select("nfs-cd8180-orion-o6")()
         context = {"arch": "arm64"}
