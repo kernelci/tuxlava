@@ -176,6 +176,26 @@ class TestDeviceDictRendering:
         assert "ramdisk: '0x10000000'" in result
         assert "dtb: '0x08000000'" in result
 
+    def test_uboot_bootz_addrs(self):
+        # a zImage boots with bootz, so booti addresses are not enough
+        device = Device.select("nfs-s32g399a-rdb3")()
+        result = device.device_dict(
+            {"arch": "arm"},
+            {
+                "boot_method": "u-boot",
+                "connection_command": "telnet localhost 2000",
+                "bootz_kernel_addr": "0x82000000",
+                "bootz_ramdisk_addr": "0x88080000",
+                "bootz_dtb_addr": "0x88000000",
+            },
+        )
+        assert "parameters:" in result
+        assert "  zimage:" in result
+        assert "  bootz:" in result
+        assert "kernel: '0x82000000'" in result
+        assert "ramdisk: '0x88080000'" in result
+        assert "dtb: '0x88000000'" in result
+
     def test_nfs_device_dict_rendering_with_config(self):
         device = Device.select("nfs-cd8180-orion-o6")()
         context = {"arch": "arm64"}

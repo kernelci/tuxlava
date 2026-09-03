@@ -130,8 +130,10 @@ docker_shell_extra_arguments: {{ docker_shell_extra_arguments }}
 
 {% block device_dict_parameters %}
 
-{% if booti_kernel_addr %}
+{% if booti_kernel_addr or bootz_kernel_addr %}
 parameters:
+{% endif %}
+{% if booti_kernel_addr %}
   image:
     kernel: '{{ booti_kernel_addr }}'
     ramdisk: '{{ booti_ramdisk_addr }}'
@@ -140,6 +142,16 @@ parameters:
     kernel: '{{ booti_kernel_addr }}'
     ramdisk: '{{ booti_ramdisk_addr }}'
     dtb: '{{ booti_dtb_addr }}'
+{% endif %}
+{% if bootz_kernel_addr %}
+  zimage:
+    kernel: '{{ bootz_kernel_addr }}'
+    ramdisk: '{{ bootz_ramdisk_addr }}'
+    dtb: '{{ bootz_dtb_addr }}'
+  bootz:
+    kernel: '{{ bootz_kernel_addr }}'
+    ramdisk: '{{ bootz_ramdisk_addr }}'
+    dtb: '{{ bootz_dtb_addr }}'
 {% endif %}
 {% endblock device_dict_parameters %}
 
