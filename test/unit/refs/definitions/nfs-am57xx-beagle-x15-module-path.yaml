@@ -1,0 +1,59 @@
+device_type: "am57xx-beagle-x15"
+
+job_name: "tuxlava@nfs-am57xx-beagle-x15: boot"
+priority: low
+visibility: "public"
+
+context:
+    arch: arm
+    console_device: ttyS2
+    bootz_kernel_addr: 0x82000000
+    bootz_ramdisk_addr: 0x88080000
+    bootz_dtb_addr: 0x88000000
+    extra_nfsroot_args: ',vers=3'
+    extra_kernel_args: 'rootwait'
+
+timeouts:
+  job:
+    minutes: 45
+  connection:
+    minutes: 2
+  actions:
+    power-off:
+      seconds: 60
+    finalize:
+      seconds: 60
+
+actions:
+- deploy:
+    to: tftp
+    timeout:
+      minutes: 30
+    os: debian
+    kernel:
+      url: "https://example.com/zImage"
+      type: zimage
+    dtb:
+      url: "https://example.com/am57xx-beagle-x15.dtb"
+    nfsrootfs:
+      url: "https://example.com/rootfs.tar.xz"
+      compression: xz
+      format: tar
+      overlays:
+        modules:
+          url: "https://example.com/modules.tar.xz"
+          path: "/usr/"
+          format: tar
+          compression: xz
+- boot:
+    method:
+      u-boot
+    commands: nfs
+    timeout:
+      minutes: 15
+    auto_login:
+      login_prompt: 'login:'
+      username: root
+    prompts:
+    - 'root@(.*):[/~]#'
+    - '/ #'

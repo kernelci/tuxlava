@@ -113,6 +113,7 @@ class TestDeviceDictConfigs:
             ("bcm2711-rpi-4-b.jinja2", "nfs-bcm2711-rpi-4-b", "u-boot"),
             ("juno-r2.jinja2", "nfs-juno-r2", "u-boot"),
             ("s32g399a-rdb3.jinja2", "nfs-s32g399a-rdb3", "u-boot"),
+            ("am57xx-beagle-x15.jinja2", "nfs-am57xx-beagle-x15", "u-boot"),
             ("nfs-uboot-arm64.jinja2", "nfs-uboot-arm64", "u-boot"),
             ("nfs-grub-x86-64.jinja2", "nfs-grub-x86-64", "grub"),
             ("dragonboard-410c.jinja2", "fastboot-dragonboard-410c", "fastboot"),

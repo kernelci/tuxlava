@@ -1,0 +1,39 @@
+{# device-dict config for BeagleBoard-X15 (NFS boot with U-Boot) #}
+
+{% set boot_method = 'u-boot' %}
+
+{% set connection_command = 'telnet localhost 2010' %}
+{% set bootloader_prompt = '=>' %}
+
+{# this U-Boot cannot be interrupted, LAVA waits for the prompt instead #}
+{% set uboot_needs_interrupt = false %}
+
+{% set hard_reset_command = [
+    'laacli usb 2 on',
+    'laacli power 12v off',
+    'laacli power 12v on',
+    'laacli button 1 on',
+    'laacli button 1 off'
+] %}
+
+{% set power_on_command = [
+    'laacli usb 2 on',
+    'laacli power 12v on',
+    'laacli button 1 on',
+    'laacli button 1 off'
+] %}
+
+{% set power_off_command = [
+    'laacli power 12v off'
+] %}
+
+{% set usbg_ms_commands = {
+    'disable': ['laacli', 'usbg-ms', 'off'],
+    'enable': ['laacli', 'usbg-ms', 'on', '{IMAGE}']
+} %}
+
+{% set docker_shell_extra_arguments = [
+    '--add-host=lava-worker.internal:host-gateway',
+    '--volume=/usr/bin/laacli:/usr/bin/laacli:ro',
+    '--volume=/run/dbus/system_bus_socket:/run/dbus/system_bus_socket:rw',
+] %}

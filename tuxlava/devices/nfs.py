@@ -69,13 +69,14 @@ class NfsDevice(StorageDevice, Device):
         if prompt and '"' in prompt:
             raise InvalidArgument('argument --prompt should not contain "')
         if dtb and self.name not in [
+            "nfs-am57xx-beagle-x15",
             "nfs-bcm2711-rpi-4-b",
             "nfs-juno-r2",
             "nfs-rk3399-rock-pi-4b",
             "nfs-s32g399a-rdb3",
         ]:
             raise InvalidArgument(
-                "argument --dtb is only valid for 'nfs-bcm2711-rpi-4-b', 'nfs-juno-r2', 'nfs-rk3399-rock-pi-4b' and 'nfs-s32g399a-rdb3' devices"
+                "argument --dtb is only valid for 'nfs-am57xx-beagle-x15', 'nfs-bcm2711-rpi-4-b', 'nfs-juno-r2', 'nfs-rk3399-rock-pi-4b' and 'nfs-s32g399a-rdb3' devices"
             )
         if modules and compression(modules[0]) not in [("tar", "gz"), ("tar", "xz")]:
             raise InvalidArgument(
@@ -231,6 +232,27 @@ class NfsNxpRdb3(NfsDevice):
     context_overrides = {
         "arch": "arm64",
         "booti_dtb_addr": "0x86000000",
+        "extra_nfsroot_args": ",vers=3",
+    }
+
+
+class NfsBeagleX15(NfsDevice):
+    name = "nfs-am57xx-beagle-x15"
+
+    arch = "arm"
+    lava_arch = "arm"
+
+    kernel = "https://storage.tuxboot.com/buildroot/armv7/zImage"
+    rootfs = "https://storage.tuxboot.com/debian/trixie/armhf/rootfs.tar.xz"
+
+    boot_method = "u-boot"
+    device_kernel_args = "rootwait"
+    context_overrides = {
+        "arch": "arm",
+        "console_device": "ttyS2",
+        "bootz_kernel_addr": "0x82000000",
+        "bootz_ramdisk_addr": "0x88080000",
+        "bootz_dtb_addr": "0x88000000",
         "extra_nfsroot_args": ",vers=3",
     }
 

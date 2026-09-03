@@ -69,6 +69,7 @@ fvp-morello-ubuntu    |
 
 Device                 |
 -----------------------|
+nfs-am57xx-beagle-x15  |
 nfs-bcm2711-rpi-4-b    |
 nfs-i386               |
 nfs-juno-r2            |

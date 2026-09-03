@@ -2670,6 +2670,22 @@ def artefacts(tmp_path):
         (
             [
                 "--device",
+                "nfs-am57xx-beagle-x15",
+                "--kernel",
+                "https://example.com/zImage",
+                "--dtb",
+                "https://example.com/am57xx-beagle-x15.dtb",
+                "--modules",
+                "https://example.com/modules.tar.xz",
+                "/usr/",
+                "--rootfs",
+                "https://example.com/rootfs.tar.xz",
+            ],
+            "nfs-am57xx-beagle-x15-module-path.yaml",
+        ),
+        (
+            [
+                "--device",
                 "fastboot-exynos850-e850-96",
                 "--kernel",
                 "https://example.com/Image.gz",
