@@ -140,6 +140,49 @@ class TestDeviceDictConfigs:
         assert "docker_shell_extra_arguments" in job.d_dict_config
 
 
+class TestUsbgDeviceDict:
+
+    def usbg_job(self):
+        return Job(
+            device="usbg-bcm2711-rpi-4-b",
+            downloads={
+                "firmware": "https://e.com/fw.wic.xz",
+                "os": "https://e.com/os.wic.xz",
+            },
+            device_dict=DEVICE_DICTS / "bcm2711-rpi-4-b.jinja2",
+        )
+
+    def test_the_rpi4_config_can_drive_usbg_ms(self):
+        # The same config file serves the nfs and the usbg device. The
+        # board needs only one dictionary.
+        job = self.usbg_job()
+        job.initialize()
+        rendered = job.device.device_dict({}, d_dict_config=job.d_dict_config)
+        methods = yaml.safe_load(rendered)["actions"]["deploy"]["methods"]
+        assert methods["usbg-ms"]["disable"] == ["laacli", "usbg-ms", "off"]
+        # LAVA substitutes {IMAGE} with the file it downloaded.
+        assert methods["usbg-ms"]["enable"] == [
+            "laacli",
+            "usbg-ms",
+            "on",
+            "{IMAGE}",
+        ]
+
+    def test_the_rpi4_config_still_boots_over_nfs(self):
+        # Adding the usbg commands must not change the nfs device.
+        job = Job(
+            device="nfs-bcm2711-rpi-4-b",
+            kernel="https://example.com/Image.gz",
+            rootfs="https://example.com/rootfs.tar.xz",
+            device_dict=DEVICE_DICTS / "bcm2711-rpi-4-b.jinja2",
+        )
+        job.initialize()
+        rendered = job.device.device_dict({}, d_dict_config=job.d_dict_config)
+        methods = yaml.safe_load(rendered)["actions"]["deploy"]["methods"]
+        assert "usbg-ms" not in methods
+        assert "nfs" in methods
+
+
 class TestDeviceDictRendering:
 
     def test_uboot_bootloader_prompt_default(self):
