@@ -1,0 +1,70 @@
+{% set prefix_len = 'usbg-'|length -%}
+device_type: "{{ device.name[prefix_len:] }}"
+
+{% if tests %}
+job_name: "tuxlava@{{ device.name }}: {{ tests|map(attribute="name")|join(", ")}}"
+{% else %}
+job_name: "tuxlava@{{ device.name }}: boot"
+{% endif %}
+priority: {{ LAVA_JOB_PRIORITY }}
+visibility: "{{ visibility }}"
+
+{% if device.lava_test_results_dir %}
+context:
+  lava_test_results_dir: {{ device.lava_test_results_dir }}
+{% endif %}
+
+{% if tags is defined and tags is sequence and tags is not string %}
+tags:
+{% for tag in tags %}
+{% if tag|length %}
+  - {{ tag }}
+{% endif %}
+{% endfor %}
+{% endif %}
+
+{%- set deploy_download_timeout = timeouts.deploy|default(30) %}
+{%- set deploy_timeout = timeouts.deploy|default(30) %}
+{%- set boot_timeout = timeouts.boot|default(25) %}
+
+timeouts:
+  job:
+    minutes: {{ deploy_download_timeout + deploy_timeout + boot_timeout + tests_timeout }}
+  connection:
+    minutes: 2
+  actions:
+    power-off:
+      seconds: 60
+    finalize:
+      seconds: 120
+{% if LAVA_QUEUE_TIMEOUT is defined %}
+  queue:
+    hours: {{ LAVA_QUEUE_TIMEOUT }}
+{% endif %}
+
+actions:
+{% include "deploy-downloads.yaml.jinja2" %}
+- deploy:
+    to: usbg-ms
+    timeout:
+      minutes: {{ deploy_timeout }}
+    image:
+      url: downloads://{{ boot_image_path }}
+
+- boot:
+    method: minimal
+    timeout:
+      minutes: {{ boot_timeout }}
+    auto_login:
+      login_prompt: 'login:'
+      username: root
+    prompts:
+    - 'root@(.*):[/~]#'
+{% for prompt in tux_prompt %}
+    - "{{ prompt }}"
+{% endfor %}
+{% if device.transfer_overlay_download %}
+    transfer_overlay:
+      download_command: {{ device.transfer_overlay_download }}
+      unpack_command: {{ device.transfer_overlay_unpack }}
+{% endif %}

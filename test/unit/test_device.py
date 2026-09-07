@@ -13,7 +13,7 @@ from tuxlava.devices import Device
 from tuxlava.devices.fvp import FVPMorelloAndroid
 from tuxlava.devices.lava import FVPLAVA, QemuLAVA
 from tuxlava.devices.qemu import QemuArmv5
-from tuxlava.exceptions import InvalidArgument
+from tuxlava.exceptions import InvalidArgument, MissingArgument
 from tuxlava.jobs import Job
 
 BASE = (Path(__file__) / "..").resolve()
@@ -28,6 +28,116 @@ def test_select():
 
     with pytest.raises(InvalidArgument):
         Device.select("Hello")
+
+
+def test_select_usbg():
+    from tuxlava.devices.usbg import UsbgRpi4
+
+    assert Device.select("usbg-bcm2711-rpi-4-b") == UsbgRpi4
+
+
+def usbg_job(tmp_path, downloads=None, **kwargs):
+    if downloads is None:
+        downloads = {
+            "firmware": "https://e.com/fw.wic.xz",
+            "os": "https://e.com/os.wic.xz",
+        }
+    return Job(
+        device="usbg-bcm2711-rpi-4-b",
+        downloads=downloads,
+        tmpdir=tmp_path,
+        **kwargs,
+    )
+
+
+def test_usbg_needs_the_os_download(tmp_path):
+    with pytest.raises(MissingArgument) as exc:
+        usbg_job(
+            tmp_path, downloads={"firmware": "https://e.com/fw.wic.xz"}
+        ).initialize()
+    assert "--os" in str(exc.value)
+
+
+def test_usbg_needs_the_firmware_download(tmp_path):
+    with pytest.raises(MissingArgument) as exc:
+        usbg_job(tmp_path, downloads={"os": "https://e.com/os.wic.xz"}).initialize()
+    assert "--firmware" in str(exc.value)
+
+
+def test_usbg_rejects_a_kernel(tmp_path):
+    with pytest.raises(InvalidArgument) as exc:
+        usbg_job(tmp_path, kernel="https://e.com/Image").initialize()
+    assert "--kernel" in str(exc.value)
+
+
+def test_usbg_takes_the_compression_from_the_url(tmp_path):
+    job = usbg_job(tmp_path)
+    job.initialize()
+    assert "compression: xz" in job.render()
+
+
+def test_usbg_leaves_a_download_alone_without_a_known_suffix(tmp_path):
+    # No compression key means LAVA saves the file as it is.
+    job = usbg_job(
+        tmp_path,
+        downloads={
+            "firmware": "https://e.com/fw.wic.xz",
+            "os": "https://e.com/os.wic.xz",
+            "seed": "https://e.com/seed.bin",
+        },
+    )
+    job.initialize()
+    assert job.render().count("compression:") == 2
+
+
+def test_usbg_rejects_two_downloads_with_the_same_saved_name(tmp_path):
+    # Everything lands in one directory, so one would overwrite the other.
+    with pytest.raises(InvalidArgument) as exc:
+        usbg_job(
+            tmp_path,
+            downloads={
+                "firmware": "https://e.com/image.wic.xz",
+                "os": "https://e.com/image.wic.gz",
+            },
+        ).initialize()
+    assert "image.wic" in str(exc.value)
+
+
+def test_usbg_boots_from_a_flat_download_path(tmp_path):
+    # No uniquify. The file sits straight in the download directory,
+    # without the compression suffix.
+    job = usbg_job(tmp_path)
+    job.initialize()
+    definition = job.render()
+    assert "downloads://fw.wic" in definition
+    assert "uniquify" not in definition
+
+
+def test_usbg_unpacks_the_overlay_in_the_overlay_dir(tmp_path):
+    # The tarball holds lava-N, not var/lib/lava-N, so unpacking at /
+    # gives /lava-N and the test shell finds no environment.
+    job = usbg_job(tmp_path, tests=["network-basic"])
+    job.initialize()
+    definition = job.render()
+    assert "unpack_command: tar -C /var/lib/ -xzvf" in definition
+    assert "lava_test_results_dir: /var/lib/lava-%s" in definition
+
+
+def test_usbg_postprocess_uses_the_real_names(tmp_path):
+    job = usbg_job(tmp_path)
+    job.initialize()
+    definition = job.render()
+    assert "bash ts-merge-images.sh fw.wic os.wic" in definition
+    assert "fdisk -l fw.wic" in definition
+
+
+def test_usbg_downloads_the_overlay_with_curl(tmp_path):
+    # Without -O curl writes to stdout and there is nothing to unpack.
+    job = usbg_job(tmp_path)
+    job.initialize()
+    definition = job.render()
+    assert "curl --fail --retry 20 --retry-connrefused -O" in definition
+    assert "wget" not in definition
 
 
 ARTEFACTS = [
@@ -3250,6 +3360,17 @@ def artefacts(tmp_path):
                 str(DEVICE_DICTS / "dragonboard-845c.jinja2"),
             ],
             "fastboot-dragonboard-845c-device-dict.yaml",
+        ),
+        (
+            [
+                "--device",
+                "usbg-bcm2711-rpi-4-b",
+                "--firmware",
+                "https://example.com/ts-firmware-rpi4.rootfs.wic.xz",
+                "--os",
+                "https://example.com/core-image-sato-sdk-genericarm64.rootfs.wic.xz",
+            ],
+            "usbg-bcm2711-rpi-4-b.yaml",
         ),
     ],
 )

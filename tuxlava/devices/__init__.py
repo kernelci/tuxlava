@@ -131,3 +131,4 @@ import tuxlava.devices.qemu  # noqa: E402,F401
 import tuxlava.devices.ssh  # noqa: E402,F401
 import tuxlava.devices.flasher  # noqa: E402,F401
 import tuxlava.devices.lava  # noqa: E402,F401
+import tuxlava.devices.usbg  # noqa: E402,F401
