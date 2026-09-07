@@ -17,6 +17,7 @@ class Commands(Test):
         "avh-rpi4b",
         "nfs-*",
         "fastboot-*",
+        "usbg-*",
     ]
     name = "commands"
     timeout = 2
