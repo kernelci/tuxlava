@@ -25,6 +25,13 @@
     'laacli power 5v off'
 ] %}
 
+{# The usbg devices attach the image over USB instead of booting over nfs.
+   LAVA puts the file it downloaded in place of {IMAGE}. #}
+{% set usbg_ms_commands = {
+    'disable': ['laacli', 'usbg-ms', 'off'],
+    'enable': ['laacli', 'usbg-ms', 'on', '{IMAGE}']
+} %}
+
 {% set docker_shell_extra_arguments = [
     '--add-host=lava-worker.internal:host-gateway',
     '--volume=/usr/bin/laacli:/usr/bin/laacli:ro',
