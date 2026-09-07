@@ -129,6 +129,37 @@ class UsbgDevice(Device):
 
     def default(self, options) -> None: ...  # noqa: E704
 
+    def device_dict(self, context, d_dict_config=None) -> str:
+        """The LAVA device dictionary.
+
+        A usbg device is a real board. The power, serial and usbg-ms
+        commands can only come from the worker that has it, and there is
+        no standard dictionary to fall back to.
+        """
+        if not d_dict_config:
+            raise MissingArgument(
+                f"Missing --device-dict, {self.name} is a real device"
+            )
+
+        # LAVA reads these two out of the deploy method. Without them
+        # the job cannot attach the image.
+        commands = d_dict_config.get("usbg_ms_commands") or {}
+        missing = [k for k in ("enable", "disable") if not commands.get(k)]
+        if missing:
+            raise MissingArgument(
+                f"Device dict is missing usbg_ms_commands "
+                f"{', '.join(sorted(missing))} for device {self.name}"
+            )
+
+        context = dict(context or {})
+        context.setdefault("lava_arch", self.lava_arch)
+        return self._render_device_dict(
+            "usbg-device-dict.yaml.jinja2",
+            context,
+            d_dict_config,
+            d_dict_defaults={"connection_command": "telnet localhost 2000"},
+        )
+
     def definition(self, **kwargs):
         kwargs = kwargs.copy()
 

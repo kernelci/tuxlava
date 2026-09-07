@@ -140,6 +140,67 @@ def test_usbg_downloads_the_overlay_with_curl(tmp_path):
     assert "wget" not in definition
 
 
+USBG_D_DICT = {
+    "connection_command": "laacli serial connect",
+    "hard_reset_command": "laacli power reset",
+    "power_on_command": "laacli power on",
+    "power_off_command": "laacli power off",
+    "usbg_ms_commands": {
+        # LAVA substitutes {IMAGE} with the file it downloaded.
+        "enable": "laacli usbg-ms on --filename {IMAGE}",
+        "disable": "laacli usbg-ms off",
+    },
+}
+
+
+def usbg_device_dict(tmp_path, d_dict_config=USBG_D_DICT):
+    job = usbg_job(tmp_path)
+    job.initialize()
+    return job.device.device_dict({}, d_dict_config=d_dict_config)
+
+
+def test_usbg_device_dict_is_valid_yaml(tmp_path):
+    assert yaml.safe_load(usbg_device_dict(tmp_path))
+
+
+def test_usbg_device_dict_deploys_over_usbg_ms(tmp_path):
+    d = yaml.safe_load(usbg_device_dict(tmp_path))
+    methods = d["actions"]["deploy"]["methods"]
+    assert list(methods) == ["usbg-ms"]
+    assert methods["usbg-ms"]["enable"] == "laacli usbg-ms on --filename {IMAGE}"
+    assert methods["usbg-ms"]["disable"] == "laacli usbg-ms off"
+
+
+def test_usbg_device_dict_boots_minimal_over_serial(tmp_path):
+    d = yaml.safe_load(usbg_device_dict(tmp_path))
+    boot = d["actions"]["boot"]
+    assert list(boot["methods"]) == ["minimal"]
+    assert list(boot["connections"]) == ["serial"]
+
+
+def test_usbg_device_dict_has_the_board_commands(tmp_path):
+    d = yaml.safe_load(usbg_device_dict(tmp_path))
+    commands = d["commands"]
+    assert commands["connect"] == "laacli serial connect"
+    assert commands["power_on"] == "laacli power on"
+    assert commands["power_off"] == "laacli power off"
+    assert commands["hard_reset"] == "laacli power reset"
+
+
+def test_usbg_device_dict_needs_the_usbg_ms_commands(tmp_path):
+    # Without them the job cannot attach the image.
+    with pytest.raises(MissingArgument) as exc:
+        usbg_device_dict(tmp_path, d_dict_config={"connection_command": "telnet x 1"})
+    assert "usbg_ms_commands" in str(exc.value)
+
+
+def test_usbg_device_dict_needs_a_device_dict(tmp_path):
+    # Only the worker that has the board can power and reach it.
+    with pytest.raises(MissingArgument) as exc:
+        usbg_device_dict(tmp_path, d_dict_config=None)
+    assert "--device-dict" in str(exc.value)
+
+
 ARTEFACTS = [
     "bzImage.gz",
     "zImage.xz",

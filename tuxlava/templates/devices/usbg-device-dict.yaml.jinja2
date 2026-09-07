@@ -1,0 +1,26 @@
+{# usbg device with device-dict config #}
+{% extends 'base.yaml.jinja2' %}
+
+{% block vland %}
+{# disabled #}
+{% endblock vland %}
+
+{% block body %}
+
+available_architectures:
+- {{ lava_arch|default('arm64') }}
+
+actions:
+  deploy:
+    connections:
+      serial:
+    methods:
+      usbg-ms:
+        enable: {{ usbg_ms_commands["enable"] }}
+        disable: {{ usbg_ms_commands["disable"] }}
+  boot:
+    connections:
+      serial:
+    methods:
+      minimal:
+{% endblock body %}
