@@ -14,6 +14,7 @@ from tuxlava.devices.fvp import FVPMorelloAndroid
 from tuxlava.devices.lava import FVPLAVA, QemuLAVA
 from tuxlava.devices.qemu import QemuArmv5
 from tuxlava.exceptions import InvalidArgument
+from tuxlava.jobs import Job
 
 BASE = (Path(__file__) / "..").resolve()
 DEVICE_DICTS = BASE / ".." / "device_dicts"
@@ -3896,3 +3897,14 @@ def test_fvp_aemva_extra_assets(tmpdir):
     assert (tmpdir / "startup.nsh").read_text(
         encoding="utf-8"
     ) == "Image dtb=fvp-base-revc.dtb systemd.log_level=warning console=ttyAMA0 earlycon=pl011,0x1c090000 ip=dhcp root=/dev/vda"
+
+
+def test_downloads_are_rejected_by_other_devices(tmp_path):
+    with pytest.raises(InvalidArgument) as exc:
+        Job(
+            device="qemu-arm64",
+            kernel="https://e.com/Image",
+            downloads={"firmware": "https://e.com/a.wic.xz"},
+            tmpdir=tmp_path,
+        ).initialize()
+    assert "--downloads" in str(exc.value)
