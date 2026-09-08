@@ -56,13 +56,16 @@ actions:
 {% if bios and device.supports_bios %}
       partition:0:
         url: "{{ bios }}"
+{% if secret_headers %}{{ headers_yaml(secret_headers, "bios", 8) }}{% endif %}
 {% endif %}
 {% if ramdisk and device.supports_ramdisk %}
       ramdisk:
         url: "{{ ramdisk }}"
+{% if secret_headers %}{{ headers_yaml(secret_headers, "ramdisk", 8) }}{% endif %}
 {% endif %}
       kernel:
         url: "{{ kernel }}"
+{% if secret_headers %}{{ headers_yaml(secret_headers, "kernel", 8) }}{% endif %}
 {% if compression(kernel)[1] is not none %}
         compression: {{ compression(kernel)[1] }}
         type: image
@@ -70,10 +73,12 @@ actions:
 {% if dtb %}
       dtb:
         url: "{{ dtb }}"
+{% if secret_headers %}{{ headers_yaml(secret_headers, "dtb", 8) }}{% endif %}
 {% endif %}
 {% if modules %}
       modules:
         url: "{{ modules[0] }}"
+{% if secret_headers %}{{ headers_yaml(secret_headers, "modules", 8) }}{% endif %}
         path: {{ modules[1] }}
 {% if compression(modules[0])[1] is not none %}
         compression: {{ compression(modules[0])[1] }}
@@ -81,6 +86,7 @@ actions:
 {% endif %}
       {{ device.downloads_image_name }}:
         url: "{{ rootfs }}"
+{% if secret_headers %}{{ headers_yaml(secret_headers, "rootfs", 8) }}{% endif %}
 {% if compression(rootfs)[1] is not none %}
         compression: {{ compression(rootfs)[1] }}
 {% endif %}
@@ -96,6 +102,7 @@ actions:
           {{ name }}:
             url: "{{ overlay }}"
             path: "{{ dst }}"
+{% if secret_headers %}{{ headers_yaml(secret_headers, name, 12) }}{% endif %}
 {% if compression(overlay)[0] is not none %}
             format: {{ compression(overlay)[0] }}
 {% endif %}

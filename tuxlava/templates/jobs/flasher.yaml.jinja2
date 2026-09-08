@@ -58,12 +58,7 @@ actions:
     os: {{ deploy_os|default("debian") }}
     images:
       image:
-{% if secrets %}
-        headers:
-{% for HEADER_NAME, HEADER_VALUE in secrets.items() %}
-          {{ HEADER_NAME }}: {{ HEADER_VALUE }}
-{% endfor %}
-{% endif %}
+{% if secret_headers %}{{ headers_yaml(secret_headers, "rootfs", 8) }}{% endif %}
         url: "{{ rootfs }}"
     postprocess:
       docker:

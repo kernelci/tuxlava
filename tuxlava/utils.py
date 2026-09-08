@@ -7,9 +7,12 @@
 # SPDX-License-Identifier: MIT
 
 import argparse
+import json
 import re
 from pathlib import Path
 from urllib.parse import urlparse
+
+AVH_API_TOKEN = "avh_api_token"
 
 COMPRESSIONS = {
     ".tar.xz": ("tar", "xz"),
@@ -56,6 +59,49 @@ def is_cpio_rootfs(rootfs):
     # the name too.
     name = (rootfs or "").rsplit("/", 1)[-1].lower()
     return compression(name)[0] == "cpio.newc" or "ramdisk" in name
+
+
+def secret_headers(secrets, given):
+    """Headers per artefact.
+
+    "kernel:Authorization=x" is only for the kernel. "Authorization=x" has
+    no artefact and is used for the artefacts in 'given', the ones that
+    come from the command line. A device default gets no header, the url
+    can point to another host.
+    """
+    defaults = {}
+    only = {}
+    for key, value in secrets.items():
+        artefact, sep, header = key.partition(":")
+        if not sep:
+            artefact, header = "", artefact
+        if not value or not header or header.lower() == AVH_API_TOKEN:
+            continue
+        if artefact:
+            only.setdefault(artefact, {})[header] = value
+        else:
+            defaults[header] = value
+
+    headers = {name: dict(defaults) for name in given}
+    for name, own in only.items():
+        headers.setdefault(name, {}).update(own)
+    return {name: h for name, h in headers.items() if h}
+
+
+def secret_headers_yaml(headers, artefact, indent):
+    own = headers.get(artefact)
+    if not own:
+        return ""
+    pad = " " * indent
+    lines = [f"{pad}headers:"]
+    # json is a subset of yaml. Quote with it, a value with a '"' or a
+    # newline would otherwise end the scalar and write its own yaml.
+    lines += [
+        f"{pad}  {json.dumps(name, ensure_ascii=False)}: "
+        f"{json.dumps(value, ensure_ascii=False)}"
+        for name, value in own.items()
+    ]
+    return "\n".join(lines) + "\n"
 
 
 def pathurlnone(string):

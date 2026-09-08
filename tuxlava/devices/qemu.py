@@ -60,6 +60,7 @@ class QemuDevice(Device):
         rootfs_partition,
         prompt,
         rootfs,
+        secrets,
         enable_kvm,
         enable_trustzone,
         enable_network,

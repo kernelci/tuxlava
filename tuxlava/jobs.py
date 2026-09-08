@@ -19,9 +19,29 @@ from tuxlava.exceptions import InvalidArgument, MissingArgument, TuxLavaError
 from tuxlava.devices import Device
 from tuxlava.tests import Test
 from tuxlava.tuxmake import TuxBuildBuild, TuxMakeBuild
-from tuxlava.utils import pathurlnone
+from tuxlava.utils import pathurlnone, secret_headers
 
 TEST_DEFINITIONS = "https://github.com/Linaro/test-definitions/releases/download/2026.06.02/2026.06.tar.zst"
+
+# Artefacts that can carry a secret header
+SECRET_ARTEFACTS = {
+    "ap_romfw",
+    "bios",
+    "bl1",
+    "boot",
+    "dtb",
+    "fip",
+    "kernel",
+    "mcp_fw",
+    "mcp_romfw",
+    "modules",
+    "pflash",
+    "ramdisk",
+    "rootfs",
+    "scp_fw",
+    "scp_romfw",
+    "uefi",
+}
 
 # Supported device-dict config variables
 # Update this list when adding new variables to device-dict configs
@@ -278,6 +298,12 @@ class Job:
         self.device = Device.select(self.device)()
         self.tests = [Test.select(t)(self.timeouts.get(t)) for t in self.tests]
         self.device.validate(**filter_options(self))
+        # Which artefacts came from the command line. This must be before
+        # device.default(), it fills in the rest. A secret without an
+        # artefact is only used on these.
+        self.given_artefacts = {
+            name for name in SECRET_ARTEFACTS if getattr(self, name, None)
+        }
         self.device.default(self)
 
         # Load device dict config if --device-dict provided
@@ -368,6 +394,17 @@ class Job:
         )
 
         self.overlays = overlays
+        # Fail here. An unknown artefact renders no header, and the
+        # download would fail much later, inside LAVA.
+        known = SECRET_ARTEFACTS | {name for name, _, _ in self.overlays}
+        unknown = (
+            {key.split(":", 1)[0] for key in self.secrets if ":" in key} - known - {""}
+        )
+        if unknown:
+            raise InvalidArgument(
+                f"argument --secrets unknown artefact(s): {', '.join(sorted(unknown))}"
+            )
+
         # Add extra assets from device
         self.extra_assets.extend(self.device.extra_assets(**vars(self)))
 
@@ -421,6 +458,9 @@ class Job:
             "uefi": self.uefi,
             "boot_args": self.boot_args,
             "secrets": self.secrets,
+            "secret_headers": secret_headers(
+                self.secrets, self.given_artefacts | {n for n, _, _ in self.overlays}
+            ),
             "deploy_os": self.deploy_os,
             "LAVA_JOB_PRIORITY": self.lava_job_priority,
             "tags": self.lava_job_tags,
