@@ -52,6 +52,9 @@ The fvp devices add the firmware artefacts:
 * `scp_romfw`
 * `uefi`
 
+An unknown artefact is an error, so a typo does not fail later inside
+LAVA.
+
 A key without an artefact is the fallback. When both match, the artefact
 wins:
 

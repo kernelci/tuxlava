@@ -3868,6 +3868,17 @@ def test_definition(monkeypatch, mocker, capsys, tmpdir, artefacts, args, filena
             ],
             "Missing --rootfs argument. Can't render the template",
         ),
+        (
+            [
+                "--device",
+                "qemu-arm64",
+                "--kernel",
+                "https://example.com/Image.gz",
+                "--secrets",
+                "kernle:Authorization=token",
+            ],
+            "argument --secrets unknown artefact(s): kernle",
+        ),
     ],
 )
 def test_failures(monkeypatch, mocker, capsys, tmpdir, args, error_str):

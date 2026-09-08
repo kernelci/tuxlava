@@ -394,6 +394,17 @@ class Job:
         )
 
         self.overlays = overlays
+        # Fail here. An unknown artefact renders no header, and the
+        # download would fail much later, inside LAVA.
+        known = SECRET_ARTEFACTS | {name for name, _, _ in self.overlays}
+        unknown = (
+            {key.split(":", 1)[0] for key in self.secrets if ":" in key} - known - {""}
+        )
+        if unknown:
+            raise InvalidArgument(
+                f"argument --secrets unknown artefact(s): {', '.join(sorted(unknown))}"
+            )
+
         # Add extra assets from device
         self.extra_assets.extend(self.device.extra_assets(**vars(self)))
 
