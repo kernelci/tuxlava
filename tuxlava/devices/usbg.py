@@ -44,6 +44,10 @@ class UsbgDevice(Device):
     postprocess_docker: str = ""
     postprocess_steps: List[str] = []
 
+    # The postprocess only runs when all of these were given. Without
+    # them the default downloads it needs are not fetched either.
+    postprocess_needs: List[str] = []
+
     # A wic rootfs has no nfs, so LAVA pushes the overlay over the network
     # after boot instead.
     transfer_overlay_download: str = ""
@@ -62,8 +66,13 @@ class UsbgDevice(Device):
     def lava_test_results_dir(self) -> str:
         return f"{self.overlay_dir}lava-%s"
 
+    def postprocess_applies(self, downloads) -> bool:
+        return all(k in downloads for k in self.postprocess_needs)
+
     def all_downloads(self, downloads):
         """The files the job downloads. The user wins over the defaults."""
+        if not self.postprocess_applies(downloads):
+            return dict(downloads)
         return {**self.default_downloads, **downloads}
 
     def compression_for(self, url):
@@ -165,14 +174,15 @@ class UsbgDevice(Device):
 
         kwargs["arch"] = self.arch
         kwargs["lava_arch"] = self.lava_arch
+        applies = self.postprocess_applies(kwargs["downloads"])
         kwargs["downloads"] = self.all_downloads(kwargs["downloads"])
 
         names = {key: self.saved_name(url) for key, url in kwargs["downloads"].items()}
         # The usbg-ms deploy names the file, LAVA does not glob downloads://
         kwargs["boot_image_path"] = names[self.boot_image]
-        kwargs["postprocess_steps"] = [
-            step.format(**names) for step in self.postprocess_steps
-        ]
+        kwargs["postprocess_steps"] = (
+            [step.format(**names) for step in self.postprocess_steps] if applies else []
+        )
 
         if kwargs["tux_prompt"]:
             kwargs["tux_prompt"] = [kwargs["tux_prompt"]]
@@ -206,7 +216,7 @@ class UsbgRpi4(UsbgDevice):
     arch = "arm64"
     lava_arch = "arm64"
 
-    required_downloads = ["firmware", "os"]
+    required_downloads = ["firmware"]
     default_downloads = {
         "script": (
             "https://gitlab.com/Linaro/blueprints/ci/-/raw/HEAD/"
@@ -215,6 +225,9 @@ class UsbgRpi4(UsbgDevice):
     }
     boot_image = "firmware"
 
+    # Merge only when a separate OS image is given. A complete disk
+    # image boots as it is.
+    postprocess_needs = ["os"]
     postprocess_docker = "debian"
     postprocess_steps = [
         "apt-get update",
