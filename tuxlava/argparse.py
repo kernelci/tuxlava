@@ -14,7 +14,7 @@ from pathlib import Path
 from tuxlava import __version__
 from tuxlava.devices import Device
 from tuxlava.tests import Test
-from tuxlava.utils import pathurlnone
+from tuxlava.utils import download_key, pathurlnone, url_name
 
 
 ###########
@@ -86,6 +86,41 @@ class KeyValueParameterAction(argparse.Action):
                 if "$BUILD/" not in value:
                     value = pathurlnone(value)
             getattr(namespace, self.dest)[key] = value
+
+
+class DownloadAction(argparse.Action):
+    """Collect the files the job downloads, in the order they are given.
+
+    Takes a URL. --firmware and --os pass a fixed key. A plain
+    --downloads takes its key from the URL.
+    """
+
+    def __init__(self, *args, key=None, **kwargs):
+        self.key = key
+        super().__init__(*args, **kwargs)
+
+    def __call__(self, parser, namespace, values, option_string=None):
+        if len(values) != 1:
+            raise argparse.ArgumentError(self, "takes a URL")
+        url = values[0]
+
+        # argparse only catches ArgumentTypeError from a type= callable,
+        # not from inside an action, so turn it into ArgumentError here.
+        try:
+            url = pathurlnone(url)
+        except argparse.ArgumentTypeError as exc:
+            raise argparse.ArgumentError(self, str(exc))
+
+        key = self.key or download_key(url_name(url))
+        if not key:
+            raise argparse.ArgumentError(self, f"cannot work out a name for '{url}'")
+
+        # Copy so the parser default is never mutated.
+        downloads = dict(getattr(namespace, self.dest) or {})
+        if key in downloads:
+            raise argparse.ArgumentError(self, f"'{key}' is downloaded twice")
+        downloads[key] = url
+        setattr(namespace, self.dest, downloads)
 
 
 class KeyValueIntAction(argparse.Action):
@@ -198,6 +233,23 @@ def setup_parser() -> argparse.ArgumentParser:
         nargs="+",
         dest="overlays",
     )
+
+    def download(name, key=None):
+        group.add_argument(
+            f"--{name}",
+            metavar=("URL", "FILENAME"),
+            default={},
+            type=str,
+            help=f"{name} URL. The compression is taken from it",
+            action=DownloadAction,
+            key=key,
+            nargs="+",
+            dest="downloads",
+        )
+
+    download("firmware", key="firmware")
+    download("os", key="os")
+    download("downloads")
     group.add_argument(
         "--partition",
         default=None,

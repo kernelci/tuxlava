@@ -129,6 +129,7 @@ class Job:
         secrets: Dict[str, Any] = {},
         modules: str = None,
         overlays: List[str] = [],
+        downloads: Dict[str, Any] = {},
         pflash: List[str] = [],
         parameters: Dict[str, str] = {},
         deploy_os: str = "debian",
@@ -179,6 +180,7 @@ class Job:
         self.secrets = secrets
         self.modules = modules
         self.overlays = overlays
+        self.downloads = downloads
         self.pflash = pflash
         self.parameters = parameters
         self.deploy_os = deploy_os
@@ -397,6 +399,7 @@ class Job:
             "enable_network": self.enable_network,
             "modules": self.modules,
             "overlays": self.overlays,
+            "downloads": self.downloads,
             "pflash": self.pflash,
             "prompt": self.prompt,
             "ramdisk": self.ramdisk,
@@ -426,5 +429,4 @@ class Job:
             "tags": self.lava_job_tags,
             "visibility": self.visibility,
         }
-        definition = self.device.definition(**def_arguments)
-        return definition
+        return self.device.definition(**def_arguments)

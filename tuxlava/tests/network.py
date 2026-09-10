@@ -19,6 +19,7 @@ class NetworkTest(Test):
         "nfs-*",
         "fastboot-*",
         "flasher-*",
+        "usbg-*",
     ]
     need_test_definition = True
 

@@ -15,6 +15,7 @@ class OPTEEXtestTest(Test):
         "fvp-aemva",
         "nfs-*",
         "fastboot-*",
+        "usbg-*",
     ]
     name = "optee-xtest"
     timeout = 30

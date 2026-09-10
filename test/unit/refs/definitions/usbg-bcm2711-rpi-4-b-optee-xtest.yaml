@@ -1,0 +1,63 @@
+device_type: "bcm2711-rpi-4-b"
+
+job_name: "tuxlava@usbg-bcm2711-rpi-4-b: optee-xtest"
+priority: low
+visibility: "public"
+
+context:
+  lava_test_results_dir: /var/lib/lava-%s
+
+
+timeouts:
+  job:
+    minutes: 115
+  connection:
+    minutes: 2
+  actions:
+    power-off:
+      seconds: 60
+    finalize:
+      seconds: 120
+
+actions:
+- deploy:
+    to: downloads
+    failure_retry: 3
+    timeout:
+      minutes: 30
+    images:
+      firmware:
+        url: "https://example.com/rpi4-disk.img.xz"
+        compression: xz
+- deploy:
+    to: usbg-ms
+    timeout:
+      minutes: 30
+    image:
+      url: downloads://rpi4-disk.img
+
+- boot:
+    method: minimal
+    timeout:
+      minutes: 25
+    auto_login:
+      login_prompt: 'login:'
+      username: root
+    prompts:
+    - 'root@(.*):[/~]#'
+    transfer_overlay:
+      download_command: sleep 5; ip addr; route -n; curl --fail --retry 20 --retry-connrefused -O
+      unpack_command: tar -C /var/lib/ -xzvf
+- test:
+    timeout:
+      minutes: 30
+    definitions:
+    - repository: https://github.com/Linaro/test-definitions/releases/download/2026.06.02/2026.06.tar.zst
+      lava-signal: kmsg
+      from: url
+      compression: zstd
+      path: automated/linux/optee/optee-xtest.yaml
+      parameters:
+        TEST_LEVEL: '0'
+        TEST_SUITE: 'regression'
+      name: optee-xtest

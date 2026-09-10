@@ -1,0 +1,65 @@
+device_type: "bcm2711-rpi-4-b"
+
+job_name: "tuxlava@usbg-bcm2711-rpi-4-b: boot"
+priority: low
+visibility: "public"
+
+context:
+  lava_test_results_dir: /var/lib/lava-%s
+
+
+timeouts:
+  job:
+    minutes: 85
+  connection:
+    minutes: 2
+  actions:
+    power-off:
+      seconds: 60
+    finalize:
+      seconds: 120
+
+actions:
+- deploy:
+    to: downloads
+    failure_retry: 3
+    timeout:
+      minutes: 30
+    images:
+      script:
+        url: "https://gitlab.com/Linaro/blueprints/ci/-/raw/HEAD/support_files/ts-merge-images.sh"
+      firmware:
+        url: "https://example.com/ts-firmware-rpi4.rootfs.wic.xz"
+        compression: xz
+      os:
+        url: "https://example.com/core-image-sato-sdk-genericarm64.rootfs.wic.xz"
+        compression: xz
+    postprocess:
+      docker:
+        image: "debian"
+        steps:
+        - apt-get update
+        - apt-get install -qy fdisk gdisk coreutils
+        - fdisk -l ts-firmware-rpi4.rootfs.wic
+        - fdisk -l core-image-sato-sdk-genericarm64.rootfs.wic
+        - bash ts-merge-images.sh ts-firmware-rpi4.rootfs.wic core-image-sato-sdk-genericarm64.rootfs.wic
+        - fdisk -l ts-firmware-rpi4.rootfs.wic
+- deploy:
+    to: usbg-ms
+    timeout:
+      minutes: 30
+    image:
+      url: downloads://ts-firmware-rpi4.rootfs.wic
+
+- boot:
+    method: minimal
+    timeout:
+      minutes: 25
+    auto_login:
+      login_prompt: 'login:'
+      username: root
+    prompts:
+    - 'root@(.*):[/~]#'
+    transfer_overlay:
+      download_command: sleep 5; ip addr; route -n; curl --fail --retry 20 --retry-connrefused -O
+      unpack_command: tar -C /var/lib/ -xzvf

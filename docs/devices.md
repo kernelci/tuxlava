@@ -8,6 +8,7 @@ TuxLAVA supports the following virtual devices.
 * NFS
 * QEMU
 * SSH
+* USBG
 
 !!! tip "Listing devices"
     You can list the supported devices with:
@@ -112,3 +113,52 @@ the job definition and used to authenticate downloads securely.
 Device        | Description            | Machine     | CPU              |
 --------------|------------------------|-------------|------------------|
 ssh-device    | Device with ssh access | Any         | Any	        |
+
+## USBG devices
+
+Device                 |
+-----------------------|
+usbg-bcm2711-rpi-4-b   |
+
+The usbg devices boot a whole disk image that the dispatcher
+exports as USB mass storage. The board boots from it as if a USB
+disk was plugged in.
+
+The board boots from `--firmware`, and `--os` is merged into it
+by a default `script` download. For example:
+
+```shell
+tuxlava -d usbg-bcm2711-rpi-4-b \
+  --firmware https://example.com/firmware.wic.xz \
+  --os https://example.com/os.wic.xz
+```
+
+Anything else the job needs goes in with `--downloads`, once
+per file. Use it for files a test reads on the dispatcher.
+
+Every one of them takes an optional file name after the URL.
+Some URLs have no file name in the path. A redirect endpoint
+saves every file as `download`, so they overwrite each other
+and we cannot see the compression either. Say the name and
+both problems go away:
+
+```shell
+tuxlava -d usbg-bcm2711-rpi-4-b \
+  --firmware "https://example.com/download?id=A" firmware.wic.xz \
+  --os "https://example.com/download?id=B" os.wic.xz \
+  --downloads "https://example.com/download?id=C" packages.tar.gz
+```
+
+The compression comes from that name, so LAVA unpacks the file
+during the download and it lands as `packages.tar`. A name with
+no known suffix is left as it is.
+
+A `--downloads` file is named after its file name, so
+`packages.tar.gz` becomes `packages` in the job. Everything
+lands in one directory, so two files that end up with the same
+name is an error.
+
+These devices retry failed downloads three times. LAVA
+divides the deploy timeout by the number of tries, so
+`--timeouts deploy=45` gives 15 minutes per try, not 45. Keep
+that in mind when you raise it.
