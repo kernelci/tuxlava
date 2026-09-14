@@ -7,6 +7,7 @@
 # SPDX-License-Identifier: MIT
 
 import argparse
+import json
 import re
 from pathlib import Path
 from urllib.parse import urlparse
@@ -81,6 +82,14 @@ def downloaded_name(name, compression=None):
     if "." not in name:
         return name
     return name.rsplit(".", 1)[0]
+
+
+def yaml_quote(value):
+    """Quote a value so the job has it as one YAML string.
+
+    A JSON string is also a valid YAML string, so json.dumps escapes it.
+    """
+    return json.dumps(str(value))
 
 
 def is_cpio_rootfs(rootfs):
