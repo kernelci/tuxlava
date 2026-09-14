@@ -50,7 +50,7 @@ actions:
     timeout:
       minutes: {{ deploy_timeout }}
     image:
-      url: "downloads://{{ boot_image_path }}"
+      url: {{ ("downloads://" ~ boot_image_path) | yaml_quote }}
 
 - boot:
     method: minimal

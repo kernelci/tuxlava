@@ -27,7 +27,7 @@ actions:
       minutes: 30
     os: debian
     images:
-      firmware:
+      "firmware":
         url: "https://example.com/rpi4-disk.img.xz"
         compression: xz
 - deploy:
