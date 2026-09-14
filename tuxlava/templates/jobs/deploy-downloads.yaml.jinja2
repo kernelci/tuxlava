@@ -7,10 +7,13 @@
       minutes: {{ deploy_download_timeout }}
     os: {{ deploy_os }}
     images:
-{% for name, url in downloads.items() %}
+{% for name, (url, filename) in downloads.items() %}
       {{ name }}:
         url: "{{ url }}"
-{% set comp = device.compression_for(url) %}
+{% if filename %}
+        filename: "{{ filename }}"
+{% endif %}
+{% set comp = device.compression_for(url, filename) %}
 {% if comp %}
         compression: {{ comp }}
 {% endif %}

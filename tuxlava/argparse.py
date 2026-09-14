@@ -91,8 +91,9 @@ class KeyValueParameterAction(argparse.Action):
 class DownloadAction(argparse.Action):
     """Collect the files the job downloads, in the order they are given.
 
-    Takes a URL. --firmware and --os pass a fixed key. A plain
-    --downloads takes its key from the URL.
+    Takes a URL and optionally the file name to save it as. --firmware and
+    --os pass a fixed key. A plain --downloads takes its key from the file
+    name, or from the URL when no file name is given.
     """
 
     def __init__(self, *args, key=None, **kwargs):
@@ -100,8 +101,19 @@ class DownloadAction(argparse.Action):
         super().__init__(*args, **kwargs)
 
     def __call__(self, parser, namespace, values, option_string=None):
-        # nargs=1, so values is a list with the URL.
+        if len(values) > 2:
+            raise argparse.ArgumentError(
+                self, "takes a URL and optionally the file name to save it as"
+            )
         url = values[0]
+        filename = values[1] if len(values) == 2 else None
+
+        # LAVA writes the file into the download directory. A name with
+        # a path in it would escape that directory.
+        if filename is not None and ("/" in filename or filename in (".", "..")):
+            raise argparse.ArgumentError(
+                self, f"'{filename}' must be a plain file name"
+            )
 
         # argparse only catches ArgumentTypeError from a type= callable,
         # not from inside an action, so turn it into ArgumentError here.
@@ -110,15 +122,17 @@ class DownloadAction(argparse.Action):
         except argparse.ArgumentTypeError as exc:
             raise argparse.ArgumentError(self, str(exc))
 
-        key = self.key or download_key(url_name(url))
+        key = self.key or download_key(filename or url_name(url))
         if not key:
             raise argparse.ArgumentError(self, f"cannot work out a name for '{url}'")
 
         # Copy so the parser default is never mutated.
         downloads = dict(getattr(namespace, self.dest) or {})
         if key in downloads:
-            raise argparse.ArgumentError(self, f"'{key}' is downloaded twice")
-        downloads[key] = url
+            raise argparse.ArgumentError(
+                self, f"'{key}' is downloaded twice, give it another file name"
+            )
+        downloads[key] = (url, filename)
         setattr(namespace, self.dest, downloads)
 
 
@@ -236,13 +250,15 @@ def setup_parser() -> argparse.ArgumentParser:
     def download(name, key=None):
         group.add_argument(
             f"--{name}",
-            metavar="URL",
+            metavar=("URL", "FILENAME"),
             default={},
             type=str,
-            help=f"{name} URL. The compression is taken from it",
+            help=f"{name} URL and optionally the file name to save it as. "
+            "The compression is taken from that name. Put any commands "
+            'after a "--", or the first one is read as the file name',
             action=DownloadAction,
             key=key,
-            nargs=1,
+            nargs="+",
             dest="downloads",
         )
 
