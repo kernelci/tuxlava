@@ -146,8 +146,8 @@ class TestUsbgDeviceDict:
         return Job(
             device="usbg-bcm2711-rpi-4-b",
             downloads={
-                "firmware": "https://e.com/fw.wic.xz",
-                "os": "https://e.com/os.wic.xz",
+                "firmware": ("https://e.com/fw.wic.xz", None),
+                "os": ("https://e.com/os.wic.xz", None),
             },
             device_dict=DEVICE_DICTS / "bcm2711-rpi-4-b.jinja2",
         )

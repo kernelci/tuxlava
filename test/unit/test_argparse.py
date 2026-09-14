@@ -54,7 +54,22 @@ def test_firmware_takes_a_url():
         ["--device", "qemu-arm64", "--firmware", "https://e.com/fw.wic.xz"]
     )
     assert options.downloads == {
-        "firmware": "https://e.com/fw.wic.xz",
+        "firmware": ("https://e.com/fw.wic.xz", None),
+    }
+
+
+def test_firmware_takes_a_url_and_a_filename():
+    options = setup_parser().parse_args(
+        [
+            "--device",
+            "qemu-arm64",
+            "--firmware",
+            "https://e.com/download?id=A",
+            "fw.wic.xz",
+        ]
+    )
+    assert options.downloads == {
+        "firmware": ("https://e.com/download?id=A", "fw.wic.xz"),
     }
 
 
@@ -72,7 +87,22 @@ def test_os_and_firmware_keep_their_own_names():
     assert list(options.downloads) == ["firmware", "os"]
 
 
-def test_downloads_takes_the_name_from_the_url():
+def test_downloads_takes_the_name_from_the_filename():
+    options = setup_parser().parse_args(
+        [
+            "--device",
+            "qemu-arm64",
+            "--downloads",
+            "https://e.com/download?id=A",
+            "testexport.tar.gz",
+        ]
+    )
+    assert options.downloads == {
+        "testexport": ("https://e.com/download?id=A", "testexport.tar.gz"),
+    }
+
+
+def test_downloads_takes_the_name_from_the_url_without_a_filename():
     options = setup_parser().parse_args(
         [
             "--device",
@@ -82,7 +112,7 @@ def test_downloads_takes_the_name_from_the_url():
         ]
     )
     assert options.downloads == {
-        "packages": "https://e.com/packages.tar.gz",
+        "packages": ("https://e.com/packages.tar.gz", None),
     }
 
 
@@ -124,12 +154,42 @@ def test_downloads_clashing_with_firmware_is_an_error(capsys):
                 "--device",
                 "qemu-arm64",
                 "--firmware",
-                "https://e.com/a/firmware.wic.xz",
+                "https://e.com/a",
                 "--downloads",
-                "https://e.com/b/firmware.wic.xz",
+                "https://e.com/b",
+                "firmware.wic.xz",
             ]
         )
     assert "'firmware' is downloaded twice" in capsys.readouterr().err
+
+
+def test_downloads_takes_at_most_two_values(capsys):
+    with pytest.raises(SystemExit):
+        setup_parser().parse_args(
+            [
+                "--device",
+                "qemu-arm64",
+                "--downloads",
+                "https://e.com/a",
+                "a.tar.gz",
+                "extra",
+            ]
+        )
+    assert "optionally the file name" in capsys.readouterr().err
+
+
+def test_downloads_rejects_a_filename_with_a_directory(capsys):
+    with pytest.raises(SystemExit):
+        setup_parser().parse_args(
+            [
+                "--device",
+                "qemu-arm64",
+                "--downloads",
+                "https://e.com/a",
+                "../a.tar.gz",
+            ]
+        )
+    assert "plain file name" in capsys.readouterr().err
 
 
 def test_downloads_with_a_missing_file_is_an_error(capsys):

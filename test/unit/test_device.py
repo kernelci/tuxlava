@@ -39,8 +39,8 @@ def test_select_usbg():
 def usbg_job(tmp_path, downloads=None, **kwargs):
     if downloads is None:
         downloads = {
-            "firmware": "https://e.com/fw.wic.xz",
-            "os": "https://e.com/os.wic.xz",
+            "firmware": ("https://e.com/download?id=A", "fw.wic.xz"),
+            "os": ("https://e.com/download?id=B", "os.wic.xz"),
         }
     return Job(
         device="usbg-bcm2711-rpi-4-b",
@@ -52,7 +52,9 @@ def usbg_job(tmp_path, downloads=None, **kwargs):
 
 def test_usbg_needs_the_firmware_download(tmp_path):
     with pytest.raises(MissingArgument) as exc:
-        usbg_job(tmp_path, downloads={"os": "https://e.com/os.wic.xz"}).initialize()
+        usbg_job(
+            tmp_path, downloads={"os": ("https://e.com/os.wic.xz", None)}
+        ).initialize()
     assert "--firmware" in str(exc.value)
 
 
@@ -62,10 +64,39 @@ def test_usbg_rejects_a_kernel(tmp_path):
     assert "--kernel" in str(exc.value)
 
 
-def test_usbg_takes_the_compression_from_the_url(tmp_path):
+def test_usbg_takes_the_compression_from_the_filename(tmp_path):
+    # The URL has no name, so only the file name says it is xz.
     job = usbg_job(tmp_path)
     job.initialize()
-    assert "compression: xz" in job.render()
+    definition = job.render()
+    assert 'filename: "fw.wic.xz"' in definition
+    assert "compression: xz" in definition
+
+
+def test_usbg_falls_back_to_the_url_without_a_filename(tmp_path):
+    job = usbg_job(
+        tmp_path,
+        downloads={
+            "firmware": ("https://e.com/fw.wic.xz", None),
+            "os": ("https://e.com/os.wic.xz", None),
+        },
+    )
+    job.initialize()
+    definition = job.render()
+    assert "filename:" not in definition
+    assert "compression: xz" in definition
+
+
+def test_usbg_rejects_a_filename_with_a_directory(tmp_path):
+    with pytest.raises(InvalidArgument) as exc:
+        usbg_job(
+            tmp_path,
+            downloads={
+                "firmware": ("https://e.com/a", "../fw.wic.xz"),
+                "os": ("https://e.com/b", "os.wic.xz"),
+            },
+        ).initialize()
+    assert "plain file name" in str(exc.value)
 
 
 def test_usbg_leaves_a_download_alone_without_a_known_suffix(tmp_path):
@@ -73,9 +104,9 @@ def test_usbg_leaves_a_download_alone_without_a_known_suffix(tmp_path):
     job = usbg_job(
         tmp_path,
         downloads={
-            "firmware": "https://e.com/fw.wic.xz",
-            "os": "https://e.com/os.wic.xz",
-            "seed": "https://e.com/seed.bin",
+            "firmware": ("https://e.com/fw.wic.xz", None),
+            "os": ("https://e.com/os.wic.xz", None),
+            "seed": ("https://e.com/seed.bin", None),
         },
     )
     job.initialize()
@@ -87,8 +118,8 @@ def test_usbg_rejects_two_downloads_with_the_same_saved_name(tmp_path):
         usbg_job(
             tmp_path,
             downloads={
-                "firmware": "https://e.com/image.wic.xz",
-                "os": "https://e.com/image.wic.gz",
+                "firmware": ("https://e.com/image.wic.xz", None),
+                "os": ("https://e.com/image.wic.gz", None),
             },
         ).initialize()
     assert "image.wic" in str(exc.value)
@@ -106,7 +137,9 @@ def test_usbg_boots_from_a_flat_download_path(tmp_path):
 
 def test_usbg_rpi4_needs_only_the_firmware_download(tmp_path):
     # A complete disk image has nothing to merge, so --os is optional.
-    job = usbg_job(tmp_path, downloads={"firmware": "https://e.com/disk.img.xz"})
+    job = usbg_job(
+        tmp_path, downloads={"firmware": ("https://e.com/disk.img.xz", None)}
+    )
     job.initialize()
     definition = job.render()
     assert "downloads://disk.img" in definition
@@ -125,7 +158,7 @@ def test_usbg_rpi4_merges_when_an_os_image_is_given(tmp_path):
 def test_usbg_rpi4_runs_optee_xtest(tmp_path):
     job = usbg_job(
         tmp_path,
-        downloads={"firmware": "https://e.com/disk.img.xz"},
+        downloads={"firmware": ("https://e.com/disk.img.xz", None)},
         tests=["optee-xtest"],
     )
     job.initialize()
@@ -169,15 +202,15 @@ def test_usbg_rejects_an_overlay(tmp_path):
 def test_usbg_clash_with_a_default_download(tmp_path):
     from tuxlava.devices.usbg import UsbgRpi4
 
-    script = UsbgRpi4.default_downloads["script"]
+    script = UsbgRpi4.default_downloads["script"][0]
     url = "https://e.com/x/ts-merge-images.sh"
     with pytest.raises(InvalidArgument) as exc:
         usbg_job(
             tmp_path,
             downloads={
-                "firmware": "https://e.com/fw.wic.xz",
-                "os": "https://e.com/os.wic.xz",
-                "ts-merge-images": url,
+                "firmware": ("https://e.com/fw.wic.xz", None),
+                "os": ("https://e.com/os.wic.xz", None),
+                "ts-merge-images": (url, None),
             },
         ).initialize()
     assert f"'{script}' and '{url}' are both saved as" in str(exc.value)
@@ -3502,6 +3535,22 @@ def artefacts(tmp_path):
                 str(DEVICE_DICTS / "dragonboard-845c.jinja2"),
             ],
             "fastboot-dragonboard-845c-device-dict.yaml",
+        ),
+        (
+            [
+                "--device",
+                "usbg-bcm2711-rpi-4-b",
+                "--firmware",
+                "https://example.com/download?id=A",
+                "ts-firmware-rpi4.rootfs.wic.xz",
+                "--os",
+                "https://example.com/download?id=B",
+                "core-image-sato-sdk-genericarm64.rootfs.wic.xz",
+                "--downloads",
+                "https://example.com/download?id=C",
+                "testexport.tar.gz",
+            ],
+            "usbg-bcm2711-rpi-4-b-nameless-urls.yaml",
         ),
         (
             [

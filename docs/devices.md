@@ -136,14 +136,27 @@ tuxlava --device usbg-bcm2711-rpi-4-b \
 Anything else the job needs goes in with `--downloads`, once
 per file. Use it for files a test reads on the dispatcher.
 
-Each of them takes one URL. The file name is the last part of
-the URL path, so use URLs that end with the real file name. A
-redirect endpoint like `download?id=A` saves every file as
-`download`.
+Every one of them takes an optional file name after the URL.
+Some URLs have no file name in the path. A redirect endpoint
+saves every file as `download`, so they overwrite each other
+and we cannot see the compression either. Say the name and
+both problems go away:
+
+```shell
+tuxlava --device usbg-bcm2711-rpi-4-b \
+  --firmware "https://example.com/download?id=A" firmware.wic.xz \
+  --os "https://example.com/download?id=B" os.wic.xz \
+  --downloads "https://example.com/download?id=C" packages.tar.gz
+```
+
+Put any commands for the job after a `--`. These options read
+one more value after the URL, so the first command would be
+taken as the file name. Every option that takes several values
+works like this, `--modules` and `--parameters` too.
 
 The compression comes from that name, so LAVA unpacks the file
-during the download and `packages.tar.gz` lands as
-`packages.tar`. A name with no known suffix is left as it is.
+during the download and it lands as `packages.tar`. A name with
+no known suffix is left as it is.
 
 A `--downloads` file is named after its file name, so
 `packages.tar.gz` becomes `packages` in the job. Everything
