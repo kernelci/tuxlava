@@ -183,6 +183,21 @@ def test_usbg_postprocess_uses_the_real_names(tmp_path):
     assert "fdisk -l fw.wic" in definition
 
 
+def test_usbg_quotes_the_names_in_the_yaml(tmp_path):
+    job = usbg_job(
+        tmp_path,
+        downloads={
+            "firmware": ("https://e.com/fw", "fw: one.wic.xz"),
+            "os": ("https://e.com/os", "os #1.wic.xz"),
+        },
+    )
+    job.initialize()
+    definition = yaml.safe_load(job.render())
+    steps = definition["actions"][0]["deploy"]["postprocess"]["docker"]["steps"]
+    assert "fdisk -l 'fw: one.wic'" in steps
+    assert "fdisk -l 'os #1.wic'" in steps
+
+
 def test_usbg_rejects_an_overlay(tmp_path):
     with pytest.raises(InvalidArgument) as exc:
         usbg_job(tmp_path, overlays=[["https://e.com/o.tar.gz", "/"]]).initialize()
@@ -204,6 +219,21 @@ def test_usbg_clash_with_a_default_download(tmp_path):
             },
         ).initialize()
     assert f"'{script}' and '{url}' are both saved as" in str(exc.value)
+
+
+def test_usbg_quotes_the_saved_names(tmp_path):
+    job = usbg_job(
+        tmp_path,
+        downloads={
+            "firmware": ("https://e.com/a/fw x.wic.xz", None),
+            "os": ("https://e.com/os.wic.xz", None),
+        },
+    )
+    job.initialize()
+    definition = yaml.safe_load(job.render())
+    deploy = definition["actions"][0]["deploy"]
+    assert "fdisk -l 'fw x.wic'" in deploy["postprocess"]["docker"]["steps"]
+    assert definition["actions"][1]["deploy"]["image"]["url"] == "downloads://fw x.wic"
 
 
 def test_usbg_runs_commands(tmp_path):

@@ -7,10 +7,10 @@
       minutes: {{ deploy_download_timeout }}
     images:
 {% for name, (url, filename) in downloads.items() %}
-      {{ name }}:
-        url: "{{ url }}"
+      {{ name | yaml_quote }}:
+        url: {{ url | yaml_quote }}
 {% if filename %}
-        filename: "{{ filename }}"
+        filename: {{ filename | yaml_quote }}
 {% endif %}
 {% set comp = device.compression_for(url, filename) %}
 {% if comp %}
@@ -23,6 +23,6 @@
         image: "{{ device.postprocess_docker }}"
         steps:
 {% for step in postprocess_steps %}
-        - {{ step }}
+        - {{ step | yaml_quote }}
 {% endfor %}
 {% endif %}

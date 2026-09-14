@@ -6,6 +6,7 @@
 #
 # SPDX-License-Identifier: MIT
 
+import shlex
 from typing import Dict, List, Optional, Tuple
 
 from tuxlava import templates
@@ -187,8 +188,11 @@ class UsbgDevice(Device):
         }
         # The usbg-ms deploy names the file, LAVA does not glob downloads://
         kwargs["boot_image_path"] = names[self.boot_image]
+        quoted = {key: shlex.quote(name) for key, name in names.items()}
         kwargs["postprocess_steps"] = (
-            [step.format(**names) for step in self.postprocess_steps] if applies else []
+            [step.format(**quoted) for step in self.postprocess_steps]
+            if applies
+            else []
         )
 
         if kwargs["tux_prompt"]:

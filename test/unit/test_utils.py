@@ -4,6 +4,7 @@ from argparse import ArgumentTypeError
 from pathlib import Path
 
 import pytest
+import yaml
 
 from tuxlava.utils import (
     downloaded_name,
@@ -12,6 +13,7 @@ from tuxlava.utils import (
     kernel_type,
     notnone,
     pathurlnone,
+    yaml_quote,
 )
 
 
@@ -85,3 +87,20 @@ def test_downloaded_name_keeps_the_suffix_without_compression():
 
 def test_downloaded_name_of_a_file_without_a_suffix():
     assert downloaded_name("Image") == "Image"
+
+
+def test_yaml_quote_wraps_the_value():
+    assert yaml_quote("rootfs.img.xz") == '"rootfs.img.xz"'
+
+
+def test_yaml_quote_keeps_a_colon_in_the_string():
+    assert yaml.safe_load(f"key: {yaml_quote('a: b')}") == {"key": "a: b"}
+
+
+def test_yaml_quote_keeps_a_hash_in_the_string():
+    assert yaml.safe_load(f"key: {yaml_quote('a #1')}") == {"key": "a #1"}
+
+
+def test_yaml_quote_escapes_a_quote():
+    quoted = yaml_quote('a"b')
+    assert yaml.safe_load(f"key: {quoted}") == {"key": 'a"b'}

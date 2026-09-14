@@ -11,7 +11,7 @@ from pathlib import Path
 
 import jinja2
 
-from tuxlava.utils import compression, is_cpio_rootfs, kernel_type
+from tuxlava.utils import compression, is_cpio_rootfs, kernel_type, yaml_quote
 
 BASE = (Path(__file__) / "..").resolve()
 
@@ -27,6 +27,7 @@ def jobs():
     env.globals["compression"] = compression
     env.globals["is_cpio_rootfs"] = is_cpio_rootfs
     env.globals["kernel_type"] = kernel_type
+    env.filters["yaml_quote"] = yaml_quote
     return env
 
 

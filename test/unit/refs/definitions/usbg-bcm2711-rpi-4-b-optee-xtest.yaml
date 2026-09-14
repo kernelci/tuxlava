@@ -26,7 +26,7 @@ actions:
     timeout:
       minutes: 30
     images:
-      firmware:
+      "firmware":
         url: "https://example.com/rpi4-disk.img.xz"
         compression: xz
 - deploy:
