@@ -50,14 +50,6 @@ def usbg_job(tmp_path, downloads=None, **kwargs):
     )
 
 
-def test_usbg_needs_the_os_download(tmp_path):
-    with pytest.raises(MissingArgument) as exc:
-        usbg_job(
-            tmp_path, downloads={"firmware": "https://e.com/fw.wic.xz"}
-        ).initialize()
-    assert "--os" in str(exc.value)
-
-
 def test_usbg_needs_the_firmware_download(tmp_path):
     with pytest.raises(MissingArgument) as exc:
         usbg_job(tmp_path, downloads={"os": "https://e.com/os.wic.xz"}).initialize()
@@ -110,6 +102,24 @@ def test_usbg_boots_from_a_flat_download_path(tmp_path):
     definition = job.render()
     assert "downloads://fw.wic" in definition
     assert "uniquify" not in definition
+
+
+def test_usbg_rpi4_needs_only_the_firmware_download(tmp_path):
+    # A complete disk image has nothing to merge, so --os is optional.
+    job = usbg_job(tmp_path, downloads={"firmware": "https://e.com/disk.img.xz"})
+    job.initialize()
+    definition = job.render()
+    assert "downloads://disk.img" in definition
+    assert "postprocess" not in definition
+    assert "ts-merge-images.sh" not in definition
+
+
+def test_usbg_rpi4_merges_when_an_os_image_is_given(tmp_path):
+    job = usbg_job(tmp_path)
+    job.initialize()
+    definition = job.render()
+    assert "postprocess" in definition
+    assert "ts-merge-images.sh" in definition
 
 
 def test_usbg_passes_the_deploy_os_to_both_deploys(tmp_path):
