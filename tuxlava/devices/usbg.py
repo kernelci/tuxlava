@@ -6,7 +6,7 @@
 #
 # SPDX-License-Identifier: MIT
 
-from typing import Dict, List
+from typing import Dict, List, Optional, Tuple
 
 from tuxlava import templates
 from tuxlava.devices import Device
@@ -32,7 +32,7 @@ class UsbgDevice(Device):
 
     # Downloads the job must be given, and defaults for the rest.
     required_downloads: List[str] = []
-    default_downloads: Dict[str, str] = {}
+    default_downloads: Dict[str, Tuple[str, Optional[str]]] = {}
 
     # The download the board boots from. It goes to usbg-ms.
     boot_image: str = ""
@@ -75,17 +75,19 @@ class UsbgDevice(Device):
             return dict(downloads)
         return {**self.default_downloads, **downloads}
 
-    def compression_for(self, url):
+    def compression_for(self, url, filename):
         """Worked out from the name LAVA downloads as."""
-        return compression(url_name(url))[1]
+        return compression(filename or url_name(url))[1]
 
-    def saved_name(self, url):
+    def saved_name(self, url, filename):
         """The name the file has in the download directory.
 
         LAVA drops the compression suffix when it unpacks the file during
         the download, so the name on disk is not the name we asked for.
         """
-        return downloaded_name(url_name(url), self.compression_for(url))
+        return downloaded_name(
+            filename or url_name(url), self.compression_for(url, filename)
+        )
 
     def validate(
         self,
@@ -120,9 +122,14 @@ class UsbgDevice(Device):
                 f"Missing --{self.boot_image}, the image {self.name} boots from"
             )
 
+        # The parser checks the file name too, but a Job can be built directly.
         seen = {}
-        for url in all_downloads.values():
-            name = self.saved_name(url)
+        for url, filename in all_downloads.values():
+            if filename is not None and ("/" in filename or filename in (".", "..")):
+                raise InvalidArgument(
+                    f"file name '{filename}' for '{url}' must be a plain file name"
+                )
+            name = self.saved_name(url, filename)
             if name in seen:
                 raise InvalidArgument(
                     f"'{seen[name]}' and '{url}' are both saved as '{name}', "
@@ -174,7 +181,10 @@ class UsbgDevice(Device):
         applies = self.postprocess_applies(kwargs["downloads"])
         kwargs["downloads"] = self.all_downloads(kwargs["downloads"])
 
-        names = {key: self.saved_name(url) for key, url in kwargs["downloads"].items()}
+        names = {
+            key: self.saved_name(url, filename)
+            for key, (url, filename) in kwargs["downloads"].items()
+        }
         # The usbg-ms deploy names the file, LAVA does not glob downloads://
         kwargs["boot_image_path"] = names[self.boot_image]
         kwargs["postprocess_steps"] = (
@@ -218,7 +228,8 @@ class UsbgRpi4(UsbgDevice):
         "script": (
             "https://gitlab.com/Linaro/blueprints/ci/-/raw/"
             "630d54e45c42ae0ca2c2ec8c3c3ea07b0996ab58/"
-            "support_files/ts-merge-images.sh"
+            "support_files/ts-merge-images.sh",
+            None,
         ),
     }
     boot_image = "firmware"
