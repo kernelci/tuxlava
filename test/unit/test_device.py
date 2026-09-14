@@ -122,6 +122,16 @@ def test_usbg_rpi4_merges_when_an_os_image_is_given(tmp_path):
     assert "ts-merge-images.sh" in definition
 
 
+def test_usbg_rpi4_runs_optee_xtest(tmp_path):
+    job = usbg_job(
+        tmp_path,
+        downloads={"firmware": "https://e.com/disk.img.xz"},
+        tests=["optee-xtest"],
+    )
+    job.initialize()
+    assert "automated/linux/optee/optee-xtest.yaml" in job.render()
+
+
 def test_usbg_passes_the_deploy_os_to_both_deploys(tmp_path):
     job = usbg_job(tmp_path, deploy_os="oe")
     job.initialize()
@@ -3503,6 +3513,17 @@ def artefacts(tmp_path):
                 "https://example.com/core-image-sato-sdk-genericarm64.rootfs.wic.xz",
             ],
             "usbg-bcm2711-rpi-4-b.yaml",
+        ),
+        (
+            [
+                "--device",
+                "usbg-bcm2711-rpi-4-b",
+                "--firmware",
+                "https://example.com/rpi4-disk.img.xz",
+                "--tests",
+                "optee-xtest",
+            ],
+            "usbg-bcm2711-rpi-4-b-optee-xtest.yaml",
         ),
     ],
 )
