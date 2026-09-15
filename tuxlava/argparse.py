@@ -14,7 +14,7 @@ from pathlib import Path
 from tuxlava import __version__
 from tuxlava.devices import Device
 from tuxlava.tests import Test
-from tuxlava.utils import download_key, pathurlnone, url_name
+from tuxlava.utils import download_key, is_plain_file_name, pathurlnone, url_name
 
 
 ###########
@@ -108,13 +108,6 @@ class DownloadAction(argparse.Action):
         url = values[0]
         filename = values[1] if len(values) == 2 else None
 
-        # LAVA writes the file into the download directory. A name with
-        # a path in it would escape that directory.
-        if filename is not None and ("/" in filename or filename in (".", "..")):
-            raise argparse.ArgumentError(
-                self, f"'{filename}' must be a plain file name"
-            )
-
         # argparse only catches ArgumentTypeError from a type= callable,
         # not from inside an action, so turn it into ArgumentError here.
         try:
@@ -122,7 +115,14 @@ class DownloadAction(argparse.Action):
         except argparse.ArgumentTypeError as exc:
             raise argparse.ArgumentError(self, str(exc))
 
-        key = self.key or download_key(filename or url_name(url))
+        name = filename or url_name(url)
+        if not is_plain_file_name(name):
+            hint = "" if filename else ", give a file name to save it as"
+            raise argparse.ArgumentError(
+                self, f"'{name}' must be a plain file name{hint}"
+            )
+
+        key = self.key or download_key(name)
         if not key:
             raise argparse.ArgumentError(self, f"cannot work out a name for '{url}'")
 

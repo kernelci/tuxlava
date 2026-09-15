@@ -99,6 +99,27 @@ def test_usbg_rejects_a_filename_with_a_directory(tmp_path):
     assert "plain file name" in str(exc.value)
 
 
+def test_usbg_rejects_a_filename_that_breaks_the_url(tmp_path):
+    with pytest.raises(InvalidArgument) as exc:
+        usbg_job(
+            tmp_path,
+            downloads={
+                "firmware": ("https://e.com/a", "fw#1.wic.xz"),
+                "os": ("https://e.com/b", "os.wic.xz"),
+            },
+        ).initialize()
+    assert "plain file name" in str(exc.value)
+
+
+def test_usbg_rejects_a_url_name_that_breaks_the_url(tmp_path):
+    with pytest.raises(InvalidArgument) as exc:
+        usbg_job(
+            tmp_path,
+            downloads={"firmware": ("https://e.com/a[b].wic.xz", None)},
+        ).initialize()
+    assert "'a[b].wic.xz'" in str(exc.value)
+
+
 def test_usbg_leaves_a_download_alone_without_a_known_suffix(tmp_path):
     # No compression key means LAVA saves the file as it is.
     job = usbg_job(
@@ -198,14 +219,14 @@ def test_usbg_quotes_the_names_in_the_yaml(tmp_path):
         tmp_path,
         downloads={
             "firmware": ("https://e.com/fw", "fw: one.wic.xz"),
-            "os": ("https://e.com/os", "os #1.wic.xz"),
+            "os": ("https://e.com/os", "os two.wic.xz"),
         },
     )
     job.initialize()
     definition = yaml.safe_load(job.render())
     steps = definition["actions"][0]["deploy"]["postprocess"]["docker"]["steps"]
     assert "fdisk -l 'fw: one.wic'" in steps
-    assert "fdisk -l 'os #1.wic'" in steps
+    assert "fdisk -l 'os two.wic'" in steps
 
 
 def test_usbg_rejects_an_overlay(tmp_path):

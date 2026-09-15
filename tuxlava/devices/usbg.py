@@ -15,6 +15,7 @@ from tuxlava.exceptions import InvalidArgument, MissingArgument
 from tuxlava.utils import (
     compression,
     downloaded_name,
+    is_plain_file_name,
     slugify,
     url_name,
 )
@@ -126,9 +127,10 @@ class UsbgDevice(Device):
         # The parser checks the file name too, but a Job can be built directly.
         seen = {}
         for url, filename in all_downloads.values():
-            if filename is not None and ("/" in filename or filename in (".", "..")):
+            given_name = filename or url_name(url)
+            if not is_plain_file_name(given_name):
                 raise InvalidArgument(
-                    f"file name '{filename}' for '{url}' must be a plain file name"
+                    f"file name '{given_name}' for '{url}' must be a plain file name"
                 )
             name = self.saved_name(url, filename)
             if name in seen:
