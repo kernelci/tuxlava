@@ -7,6 +7,7 @@
 # SPDX-License-Identifier: MIT
 
 import argparse
+import json
 import re
 from pathlib import Path
 from urllib.parse import urlparse
@@ -49,6 +50,57 @@ def kernel_type(kernel):
     if name.startswith("uimage"):
         return "uimage"
     return "image"
+
+
+def url_name(url):
+    """The name LAVA takes from the URL, when the job does not say one.
+
+    It is the last part of the path, so the query is left out. A redirect
+    endpoint has no name there and every image comes back as "download".
+    """
+    return urlparse(url).path.rsplit("/", 1)[-1]
+
+
+def download_key(name):
+    """The name a download gets in the job.
+
+    The file name without its suffixes, so "testexport.tar.gz" becomes
+    "testexport". LAVA only needs the key to be unique, it does not end up
+    in a path.
+    """
+    return name.split(".")[0]
+
+
+def downloaded_name(name, compression=None):
+    """The name LAVA saves a download as.
+
+    When LAVA unpacks the file during the download it drops the
+    compression suffix. Pass the compression the job sets.
+    """
+    if not compression:
+        return name
+    if "." not in name:
+        return name
+    return name.rsplit(".", 1)[0]
+
+
+def is_plain_file_name(name):
+    """A name LAVA can save and point at with a downloads:// URL.
+
+    A "/" escapes the download directory. The others end the path or
+    start a query when LAVA parses the downloads:// URL.
+    """
+    if "/" in name or name in (".", ".."):
+        return False
+    return not any(c in name for c in "#?[]")
+
+
+def yaml_quote(value):
+    """Quote a value so the job has it as one YAML string.
+
+    A JSON string is also a valid YAML string, so json.dumps escapes it.
+    """
+    return json.dumps(str(value))
 
 
 def is_cpio_rootfs(rootfs):

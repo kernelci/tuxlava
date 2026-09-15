@@ -1,0 +1,28 @@
+- deploy:
+    to: downloads
+{% if device.failure_retry > 1 %}
+    failure_retry: {{ device.failure_retry }}
+{% endif %}
+    timeout:
+      minutes: {{ deploy_download_timeout }}
+    images:
+{% for name, (url, filename) in downloads.items() %}
+      {{ name | yaml_quote }}:
+        url: {{ url | yaml_quote }}
+{% if filename %}
+        filename: {{ filename | yaml_quote }}
+{% endif %}
+{% set comp = device.compression_for(url, filename) %}
+{% if comp %}
+        compression: {{ comp }}
+{% endif %}
+{% endfor %}
+{% if postprocess_steps %}
+    postprocess:
+      docker:
+        image: "{{ device.postprocess_docker }}"
+        steps:
+{% for step in postprocess_steps %}
+        - {{ step | yaml_quote }}
+{% endfor %}
+{% endif %}

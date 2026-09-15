@@ -14,7 +14,7 @@ from pathlib import Path
 from tuxlava import __version__
 from tuxlava.devices import Device
 from tuxlava.tests import Test
-from tuxlava.utils import pathurlnone
+from tuxlava.utils import download_key, is_plain_file_name, pathurlnone, url_name
 
 
 ###########
@@ -86,6 +86,52 @@ class KeyValueParameterAction(argparse.Action):
                 if "$BUILD/" not in value:
                     value = pathurlnone(value)
             getattr(namespace, self.dest)[key] = value
+
+
+class DownloadAction(argparse.Action):
+    """Collect the files the job downloads, in the order they are given.
+
+    Takes a URL and optionally the file name to save it as. --firmware and
+    --os pass a fixed key. A plain --downloads takes its key from the file
+    name, or from the URL when no file name is given.
+    """
+
+    def __init__(self, *args, key=None, **kwargs):
+        self.key = key
+        super().__init__(*args, **kwargs)
+
+    def __call__(self, parser, namespace, values, option_string=None):
+        if len(values) > 2:
+            raise argparse.ArgumentError(
+                self, "takes a URL and optionally the file name to save it as"
+            )
+        url = values[0]
+        filename = values[1] if len(values) == 2 else None
+
+        if filename is not None and not is_plain_file_name(filename):
+            raise argparse.ArgumentError(
+                self, f"'{filename}' must be a plain file name"
+            )
+
+        # argparse only catches ArgumentTypeError from a type= callable,
+        # not from inside an action, so turn it into ArgumentError here.
+        try:
+            url = pathurlnone(url)
+        except argparse.ArgumentTypeError as exc:
+            raise argparse.ArgumentError(self, str(exc))
+
+        key = self.key or download_key(filename or url_name(url))
+        if not key:
+            raise argparse.ArgumentError(self, f"cannot work out a name for '{url}'")
+
+        # Copy so the parser default is never mutated.
+        downloads = dict(getattr(namespace, self.dest) or {})
+        if key in downloads:
+            raise argparse.ArgumentError(
+                self, f"'{key}' is downloaded twice, give it another file name"
+            )
+        downloads[key] = (url, filename)
+        setattr(namespace, self.dest, downloads)
 
 
 class KeyValueIntAction(argparse.Action):
@@ -198,6 +244,25 @@ def setup_parser() -> argparse.ArgumentParser:
         nargs="+",
         dest="overlays",
     )
+
+    def download(name, key=None):
+        group.add_argument(
+            f"--{name}",
+            metavar=("URL", "FILENAME"),
+            default={},
+            type=str,
+            help=f"{name} URL and optionally the file name to save it as. "
+            "The compression is taken from that name. Put any commands "
+            'after a "--", or the first one is read as the file name',
+            action=DownloadAction,
+            key=key,
+            nargs="+",
+            dest="downloads",
+        )
+
+    download("firmware", key="firmware")
+    download("os", key="os")
+    download("downloads")
     group.add_argument(
         "--partition",
         default=None,

@@ -13,7 +13,8 @@ from tuxlava.devices import Device
 from tuxlava.devices.fvp import FVPMorelloAndroid
 from tuxlava.devices.lava import FVPLAVA, QemuLAVA
 from tuxlava.devices.qemu import QemuArmv5
-from tuxlava.exceptions import InvalidArgument
+from tuxlava.exceptions import InvalidArgument, MissingArgument
+from tuxlava.jobs import Job
 
 BASE = (Path(__file__) / "..").resolve()
 DEVICE_DICTS = BASE / ".." / "device_dicts"
@@ -27,6 +28,323 @@ def test_select():
 
     with pytest.raises(InvalidArgument):
         Device.select("Hello")
+
+
+def test_select_usbg():
+    from tuxlava.devices.usbg import UsbgRpi4
+
+    assert Device.select("usbg-bcm2711-rpi-4-b") == UsbgRpi4
+
+
+def usbg_job(tmp_path, downloads=None, **kwargs):
+    if downloads is None:
+        downloads = {
+            "firmware": ("https://e.com/download?id=A", "fw.wic.xz"),
+            "os": ("https://e.com/download?id=B", "os.wic.xz"),
+        }
+    return Job(
+        device="usbg-bcm2711-rpi-4-b",
+        downloads=downloads,
+        tmpdir=tmp_path,
+        **kwargs,
+    )
+
+
+def test_usbg_needs_the_firmware_download(tmp_path):
+    with pytest.raises(MissingArgument) as exc:
+        usbg_job(
+            tmp_path, downloads={"os": ("https://e.com/os.wic.xz", None)}
+        ).initialize()
+    assert "--firmware" in str(exc.value)
+
+
+def test_usbg_rejects_a_kernel(tmp_path):
+    with pytest.raises(InvalidArgument) as exc:
+        usbg_job(tmp_path, kernel="https://e.com/Image").initialize()
+    assert "--kernel" in str(exc.value)
+
+
+def test_usbg_takes_the_compression_from_the_filename(tmp_path):
+    # The URL has no name, so only the file name says it is xz.
+    job = usbg_job(tmp_path)
+    job.initialize()
+    definition = job.render()
+    assert 'filename: "fw.wic.xz"' in definition
+    assert "compression: xz" in definition
+
+
+def test_usbg_falls_back_to_the_url_without_a_filename(tmp_path):
+    job = usbg_job(
+        tmp_path,
+        downloads={
+            "firmware": ("https://e.com/fw.wic.xz", None),
+            "os": ("https://e.com/os.wic.xz", None),
+        },
+    )
+    job.initialize()
+    definition = job.render()
+    assert "filename:" not in definition
+    assert "compression: xz" in definition
+
+
+def test_usbg_rejects_a_filename_with_a_directory(tmp_path):
+    with pytest.raises(InvalidArgument) as exc:
+        usbg_job(
+            tmp_path,
+            downloads={
+                "firmware": ("https://e.com/a", "../fw.wic.xz"),
+                "os": ("https://e.com/b", "os.wic.xz"),
+            },
+        ).initialize()
+    assert "plain file name" in str(exc.value)
+
+
+def test_usbg_rejects_a_filename_that_breaks_the_url(tmp_path):
+    with pytest.raises(InvalidArgument) as exc:
+        usbg_job(
+            tmp_path,
+            downloads={
+                "firmware": ("https://e.com/a", "fw#1.wic.xz"),
+                "os": ("https://e.com/b", "os.wic.xz"),
+            },
+        ).initialize()
+    assert "plain file name" in str(exc.value)
+
+
+def test_usbg_leaves_a_download_alone_without_a_known_suffix(tmp_path):
+    # No compression key means LAVA saves the file as it is.
+    job = usbg_job(
+        tmp_path,
+        downloads={
+            "firmware": ("https://e.com/fw.wic.xz", None),
+            "os": ("https://e.com/os.wic.xz", None),
+            "seed": ("https://e.com/seed.bin", None),
+        },
+    )
+    job.initialize()
+    assert job.render().count("compression:") == 2
+
+
+def test_usbg_rejects_two_downloads_with_the_same_saved_name(tmp_path):
+    with pytest.raises(InvalidArgument) as exc:
+        usbg_job(
+            tmp_path,
+            downloads={
+                "firmware": ("https://e.com/image.wic.xz", None),
+                "os": ("https://e.com/image.wic.gz", None),
+            },
+        ).initialize()
+    assert "image.wic" in str(exc.value)
+
+
+def test_usbg_boots_from_a_flat_download_path(tmp_path):
+    # No uniquify. The file sits straight in the download directory,
+    # without the compression suffix.
+    job = usbg_job(tmp_path)
+    job.initialize()
+    definition = job.render()
+    assert "downloads://fw.wic" in definition
+    assert "uniquify" not in definition
+
+
+def test_usbg_rpi4_needs_only_the_firmware_download(tmp_path):
+    # A complete disk image has nothing to merge, so --os is optional.
+    job = usbg_job(
+        tmp_path, downloads={"firmware": ("https://e.com/disk.img.xz", None)}
+    )
+    job.initialize()
+    definition = job.render()
+    assert "downloads://disk.img" in definition
+    assert "postprocess" not in definition
+    assert "ts-merge-images.sh" not in definition
+
+
+def test_usbg_rpi4_merges_when_an_os_image_is_given(tmp_path):
+    job = usbg_job(tmp_path)
+    job.initialize()
+    definition = job.render()
+    assert "postprocess" in definition
+    assert "ts-merge-images.sh" in definition
+
+
+def test_usbg_rpi4_runs_optee_xtest(tmp_path):
+    job = usbg_job(
+        tmp_path,
+        downloads={"firmware": ("https://e.com/disk.img.xz", None)},
+        tests=["optee-xtest"],
+    )
+    job.initialize()
+    assert "automated/linux/optee/optee-xtest.yaml" in job.render()
+
+
+def test_usbg_unpacks_the_overlay_in_the_overlay_dir(tmp_path):
+    # The tarball holds lava-N, not var/lib/lava-N, so unpacking at /
+    # gives /lava-N and the test shell finds no environment.
+    job = usbg_job(tmp_path)
+    job.initialize()
+    definition = job.render()
+    assert "unpack_command: tar -C /var/lib/ -xzvf" in definition
+    assert "lava_test_results_dir: /var/lib/lava-%s" in definition
+
+
+def test_usbg_postprocess_uses_the_real_names(tmp_path):
+    job = usbg_job(tmp_path)
+    job.initialize()
+    definition = job.render()
+    assert "bash ts-merge-images.sh fw.wic os.wic" in definition
+    assert "fdisk -l fw.wic" in definition
+
+
+def test_usbg_quotes_the_names_in_the_yaml(tmp_path):
+    job = usbg_job(
+        tmp_path,
+        downloads={
+            "firmware": ("https://e.com/fw", "fw: one.wic.xz"),
+            "os": ("https://e.com/os", "os two.wic.xz"),
+        },
+    )
+    job.initialize()
+    definition = yaml.safe_load(job.render())
+    steps = definition["actions"][0]["deploy"]["postprocess"]["docker"]["steps"]
+    assert "fdisk -l 'fw: one.wic'" in steps
+    assert "fdisk -l 'os two.wic'" in steps
+
+
+def test_usbg_rejects_an_os_download_it_never_uses():
+    from tuxlava.devices.usbg import UsbgDevice
+
+    class UsbgPlain(UsbgDevice):
+        name = "usbg-plain"
+        required_downloads = ["firmware"]
+        boot_image = "firmware"
+
+    with pytest.raises(InvalidArgument) as exc:
+        UsbgPlain().validate(
+            commands=[],
+            downloads={
+                "firmware": ("https://e.com/disk.img.xz", None),
+                "os": ("https://e.com/os.wic.xz", None),
+            },
+            parameters={},
+            prompt=None,
+            tests=[],
+            visibility="public",
+        )
+    assert "--os is not used" in str(exc.value)
+
+
+def test_usbg_rejects_an_overlay(tmp_path):
+    with pytest.raises(InvalidArgument) as exc:
+        usbg_job(tmp_path, overlays=[["https://e.com/o.tar.gz", "/"]]).initialize()
+    assert "overlay" in str(exc.value)
+
+
+def test_usbg_clash_with_a_default_download(tmp_path):
+    from tuxlava.devices.usbg import UsbgRpi4
+
+    script = UsbgRpi4.default_downloads["script"][0]
+    url = "https://e.com/x/ts-merge-images.sh"
+    with pytest.raises(InvalidArgument) as exc:
+        usbg_job(
+            tmp_path,
+            downloads={
+                "firmware": ("https://e.com/fw.wic.xz", None),
+                "os": ("https://e.com/os.wic.xz", None),
+                "ts-merge-images": (url, None),
+            },
+        ).initialize()
+    assert f"'{script}' and '{url}' are both saved as" in str(exc.value)
+
+
+def test_usbg_quotes_the_saved_names(tmp_path):
+    job = usbg_job(
+        tmp_path,
+        downloads={
+            "firmware": ("https://e.com/a/fw x.wic.xz", None),
+            "os": ("https://e.com/os.wic.xz", None),
+        },
+    )
+    job.initialize()
+    definition = yaml.safe_load(job.render())
+    deploy = definition["actions"][0]["deploy"]
+    assert "fdisk -l 'fw x.wic'" in deploy["postprocess"]["docker"]["steps"]
+    assert definition["actions"][1]["deploy"]["image"]["url"] == "downloads://fw x.wic"
+
+
+def test_usbg_runs_commands(tmp_path):
+    job = usbg_job(tmp_path, commands=["uname", "-a"])
+    job.initialize()
+    assert "lava-test-case command --shell uname -a" in job.render()
+
+
+def test_usbg_downloads_the_overlay_with_curl(tmp_path):
+    # Without -O curl writes to stdout and there is nothing to unpack.
+    job = usbg_job(tmp_path)
+    job.initialize()
+    definition = job.render()
+    assert "curl --fail --retry 20 --retry-connrefused -O" in definition
+    assert "wget" not in definition
+
+
+USBG_D_DICT = {
+    "connection_command": "laacli serial connect",
+    "hard_reset_command": "laacli power reset",
+    "power_on_command": "laacli power on",
+    "power_off_command": "laacli power off",
+    "usbg_ms_commands": {
+        # LAVA substitutes {IMAGE} with the file it downloaded.
+        "enable": "laacli usbg-ms on --filename {IMAGE}",
+        "disable": "laacli usbg-ms off",
+    },
+}
+
+
+def usbg_device_dict(tmp_path, d_dict_config=USBG_D_DICT):
+    job = usbg_job(tmp_path)
+    job.initialize()
+    return job.device.device_dict({}, d_dict_config=d_dict_config)
+
+
+def test_usbg_device_dict_is_valid_yaml(tmp_path):
+    assert yaml.safe_load(usbg_device_dict(tmp_path))
+
+
+def test_usbg_device_dict_deploys_over_usbg_ms(tmp_path):
+    d = yaml.safe_load(usbg_device_dict(tmp_path))
+    methods = d["actions"]["deploy"]["methods"]
+    assert list(methods) == ["usbg-ms"]
+    assert methods["usbg-ms"]["enable"] == "laacli usbg-ms on --filename {IMAGE}"
+    assert methods["usbg-ms"]["disable"] == "laacli usbg-ms off"
+
+
+def test_usbg_device_dict_boots_minimal_over_serial(tmp_path):
+    d = yaml.safe_load(usbg_device_dict(tmp_path))
+    boot = d["actions"]["boot"]
+    assert list(boot["methods"]) == ["minimal"]
+    assert list(boot["connections"]) == ["serial"]
+
+
+def test_usbg_device_dict_has_the_board_commands(tmp_path):
+    d = yaml.safe_load(usbg_device_dict(tmp_path))
+    commands = d["commands"]
+    assert commands["connect"] == "laacli serial connect"
+    assert commands["power_on"] == "laacli power on"
+    assert commands["power_off"] == "laacli power off"
+    assert commands["hard_reset"] == "laacli power reset"
+
+
+def test_usbg_device_dict_needs_the_usbg_ms_commands(tmp_path):
+    # Without them the job cannot attach the image.
+    with pytest.raises(MissingArgument) as exc:
+        usbg_device_dict(tmp_path, d_dict_config={"connection_command": "telnet x 1"})
+    assert "usbg_ms_commands" in str(exc.value)
+
+
+def test_usbg_device_dict_needs_a_device_dict(tmp_path):
+    # Only the worker that has the board can power and reach it.
+    with pytest.raises(MissingArgument) as exc:
+        usbg_device_dict(tmp_path, d_dict_config=None)
+    assert "--device-dict" in str(exc.value)
 
 
 ARTEFACTS = [
@@ -3250,6 +3568,44 @@ def artefacts(tmp_path):
             ],
             "fastboot-dragonboard-845c-device-dict.yaml",
         ),
+        (
+            [
+                "--device",
+                "usbg-bcm2711-rpi-4-b",
+                "--firmware",
+                "https://example.com/download?id=A",
+                "ts-firmware-rpi4.rootfs.wic.xz",
+                "--os",
+                "https://example.com/download?id=B",
+                "core-image-sato-sdk-genericarm64.rootfs.wic.xz",
+                "--downloads",
+                "https://example.com/download?id=C",
+                "testexport.tar.gz",
+            ],
+            "usbg-bcm2711-rpi-4-b-nameless-urls.yaml",
+        ),
+        (
+            [
+                "--device",
+                "usbg-bcm2711-rpi-4-b",
+                "--firmware",
+                "https://example.com/ts-firmware-rpi4.rootfs.wic.xz",
+                "--os",
+                "https://example.com/core-image-sato-sdk-genericarm64.rootfs.wic.xz",
+            ],
+            "usbg-bcm2711-rpi-4-b.yaml",
+        ),
+        (
+            [
+                "--device",
+                "usbg-bcm2711-rpi-4-b",
+                "--firmware",
+                "https://example.com/rpi4-disk.img.xz",
+                "--tests",
+                "optee-xtest",
+            ],
+            "usbg-bcm2711-rpi-4-b-optee-xtest.yaml",
+        ),
     ],
 )
 def test_definition(monkeypatch, mocker, capsys, tmpdir, artefacts, args, filename):
@@ -3896,3 +4252,14 @@ def test_fvp_aemva_extra_assets(tmpdir):
     assert (tmpdir / "startup.nsh").read_text(
         encoding="utf-8"
     ) == "Image dtb=fvp-base-revc.dtb systemd.log_level=warning console=ttyAMA0 earlycon=pl011,0x1c090000 ip=dhcp root=/dev/vda"
+
+
+def test_downloads_are_rejected_by_other_devices(tmp_path):
+    with pytest.raises(InvalidArgument) as exc:
+        Job(
+            device="qemu-arm64",
+            kernel="https://e.com/Image",
+            downloads={"firmware": "https://e.com/a.wic.xz"},
+            tmpdir=tmp_path,
+        ).initialize()
+    assert "--downloads" in str(exc.value)
