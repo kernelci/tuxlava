@@ -79,6 +79,7 @@ class FastbootDevice(StorageDevice, Device):
         prompt,
         ramdisk,
         rootfs,
+        secrets,
         enable_network,
         tests,
         boot,
