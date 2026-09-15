@@ -124,6 +124,15 @@ class UsbgDevice(Device):
                 f"Missing --{self.boot_image}, the image {self.name} boots from"
             )
 
+        if (
+            "os" in downloads
+            and "os" not in self.postprocess_needs
+            and self.boot_image != "os"
+        ):
+            raise InvalidArgument(
+                f"--os is not used by {self.name}, it boots one whole image"
+            )
+
         # The parser checks the file name too, but a Job can be built directly.
         seen = {}
         for url, filename in all_downloads.values():
