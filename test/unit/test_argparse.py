@@ -192,6 +192,45 @@ def test_downloads_rejects_a_filename_with_a_directory(capsys):
     assert "plain file name" in capsys.readouterr().err
 
 
+def test_downloads_rejects_a_filename_that_breaks_the_url(capsys):
+    with pytest.raises(SystemExit):
+        setup_parser().parse_args(
+            [
+                "--device",
+                "qemu-arm64",
+                "--downloads",
+                "https://e.com/a",
+                "fw#1.wic",
+            ]
+        )
+    assert "plain file name" in capsys.readouterr().err
+
+
+def test_firmware_rejects_a_url_name_that_breaks_the_url(capsys):
+    with pytest.raises(SystemExit):
+        setup_parser().parse_args(
+            ["--device", "qemu-arm64", "--firmware", "https://e.com/a[b].wic.xz"]
+        )
+    err = capsys.readouterr().err
+    assert "'a[b].wic.xz'" in err
+    assert "give a file name" in err
+
+
+def test_firmware_takes_a_bad_url_name_with_a_filename():
+    options = setup_parser().parse_args(
+        [
+            "--device",
+            "qemu-arm64",
+            "--firmware",
+            "https://e.com/a[b].wic.xz",
+            "fw.wic.xz",
+        ]
+    )
+    assert options.downloads == {
+        "firmware": ("https://e.com/a[b].wic.xz", "fw.wic.xz"),
+    }
+
+
 def test_downloads_with_a_missing_file_is_an_error(capsys):
     # A bad path used to come out as a traceback.
     with pytest.raises(SystemExit):

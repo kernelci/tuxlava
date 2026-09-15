@@ -11,6 +11,7 @@ from tuxlava.utils import (
     url_name,
     is_cpio_rootfs,
     kernel_type,
+    is_plain_file_name,
     notnone,
     pathurlnone,
     yaml_quote,
@@ -87,6 +88,21 @@ def test_downloaded_name_keeps_the_suffix_without_compression():
 
 def test_downloaded_name_of_a_file_without_a_suffix():
     assert downloaded_name("Image") == "Image"
+
+
+def test_is_plain_file_name_takes_a_normal_name():
+    assert is_plain_file_name("rootfs.img.xz") is True
+
+
+def test_is_plain_file_name_rejects_a_path():
+    assert is_plain_file_name("a/b.img") is False
+    assert is_plain_file_name("..") is False
+
+
+def test_is_plain_file_name_rejects_what_breaks_the_url():
+    # LAVA points at the file with downloads://<name>.
+    for name in ("fw#1.wic", "fw?1.wic", "fw[1].wic"):
+        assert is_plain_file_name(name) is False
 
 
 def test_yaml_quote_wraps_the_value():

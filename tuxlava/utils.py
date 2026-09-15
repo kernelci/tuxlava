@@ -84,6 +84,17 @@ def downloaded_name(name, compression=None):
     return name.rsplit(".", 1)[0]
 
 
+def is_plain_file_name(name):
+    """A name LAVA can save and point at with a downloads:// URL.
+
+    A "/" escapes the download directory. The others end the path or
+    start a query when LAVA parses the downloads:// URL.
+    """
+    if "/" in name or name in (".", ".."):
+        return False
+    return not any(c in name for c in "#?[]")
+
+
 def yaml_quote(value):
     """Quote a value so the job has it as one YAML string.
 
