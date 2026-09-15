@@ -192,6 +192,20 @@ def test_downloads_rejects_a_filename_with_a_directory(capsys):
     assert "plain file name" in capsys.readouterr().err
 
 
+def test_downloads_rejects_a_filename_that_breaks_the_url(capsys):
+    with pytest.raises(SystemExit):
+        setup_parser().parse_args(
+            [
+                "--device",
+                "qemu-arm64",
+                "--downloads",
+                "https://e.com/a",
+                "fw#1.wic",
+            ]
+        )
+    assert "plain file name" in capsys.readouterr().err
+
+
 def test_downloads_with_a_missing_file_is_an_error(capsys):
     # A bad path used to come out as a traceback.
     with pytest.raises(SystemExit):
