@@ -14,6 +14,9 @@
         TST_CMDFILES: "{{ cmdfile }}"
         KSELFTEST_PATH: "{{ kselftest_path }}"
         SKIPFILE: "{{ parameters.get("SKIPFILE", "skipfile-lkft.yaml") }}"
+{% if parameters.get("TST_CASENAME") %}
+        TST_CASENAME: "{{ parameters['TST_CASENAME'] }}"
+{% endif %}
         ENVIRONMENT: "production"
         SHARD_NUMBER: {{ parameters.get("SHARD_NUMBER", 1) }}
         SHARD_INDEX: {{ parameters.get("SHARD_INDEX", 1) }}
