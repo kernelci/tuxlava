@@ -1,0 +1,74 @@
+device_type: "qemu"
+
+job_name: "tuxlava@qemu-riscv64: kselftest-kvm"
+priority: low
+visibility: "public"
+
+context:
+    arch: "riscv64"
+    machine: "virt"
+    cpu: "rv64"
+    memory: "4G"
+    extra_options: ["-no-reboot", "-smp 2"]
+    no_kvm: true
+    no_network: true
+timeouts:
+  job:
+    minutes: 45
+  action:
+   minutes: 5
+  actions:
+    power-off:
+      seconds: 30
+
+actions:
+- deploy:
+    to: tmpfs
+    timeout:
+      minutes: 15
+    os: oe
+    images:
+      kernel:
+        image_arg: '-kernel {kernel} -append "console=ttyS0,115200 rootwait root=/dev/vda debug verbose console_msg_format=syslog systemd.log_level=warning earlycon"'
+        url: "https://storage.tuxboot.com/buildroot/riscv64/Image"
+      rootfs:
+        image_arg: "-drive file={rootfs},format=raw,id=hd0,if=virtio"
+        url: "https://storage.tuxboot.com/buildroot/riscv64/rootfs.ext4.zst"
+        compression: zstd
+        format: ext4
+        overlays:
+          lava: true
+          kselftest:
+            url: "https://example.com/kselftest.tar.xz"
+            format: tar
+            compression: xz
+            path: "/opt/kselftests/default-in-kernel/"
+- boot:
+    method: qemu
+    timeout:
+      minutes: 15
+    auto_login:
+      login_prompt: 'login:'
+      username: root
+    prompts:
+    - 'root@(.*):[/~]#'
+    - '/ #'
+- test:
+    timeout:
+      minutes: 15
+    definitions:
+    - repository: https://github.com/Linaro/test-definitions/releases/download/2026.06.02/2026.06.tar.zst
+      lava-signal: kmsg
+      from: url
+      compression: zstd
+      path: automated/linux/kselftest/kselftest.yaml
+      parameters:
+        SKIP_INSTALL: 'true'
+        TST_CMDFILES: "kvm"
+        KSELFTEST_PATH: "/opt/kselftests/default-in-kernel"
+        SKIPFILE: "skipfile-lkft.yaml"
+        TST_CASENAME: "kvm:ebreak_test"
+        ENVIRONMENT: "production"
+        SHARD_NUMBER: 1
+        SHARD_INDEX: 1
+      name: kselftest-kvm

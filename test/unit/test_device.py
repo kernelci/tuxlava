@@ -1493,6 +1493,18 @@ def artefacts(tmp_path):
             "qemu-riscv64-kselftest-riscv.yaml",
         ),
         (
+            [
+                "--device",
+                "qemu-riscv64",
+                "--tests",
+                "kselftest-kvm",
+                "--parameters",
+                "KSELFTEST=https://example.com/kselftest.tar.xz",
+                "TST_CASENAME=kvm:ebreak_test",
+            ],
+            "qemu-riscv64-kselftest-kvm-tst-casename.yaml",
+        ),
+        (
             ["--device", "qemu-sh4"],
             "qemu-sh4.yaml",
         ),
