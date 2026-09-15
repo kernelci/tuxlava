@@ -408,6 +408,12 @@ class KSelftestKvm(KSelfTest):
     timeout = 15
 
 
+class KSelftestRiscv(KSelfTest):
+    devices = ["qemu-riscv64"]
+    name = "kselftest-riscv"
+    timeout = 45
+
+
 class KSelftestLandlock(KSelfTest):
     name = "kselftest-landlock"
     timeout = 5
