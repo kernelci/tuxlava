@@ -210,6 +210,29 @@ def test_usbg_quotes_the_names_in_the_yaml(tmp_path):
     assert "fdisk -l 'os two.wic'" in steps
 
 
+def test_usbg_rejects_an_os_download_it_never_uses():
+    from tuxlava.devices.usbg import UsbgDevice
+
+    class UsbgPlain(UsbgDevice):
+        name = "usbg-plain"
+        required_downloads = ["firmware"]
+        boot_image = "firmware"
+
+    with pytest.raises(InvalidArgument) as exc:
+        UsbgPlain().validate(
+            commands=[],
+            downloads={
+                "firmware": ("https://e.com/disk.img.xz", None),
+                "os": ("https://e.com/os.wic.xz", None),
+            },
+            parameters={},
+            prompt=None,
+            tests=[],
+            visibility="public",
+        )
+    assert "--os is not used" in str(exc.value)
+
+
 def test_usbg_rejects_an_overlay(tmp_path):
     with pytest.raises(InvalidArgument) as exc:
         usbg_job(tmp_path, overlays=[["https://e.com/o.tar.gz", "/"]]).initialize()
