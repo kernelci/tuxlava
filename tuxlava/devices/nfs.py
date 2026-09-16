@@ -52,6 +52,7 @@ class NfsDevice(StorageDevice, Device):
         parameters,
         prompt,
         rootfs,
+        secrets,
         enable_network,
         tests,
         visibility,

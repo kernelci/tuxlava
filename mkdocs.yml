@@ -39,4 +39,5 @@ nav:
   - Run uninstalled: run-uninstalled.md
 - Features:
   - Devices: devices.md
+  - Secrets: secrets.md
   - Tests: tests.md
