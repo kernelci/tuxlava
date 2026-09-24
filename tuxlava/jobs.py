@@ -21,7 +21,7 @@ from tuxlava.tests import Test
 from tuxlava.tuxmake import TuxBuildBuild, TuxMakeBuild
 from tuxlava.utils import pathurlnone, secret_headers
 
-TEST_DEFINITIONS = "https://github.com/Linaro/test-definitions/releases/download/2026.06.02/2026.06.tar.zst"
+TEST_DEFINITIONS = "https://github.com/Linaro/test-definitions/releases/download/2026.09.01/2026.09.tar.zst"
 
 # Artefacts that can carry a secret header
 SECRET_ARTEFACTS = {
