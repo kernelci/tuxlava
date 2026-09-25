@@ -77,5 +77,5 @@ actions:
       username: root
     prompts:
     - 'root@(.*):[/~]#'
-    - '/ #'
+    - '[/~] #'
     - 'dragonboard-845c:'

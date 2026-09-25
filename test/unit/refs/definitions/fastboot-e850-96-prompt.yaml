@@ -74,5 +74,5 @@ actions:
       username: root
     prompts:
     - 'root@(.*):[/~]#'
-    - '/ #'
+    - '[/~] #'
     - "my-test-prompt #"
