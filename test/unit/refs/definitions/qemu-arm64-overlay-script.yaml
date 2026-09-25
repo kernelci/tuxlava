@@ -57,7 +57,7 @@ actions:
       username: root
     prompts:
     - 'root@(.*):[/~]#'
-    - '/ #'
+    - '[/~] #'
 - test:
     definitions:
     - from: inline
