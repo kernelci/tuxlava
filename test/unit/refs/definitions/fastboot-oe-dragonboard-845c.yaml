@@ -54,4 +54,5 @@ actions:
       username: root
     prompts:
     - 'root@(.*):[/~]#'
+    - '[/~] #'
     - "root@qcom-armv8a:"

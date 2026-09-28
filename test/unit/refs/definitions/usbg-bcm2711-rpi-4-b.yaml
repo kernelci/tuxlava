@@ -62,6 +62,7 @@ actions:
       username: root
     prompts:
     - 'root@(.*):[/~]#'
+    - '[/~] #'
     transfer_overlay:
       download_command: sleep 5; ip addr; route -n; curl --fail --retry 20 --retry-connrefused -O
       unpack_command: tar -C /var/lib/ -xzvf

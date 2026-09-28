@@ -31,7 +31,9 @@ actions:
     timeout:
       minutes: {{ boot_timeout }}
     prompts:
-    - 'root@(.*):[/~]#'
+{% for prompt in shell_prompts %}
+    - '{{ prompt }}'
+{% endfor %}
 {% for prompt in ssh_prompt %}
     - "{{ prompt }}"
 {% endfor %}
