@@ -21,6 +21,8 @@ from tuxlava.utils import (
 
 BASE = (Path(__file__) / "..").resolve()
 
+SHELL_PROMPTS = ["root@(.*):[/~]#", "[/~] #"]
+
 
 @lru_cache(maxsize=None)
 def jobs():
@@ -35,6 +37,7 @@ def jobs():
     env.globals["kernel_type"] = kernel_type
     env.filters["yaml_quote"] = yaml_quote
     env.globals["headers_yaml"] = secret_headers_yaml
+    env.globals["shell_prompts"] = SHELL_PROMPTS
     return env
 
 
