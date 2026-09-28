@@ -92,5 +92,7 @@ actions:
       login_prompt: 'login:'
       username: root
     prompts:
-    - 'root@(.*):[/~]#'
+{% for prompt in shell_prompts %}
+    - '{{ prompt }}'
+{% endfor %}
 
