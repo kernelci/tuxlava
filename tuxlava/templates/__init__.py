@@ -6,6 +6,7 @@
 #
 # SPDX-License-Identifier: MIT
 
+import json
 from functools import lru_cache
 from pathlib import Path
 
@@ -24,6 +25,10 @@ BASE = (Path(__file__) / "..").resolve()
 SHELL_PROMPTS = ["root@(.*):[/~]#", "[/~] #"]
 
 
+def to_json(value):
+    return json.dumps(value, ensure_ascii=False)
+
+
 @lru_cache(maxsize=None)
 def jobs():
     env = jinja2.Environment(
@@ -36,6 +41,7 @@ def jobs():
     env.globals["is_cpio_rootfs"] = is_cpio_rootfs
     env.globals["kernel_type"] = kernel_type
     env.filters["yaml_quote"] = yaml_quote
+    env.filters["json"] = to_json
     env.globals["headers_yaml"] = secret_headers_yaml
     env.globals["shell_prompts"] = SHELL_PROMPTS
     return env
@@ -43,11 +49,13 @@ def jobs():
 
 @lru_cache(maxsize=None)
 def devices():
-    return jinja2.Environment(
+    env = jinja2.Environment(
         autoescape=False,
         trim_blocks=True,
         loader=jinja2.FileSystemLoader(str(BASE / "devices")),
     )
+    env.filters["json"] = to_json
+    return env
 
 
 @lru_cache(maxsize=None)

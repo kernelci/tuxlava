@@ -15,7 +15,7 @@ context:
 {% if memory %}
     memory: "{{ memory }}"
 {% endif %}
-    extra_options: ["-no-reboot", "{{ '", "'.join(extra_options) }}"]
+    extra_options: {{ (["-no-reboot"] + extra_options) | json }}
     no_kvm: {{ no_kvm|lower }}
     no_network: {{ no_network|lower }}
 

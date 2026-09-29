@@ -9,7 +9,7 @@ context:
     machine: "sun4u"
     cpu: ""
     memory: "4G"
-    extra_options: ["-no-reboot", ""]
+    extra_options: ["-no-reboot"]
     no_kvm: true
     no_network: true
 timeouts:

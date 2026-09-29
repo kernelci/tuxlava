@@ -255,7 +255,7 @@ actions:
           - -monitor {{ monitor|default('none') }}
 {# If you need to pass -soundhw in extra_options, then see doc/v2/qemu_options.rst for how to set the environment var QEMU_AUDIO_DRV=none #}
 {% if extra_options %}
-          extra: {{ extra_options }}
+          extra: {{ extra_options | json }}
 {% endif %}
 {% endblock qemu_options -%}
 {% endblock qemu_method %}

@@ -9,7 +9,7 @@ context:
     machine: "versatilepb"
     cpu: "arm926"
     memory: "256M"
-    extra_options: ["-no-reboot", ""]
+    extra_options: ["-no-reboot"]
     no_kvm: true
     no_network: true
 timeouts:

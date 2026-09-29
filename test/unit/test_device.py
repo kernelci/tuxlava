@@ -12,7 +12,7 @@ from tuxlava.__main__ import main
 from tuxlava.devices import Device
 from tuxlava.devices.fvp import FVPMorelloAndroid
 from tuxlava.devices.lava import FVPLAVA, QemuLAVA
-from tuxlava.devices.qemu import QemuArmv5
+from tuxlava.devices.qemu import QemuArm64, QemuArmv5
 from tuxlava.exceptions import InvalidArgument, MissingArgument
 from tuxlava.jobs import Job
 
@@ -34,6 +34,30 @@ def test_select_usbg():
     from tuxlava.devices.usbg import UsbgRpi4
 
     assert Device.select("usbg-bcm2711-rpi-4-b") == UsbgRpi4
+
+
+EXTRA_OPTION = "-device x,id=\"a\\b\" -append 'a&b<c>' -name 😀"
+
+
+def test_qemu_device_dict_extra_options(tmp_path):
+    job = Job(device="qemu-arm64", kernel="https://e.com/Image.gz", tmpdir=tmp_path)
+    job.initialize()
+    context = yaml.safe_load(job.render())["context"]
+    context["extra_options"].append(EXTRA_OPTION)
+    output = job.device.device_dict(context)
+    data = yaml.safe_load(output)
+    extra = data["actions"]["boot"]["methods"]["qemu"]["parameters"]["extra"]
+    assert extra[-1] == EXTRA_OPTION
+    assert "\\u" not in output
+
+
+def test_qemu_job_extra_options(monkeypatch, tmp_path):
+    monkeypatch.setattr(QemuArm64, "extra_options", [EXTRA_OPTION])
+    job = Job(device="qemu-arm64", kernel="https://e.com/Image.gz", tmpdir=tmp_path)
+    job.initialize()
+    output = job.render()
+    assert yaml.safe_load(output)["context"]["extra_options"][-1] == EXTRA_OPTION
+    assert "\\u" not in output
 
 
 def usbg_job(tmp_path, downloads=None, **kwargs):

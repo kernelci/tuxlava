@@ -9,7 +9,7 @@ context:
     machine: "ppce500"
     cpu: "e500mc"
     memory: "4G"
-    extra_options: ["-no-reboot", ""]
+    extra_options: ["-no-reboot"]
     no_kvm: true
     no_network: true
 timeouts:
