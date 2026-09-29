@@ -56,6 +56,7 @@ def main() -> int:
             enable_network=options.enable_network,
             qemu_image=options.qemu_image,
             qemu_binary=options.qemu_binary,
+            qemu_args=options.qemu_args or [],
             prompt=options.prompt,
             ramdisk=options.ramdisk,
             rootfs=options.rootfs,

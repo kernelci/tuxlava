@@ -4484,3 +4484,50 @@ def test_downloads_are_rejected_by_other_devices(tmp_path):
             tmpdir=tmp_path,
         ).initialize()
     assert "--downloads" in str(exc.value)
+
+
+@pytest.mark.parametrize(
+    "qemu_args,expected",
+    [
+        ([], ["-no-reboot", "-smp 2"]),
+        (["-S -gdb tcp::1234"], ["-no-reboot", "-smp 2", "-S -gdb tcp::1234"]),
+        (['-device x,id="a\\b"'], ["-no-reboot", "-smp 2", '-device x,id="a\\b"']),
+        ([" "], ["-no-reboot", "-smp 2"]),
+        (["-S", "-m 2G"], ["-no-reboot", "-smp 2", "-S -m 2G"]),
+    ],
+)
+def test_qemu_args(tmp_path, qemu_args, expected):
+    job = Job(
+        device="qemu-arm64",
+        kernel="https://example.com/Image.gz",
+        qemu_args=qemu_args,
+        tmpdir=tmp_path,
+    )
+    job.initialize()
+    assert yaml.safe_load(job.render())["context"]["extra_options"] == expected
+
+
+def test_qemu_args_cli(monkeypatch, mocker, capsys, tmp_path):
+    argv = ["tuxlava", "--device", "qemu-arm64", "--kernel", "https://e.com/Image.gz"]
+    argv += ["--qemu-args=-S", "--qemu-args", "-m 2G"]
+    monkeypatch.setattr("tuxlava.__main__.sys.argv", argv)
+    mocker.patch("tempfile.mkdtemp", return_value=tmp_path)
+    main()
+    context = yaml.safe_load(capsys.readouterr().out)["context"]
+    assert context["extra_options"][-1] == "-S -m 2G"
+
+
+def test_qemu_args_only_for_qemu_devices(tmp_path):
+    with pytest.raises(InvalidArgument, match="--qemu-args"):
+        Job(device="fvp-aemva", qemu_args=["-S"], tmpdir=tmp_path).initialize()
+
+
+def test_qemu_args_unbalanced_quote(tmp_path):
+    job = Job(
+        device="qemu-arm64",
+        kernel="https://e.com/Image.gz",
+        qemu_args=['-name "foo'],
+        tmpdir=tmp_path,
+    )
+    with pytest.raises(InvalidArgument, match="--qemu-args"):
+        job.initialize()

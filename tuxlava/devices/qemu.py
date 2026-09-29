@@ -8,6 +8,7 @@
 
 import gzip
 import platform
+import shlex
 import shutil
 import subprocess
 from pathlib import Path
@@ -59,6 +60,7 @@ class QemuDevice(Device):
         parameters,
         rootfs_partition,
         prompt,
+        qemu_args,
         rootfs,
         secrets,
         enable_kvm,
@@ -83,6 +85,10 @@ class QemuDevice(Device):
             raise InvalidArgument('argument --boot-args should not contains "')
         if prompt and '"' in prompt:
             raise InvalidArgument('argument --prompt should not contains "')
+        try:
+            shlex.split(qemu_args)
+        except ValueError as exc:
+            raise InvalidArgument(f"argument --qemu-args: {exc}")
         if dtb and self.name != "qemu-armv5":
             raise InvalidArgument("argument --dtb is only valid for qemu-armv5 device")
         if modules and compression(modules[0]) not in [("tar", "gz"), ("tar", "xz")]:
@@ -135,6 +141,8 @@ class QemuDevice(Device):
             kwargs.get("parameters").get("command-name", "command")
         )
         self.arch_customization(kwargs)
+        if kwargs["qemu_args"]:
+            kwargs["extra_options"].append(kwargs["qemu_args"])
 
         kwargs["redirect_to_kmsg"] = self.redirect_to_kmsg
 

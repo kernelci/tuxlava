@@ -116,6 +116,7 @@ class Job:
         commands: List[str] = [],
         qemu_image: str = None,
         qemu_binary: str = None,
+        qemu_args: List[str] = [],
         dtb: str = None,
         kernel: str = None,
         boot: str = None,
@@ -168,6 +169,7 @@ class Job:
         self.commands = commands
         self.qemu_image = qemu_image
         self.qemu_binary = qemu_binary
+        self.qemu_args = " ".join(qemu_args).strip()
         self.dtb = dtb
         self.kernel = kernel
         self.boot = boot
@@ -423,6 +425,7 @@ class Job:
             "device": self.device,
             "qemu_image": self.qemu_image,
             "qemu_binary": self.qemu_binary,
+            "qemu_args": self.qemu_args,
             "dtb": self.dtb,
             "kernel": self.kernel,
             "boot": self.boot,
