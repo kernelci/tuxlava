@@ -1,7 +1,7 @@
 # Installing from PyPI
 
 
-- TuxLAVA requires Python 3.9 or newer.
+- TuxLAVA requires Python 3.10 or newer.
 
 To install TuxLAVA on your system globally:
 
