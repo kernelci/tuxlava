@@ -24,7 +24,7 @@ actions:
 - deploy:
     to: fastboot
     docker:
-      image: "linaro/kir:20260611"
+      image: "linaro/kir:20261019"
       local: true
     timeout:
       minutes: 25
@@ -44,7 +44,7 @@ actions:
     name: pre_power_command
 - boot:
     docker:
-      image: "linaro/kir:20260611"
+      image: "linaro/kir:20261019"
       local: true
     method: fastboot
     timeout:
