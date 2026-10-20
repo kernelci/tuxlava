@@ -1,0 +1,16 @@
+- test:
+    timeout:
+      minutes: {{ timeout }}
+    definitions:
+    - repository: {{ test_definitions }}
+{%if device.redirect_to_kmsg %}
+      lava-signal: kmsg
+{% endif %}
+      from: url
+      compression: zstd
+      path: automated/linux/ltp-open-posix/ltp-open-posix.yaml
+      parameters:
+        SKIP_INSTALL: 'true'
+        GRP_TEST: '{{ parameters.get("GRP_TEST", "") }}'
+      name: {{ name }}
+
