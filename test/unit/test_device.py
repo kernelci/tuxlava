@@ -1667,6 +1667,21 @@ def artefacts(tmp_path):
             "qemu-i386-libhugetlbfs-install-path.yaml",
         ),
         (
+            ["--device", "qemu-arm64", "--tests", "ltp-open-posix"],
+            "qemu-arm64-ltp-open-posix.yaml",
+        ),
+        (
+            [
+                "--device",
+                "qemu-arm64",
+                "--tests",
+                "ltp-open-posix",
+                "--parameters",
+                "GRP_TEST=THR",
+            ],
+            "qemu-arm64-ltp-open-posix-grp-test.yaml",
+        ),
+        (
             ["--device", "qemu-i386", "--tests", "perf"],
             "qemu-i386-perf.yaml",
         ),

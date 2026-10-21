@@ -136,6 +136,17 @@ class LTPNPTL(LTPTest):
     timeout = 15
 
 
+class LTPOpenPosix(LTPTest):
+    name = "ltp-open-posix"
+    timeout = 10
+
+    def render(self, **kwargs):
+        kwargs["name"] = self.name
+        kwargs["timeout"] = self.timeout
+
+        return self._render("ltp-open-posix.yaml.jinja2", **kwargs)
+
+
 class LTPPTY(LTPTest):
     name = "ltp-pty"
     timeout = 10
