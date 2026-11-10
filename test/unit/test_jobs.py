@@ -2,6 +2,8 @@
 
 from pathlib import Path
 
+import pytest
+
 from tuxlava.jobs import TEST_DEFINITIONS, Job
 
 
@@ -48,3 +50,48 @@ def test_str_after_initialize():
     j = job()
     j.initialize()
     assert str(j) == "Job qemu-arm64/ltp-smoke"
+
+
+def test_initialize_does_not_change_the_default_tests():
+    Job(
+        device="qemu-arm64", kernel="https://example.com/Image", commands=["ls"]
+    ).initialize()
+    j = Job(device="qemu-arm64", kernel="https://example.com/Image")
+    assert j.tests == []
+
+
+@pytest.mark.parametrize(
+    "name, value",
+    [
+        ("commands", ["ls"]),
+        ("tests", ["ltp-smoke"]),
+        ("timeouts", {"boot": 5}),
+        ("secrets", {"k": "v"}),
+        ("overlays", [["https://e.com/o.tar.xz", "/"]]),
+        ("downloads", {"os": ("https://e.com/os.wic.xz", None)}),
+        ("pflash", ["https://e.com/flash0.img"]),
+        ("parameters", {"K": "V"}),
+    ],
+)
+def test_job_copies_mutable_arguments(name, value):
+    j = Job(device="qemu-arm64", **{name: value})
+    assert getattr(j, name) == value
+    assert getattr(j, name) is not value
+
+
+@pytest.mark.parametrize(
+    "name, empty",
+    [
+        ("commands", []),
+        ("tests", []),
+        ("timeouts", {}),
+        ("secrets", {}),
+        ("overlays", []),
+        ("downloads", {}),
+        ("pflash", []),
+        ("parameters", {}),
+    ],
+)
+def test_job_takes_none_for_list_and_dict_arguments(name, empty):
+    j = Job(device="qemu-arm64", **{name: None})
+    assert getattr(j, name) == empty
