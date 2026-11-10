@@ -45,6 +45,9 @@ class Test:
         if timeout:
             self.timeout = timeout
 
+    def __str__(self) -> str:
+        return self.name
+
     @classmethod
     def select(cls, name):
         for subclass in subclasses(cls):

@@ -217,7 +217,7 @@ class Job:
         self.visibility = visibility
 
     def __str__(self) -> str:
-        tests = "_".join(self.tests) if self.tests else "boot"
+        tests = "_".join(str(t) for t in self.tests) if self.tests else "boot"
         return f"Job {self.device}/{tests}"
 
     @property
