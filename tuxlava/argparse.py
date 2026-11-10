@@ -73,19 +73,23 @@ class ListTestsAction(argparse.Action):
 
 class KeyValueAction(argparse.Action):
     def __call__(self, parser, namespace, values, option_string=None):
+        items = dict(getattr(namespace, self.dest) or {})
         for value in values:
             key, *value = value.split("=")
-            getattr(namespace, self.dest)[key] = "=".join(value)
+            items[key] = "=".join(value)
+        setattr(namespace, self.dest, items)
 
 
 class KeyValueParameterAction(argparse.Action):
     def __call__(self, parser, namespace, values, option_string=None):
+        items = dict(getattr(namespace, self.dest) or {})
         for value in values:
             key, value = value.split("=", maxsplit=1)
             if key in ["KSELFTEST"]:
                 if "$BUILD/" not in value:
                     value = pathurlnone(value)
-            getattr(namespace, self.dest)[key] = value
+            items[key] = value
+        setattr(namespace, self.dest, items)
 
 
 class DownloadAction(argparse.Action):
@@ -139,6 +143,7 @@ class DownloadAction(argparse.Action):
 class KeyValueIntAction(argparse.Action):
     def __call__(self, parser, namespace, values, option_string=None):
         KEYS = ["deploy", "boot"] + Test.list()
+        items = dict(getattr(namespace, self.dest) or {})
         for value in values:
             try:
                 key, value = value.split("=")
@@ -149,11 +154,12 @@ class KeyValueIntAction(argparse.Action):
             if key not in KEYS:
                 raise argparse.ArgumentError(self, f"Invalid timeout '{key}'")
             try:
-                getattr(namespace, self.dest)[key] = int(value)
+                items[key] = int(value)
             except ValueError:
                 raise argparse.ArgumentError(
                     self, f"Invalid value for {key} timeout: '{value}'"
                 )
+        setattr(namespace, self.dest, items)
 
 
 class OneTwoPathAction(argparse.Action):

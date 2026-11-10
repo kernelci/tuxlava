@@ -246,3 +246,35 @@ def test_downloads_with_a_bad_scheme_is_an_error(capsys):
             ["--device", "qemu-arm64", "--downloads", "ftp://e.com/a"]
         )
     assert "Invalid scheme 'ftp'" in capsys.readouterr().err
+
+
+def test_key_value_options_do_not_change_the_parser_default():
+    parser = setup_parser()
+    parser.parse_args(
+        ["--timeouts", "boot=3", "--parameters", "A=1", "--secrets", "s=1"]
+    )
+    options = parser.parse_args([])
+    assert options.timeouts == {}
+    assert options.parameters == {}
+    assert options.secrets == {}
+
+
+@pytest.mark.parametrize(
+    "option, value, dest, expected",
+    [
+        ("--timeouts", "boot=3", "timeouts", {"boot": 3}),
+        ("--parameters", "A=1", "parameters", {"A": "1"}),
+        ("--secrets", "s=1", "secrets", {"s": "1"}),
+    ],
+)
+def test_key_value_options_start_from_none(option, value, dest, expected):
+    namespace = Namespace(**{dest: None})
+    options = setup_parser().parse_args([option, value], namespace=namespace)
+    assert getattr(options, dest) == expected
+
+
+def test_timeouts_given_twice():
+    options = setup_parser().parse_args(
+        ["--timeouts", "boot=1", "--timeouts", "deploy=2"]
+    )
+    assert options.timeouts == {"boot": 1, "deploy": 2}
