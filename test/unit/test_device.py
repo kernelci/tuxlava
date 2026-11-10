@@ -492,6 +492,17 @@ def artefacts(tmp_path):
             [
                 "--device",
                 "qemu-arm64",
+                "--tests",
+                "ltp-fcntl-locktests",
+                "--test-yaml",
+                str(BASE / "refs" / "test-yaml-oeqa.yaml"),
+            ],
+            "qemu-arm64-ltp-fcntl-locktests-test-yaml.yaml",
+        ),
+        (
+            [
+                "--device",
+                "qemu-arm64",
                 "--enable-trustzone",
                 "--parameters",
                 "machine=virt,secure=on",

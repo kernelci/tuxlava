@@ -1,0 +1,10 @@
+# Runs oeqa in docker on the dispatcher and ssh's into the board.
+# tuxlava does not model this shape, so it is pasted in as-is.
+- test:
+    timeout:
+      minutes: 20
+    definitions:
+    - repository: https://example.com/oeqa.git
+      from: git
+      path: oeqa.yaml
+      name: oeqa

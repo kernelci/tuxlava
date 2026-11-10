@@ -35,6 +35,7 @@ def filter_options(options):
         "shell",
         "shared",
         "test_definitions",
+        "test_yaml",
         "timeouts",
         "tmpdir",
         "tux_boot_args",
@@ -325,6 +326,15 @@ def setup_parser() -> argparse.ArgumentParser:
         help="directory containing a TuxMake build",
     )
     artefact("test-definitions")
+    group.add_argument(
+        "--test-yaml",
+        action="append",
+        default=[],
+        dest="test_yaml",
+        metavar="FILE",
+        type=pathurlnone,
+        help="LAVA test action to paste into the job. Can be given several times",
+    )
     artefact("uefi")
     group.add_argument(
         "--fvp-ubl-license",

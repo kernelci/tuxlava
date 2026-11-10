@@ -71,6 +71,7 @@ def main() -> int:
             ssh_identity_file=options.ssh_identity_file,
             tests=options.tests,
             test_definitions=options.test_definitions,
+            test_yaml=options.test_yaml,
             timeouts=options.timeouts,
             uefi=options.uefi,
             boot_args=options.boot_args,
