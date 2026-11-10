@@ -52,6 +52,9 @@ class Device:
     redirect_to_kmsg: bool = True
     real_device: bool = True
 
+    def __str__(self) -> str:
+        return self.name
+
     @classmethod
     def select(cls, name):
         for subclass in subclasses(cls):

@@ -38,3 +38,13 @@ def test_test_definitions_unused_without_tests():
     j = Job(device="qemu-arm64", kernel="https://example.com/Image")
     j.initialize()
     assert j.test_definitions is None
+
+
+def test_str_before_initialize():
+    assert str(job()) == "Job qemu-arm64/ltp-smoke"
+
+
+def test_str_after_initialize():
+    j = job()
+    j.initialize()
+    assert str(j) == "Job qemu-arm64/ltp-smoke"
