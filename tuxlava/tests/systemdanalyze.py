@@ -17,6 +17,7 @@ class SystemdAnalyze(Test):
         "avh-rpi4b",
         "nfs-*",
         "fastboot-*",
+        "usbg-*",
     ]
     name = "systemd-analyze"
     timeout = 5
