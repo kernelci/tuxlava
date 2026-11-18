@@ -3860,6 +3860,17 @@ def artefacts(tmp_path):
             ],
             "usbg-bcm2711-rpi-4-b-optee-xtest.yaml",
         ),
+        (
+            [
+                "--device",
+                "usbg-bcm2711-rpi-4-b",
+                "--firmware",
+                "https://example.com/rpi4-disk.img.xz",
+                "--tests",
+                "systemd-analyze",
+            ],
+            "usbg-bcm2711-rpi-4-b-systemd-analyze.yaml",
+        ),
     ],
 )
 def test_definition(monkeypatch, mocker, capsys, tmpdir, artefacts, args, filename):
