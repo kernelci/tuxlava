@@ -262,8 +262,12 @@ class UsbgRpi4(UsbgDevice):
         "fdisk -l {firmware}",
     ]
 
-    # -O because curl writes to stdout without it, and LAVA unpacks
-    # that file name afterwards.
+    # curl needs -O, or it writes to stdout and there is no file for
+    # LAVA to unpack. The OS image comes from the user and may only
+    # have busybox wget, which saves to the file name by default.
     transfer_overlay_download = (
-        "sleep 5; ip addr; route -n; curl --fail --retry 20 --retry-connrefused -O"
+        "sleep 5; ip addr; route -n; "
+        "dl() { if command -v curl >/dev/null; "
+        'then curl --fail --retry 20 --retry-connrefused -O "$1"; '
+        'else wget "$1"; fi; }; dl'
     )
