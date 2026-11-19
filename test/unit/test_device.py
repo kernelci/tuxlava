@@ -4546,3 +4546,27 @@ def test_qemu_args_unbalanced_quote(tmp_path):
     )
     with pytest.raises(InvalidArgument, match="--qemu-args"):
         job.initialize()
+
+
+def test_test_after_optee_xtest_starts_on_a_new_line(tmp_path):
+    job = Job(
+        device="qemu-arm64",
+        kernel="https://e.com/Image.gz",
+        tests=["optee-xtest", "ltp-smoke"],
+        tmpdir=tmp_path,
+    )
+    job.initialize()
+    actions = yaml.safe_load(job.render())["actions"]
+    names = [
+        d["name"] for a in actions if "test" in a for d in a["test"]["definitions"]
+    ]
+    assert names == ["optee-xtest", "ltp-smoke"]
+
+
+@pytest.mark.parametrize(
+    "template",
+    sorted((BASE.parent.parent / "tuxlava" / "templates" / "tests").glob("*.jinja2")),
+    ids=lambda p: p.name,
+)
+def test_test_template_ends_with_a_blank_line(template):
+    assert template.read_text(encoding="utf-8").endswith("\n\n")
