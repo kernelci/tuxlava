@@ -41,6 +41,10 @@ class UsbgDevice(Device):
 
     failure_retry: int = 3
 
+    # On a systemd OS, journald sends each kmsg signal to the console a
+    # second time as a wall message, and the two get mixed up.
+    redirect_to_kmsg: bool = False
+
     # Docker step that turns the downloads into boot_image. Each step is
     # formatted with the saved names. It cannot hold a literal brace.
     postprocess_docker: str = ""
