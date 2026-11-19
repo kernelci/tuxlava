@@ -3,6 +3,7 @@
 import gzip
 import json
 import os
+import subprocess
 import yaml
 from pathlib import Path
 
@@ -320,13 +321,43 @@ def test_usbg_runs_commands(tmp_path):
     assert "lava-test-case command --shell uname -a" in job.render()
 
 
+OVERLAY_URL = "http://198.18.0.1/tmp/overlay.tar.gz"
+
+
+def run_overlay_download(tmp_path, tools):
+    job = usbg_job(tmp_path / "job")
+    job.initialize()
+    definition = yaml.safe_load(job.render())
+    boot = next(a["boot"] for a in definition["actions"] if "boot" in a)
+    command = boot["transfer_overlay"]["download_command"]
+
+    bin_dir = tmp_path / "bin"
+    bin_dir.mkdir()
+    for tool in ["sleep", "ip", "route"] + tools:
+        script = bin_dir / tool
+        script.write_text(f'#!/bin/sh\necho {tool} "$@" >> ../calls\n')
+        script.chmod(0o755)
+    work = tmp_path / "work"
+    work.mkdir()
+    subprocess.run(
+        ["/bin/sh", "-c", f"{command} {OVERLAY_URL}"],
+        cwd=work,
+        env={"PATH": str(bin_dir)},
+        check=True,
+    )
+    return (tmp_path / "calls").read_text().splitlines()
+
+
 def test_usbg_downloads_the_overlay_with_curl(tmp_path):
     # Without -O curl writes to stdout and there is nothing to unpack.
-    job = usbg_job(tmp_path)
-    job.initialize()
-    definition = job.render()
-    assert "curl --fail --retry 20 --retry-connrefused -O" in definition
-    assert "wget" not in definition
+    calls = run_overlay_download(tmp_path, ["curl", "wget"])
+    assert f"curl --fail --retry 20 --retry-connrefused -O {OVERLAY_URL}" in calls
+    assert not [c for c in calls if c.startswith("wget")]
+
+
+def test_usbg_downloads_the_overlay_with_wget_without_curl(tmp_path):
+    calls = run_overlay_download(tmp_path, ["wget"])
+    assert f"wget {OVERLAY_URL}" in calls
 
 
 USBG_D_DICT = {
