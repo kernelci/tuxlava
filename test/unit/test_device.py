@@ -221,13 +221,11 @@ def test_usbg_passes_the_deploy_os_to_both_deploys(tmp_path):
     assert [d["os"] for d in deploys] == ["oe", "oe"]
 
 
-def test_usbg_unpacks_the_overlay_in_the_overlay_dir(tmp_path):
-    # The tarball holds lava-N, not var/lib/lava-N, so unpacking at /
-    # gives /lava-N and the test shell finds no environment.
+def test_usbg_unpacks_the_overlay_at_root(tmp_path):
     job = usbg_job(tmp_path)
     job.initialize()
     definition = job.render()
-    assert "unpack_command: tar -C /var/lib/ -xzvf" in definition
+    assert "unpack_command: tar -C / -xzvf" in definition
     assert "lava_test_results_dir: /var/lib/lava-%s" in definition
 
 

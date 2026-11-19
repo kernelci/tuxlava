@@ -57,12 +57,9 @@ class UsbgDevice(Device):
     # Where LAVA keeps its results on the board.
     overlay_dir: str = "/var/lib/"
 
-    @property
-    def transfer_overlay_unpack(self) -> str:
-        # LAVA names the archive member after the last part of
-        # lava_test_results_dir, so the tarball holds lava-N and not
-        # var/lib/lava-N. It has to be unpacked in overlay_dir.
-        return f"tar -C {self.overlay_dir} -xzvf"
+    # Since LAVA 2026.06 the tarball holds the whole
+    # lava_test_results_dir, var/lib/lava-N and not only lava-N.
+    transfer_overlay_unpack: str = "tar -C / -xzvf"
 
     @property
     def lava_test_results_dir(self) -> str:
