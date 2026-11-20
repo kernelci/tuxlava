@@ -273,6 +273,13 @@ def test_key_value_options_start_from_none(option, value, dest, expected):
     assert getattr(options, dest) == expected
 
 
+def test_overlay_does_not_change_the_parser_default():
+    parser = setup_parser()
+    parser.parse_args(["--overlay", __file__])
+    options = parser.parse_args([])
+    assert options.overlays == []
+
+
 def test_timeouts_given_twice():
     options = setup_parser().parse_args(
         ["--timeouts", "boot=1", "--timeouts", "deploy=2"]

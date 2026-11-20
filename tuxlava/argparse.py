@@ -175,8 +175,9 @@ class OneTwoPathAction(argparse.Action):
             values[0] = pathurlnone(values[0])
         except argparse.ArgumentTypeError as exc:
             raise argparse.ArgumentError(self, str(exc))
-        if isinstance(getattr(namespace, self.dest), list):
-            getattr(namespace, self.dest).append(values)
+        items = getattr(namespace, self.dest)
+        if isinstance(items, list):
+            setattr(namespace, self.dest, items + [values])
         else:
             setattr(namespace, self.dest, values)
 
