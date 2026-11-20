@@ -18,6 +18,7 @@ from tuxlava.argparse import filter_options
 from tuxlava.exceptions import InvalidArgument, MissingArgument, TuxLavaError
 from tuxlava.devices import Device
 from tuxlava.tests import Test
+from tuxlava.tests.yamltest import YamlTest
 from tuxlava.tuxmake import TuxBuildBuild, TuxMakeBuild
 from tuxlava.utils import pathurlnone, secret_headers
 
@@ -143,6 +144,7 @@ class Job:
         ssh_identity_file: str = None,
         tests: List[str] = [],
         test_definitions: str = None,
+        test_yaml: List[str] = [],
         timeouts: Dict[str, int] = {},
         tux_prompt: str = None,
         uefi: str = None,
@@ -212,6 +214,7 @@ class Job:
         self.tmpdir = tmpdir
         self.cache_dir = cache_dir
         self.test_definitions = test_definitions
+        self.test_yaml = list(test_yaml or [])
         self.extra_assets = []
         self.tux_boot_args = None
         self.visibility = visibility
@@ -301,6 +304,7 @@ class Job:
 
         self.device = Device.select(self.device)()
         self.tests = [Test.select(t)(self.timeouts.get(t)) for t in self.tests]
+        self.tests += [YamlTest(url) for url in self.test_yaml]
         self.device.validate(**filter_options(self))
         # Which artefacts came from the command line. This must be before
         # device.default(), it fills in the rest. A secret without an

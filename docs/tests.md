@@ -28,6 +28,59 @@ DUTs (Devices Under Test).
 Example:
 `--parameters TAGS=lts` or `--parameters TAGS=lts,production`.
 
+## Pasting a test into the job
+
+LAVA test actions come in several shapes and TuxLAVA only knows some of
+them. When it does not know yours, write the action yourself and paste it
+in with `--test-yaml`. Give the option several times to paste more than
+one.
+
+```shell
+tuxlava --device qemu-arm64 --kernel <url> --test-yaml my-test.yaml
+```
+
+The file can also be an http or https URL. TuxLAVA downloads it when it
+builds the job:
+
+```shell
+tuxlava --device qemu-arm64 --kernel <url> --test-yaml https://example.com/my-test.yaml
+```
+
+The file is a YAML list of test actions, the same as they look in a job:
+
+```yaml
+- test:
+    timeout:
+      minutes: 20
+    docker:
+      image: debian
+    definitions:
+    - repository:
+        metadata:
+          format: Lava-Test Test Definition 1.0
+          name: my-test
+        run:
+          steps:
+          - echo hello
+      from: inline
+      path: my-test
+      name: my-test
+```
+
+The file goes into the job as you wrote it, so comments and formatting
+survive. It is pasted after the tests from `--tests`, so it has to be
+one plain YAML list with the items at column 0, and the file can't have
+a `---` or `...` line.
+
+Every action must say its timeout, in minutes only. TuxLAVA adds the
+minutes to the job timeout, and without them LAVA would stop the job
+partway through.
+
+The test gets the file name without `.yaml`, and the job name uses it
+too, because TuxLAVA cannot know what is inside the action. The name can
+only have letters, digits, `.`, `_` and `-`. Two files with the same
+name, or a file named like a TuxLAVA test, can't be in the same job.
+
 ## Devices
 
 This section outlines which tests are supported on various devices.
