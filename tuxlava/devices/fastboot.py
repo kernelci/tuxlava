@@ -13,7 +13,7 @@ from tuxlava.devices import Device, StorageDevice
 from tuxlava.exceptions import InvalidArgument
 from tuxlava.utils import compression, notnone, slugify
 
-KIR_IMAGE = "linaro/kir:20261019"
+KIR_IMAGE = "linaro/kir:20261124"
 
 
 class FastbootDevice(StorageDevice, Device):
